@@ -1,0 +1,23 @@
+.btn__primary {
+  background-color: #5536db;
+  padding: 10px 10px 10px 10px;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: poppins;
+  font-weight: 400;
+}
+
+.btn__secondary {
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #5536db;
+  padding: 5px 5px 5px 5px;
+  justify-content: center;
+  align-items: center;
+  font-family: poppins;
+  font-weight: 400;
+  color: #5536db;
+  font-size: small;
+}

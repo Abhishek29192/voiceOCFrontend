@@ -1,0 +1,154 @@
+.Brodcast_section {
+  width: 90%;
+  background-color: rgb(245, 246, 250);
+  height: 100%;
+}
+
+.sort__text {
+  margin-top: 12px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.input__container {
+  width: 30%;
+  height: auto;
+  /* margin-left: 2%; */
+}
+
+.filter__icon {
+  width: 8%;
+  background-color: #5536db;
+  border-radius: 10px;
+  position: relative;
+  margin-left: 80px;
+}
+
+.filter {
+  justify-content: center;
+  align-items: ceter;
+  position: absolute;
+  color: white;
+  top: 1rem;
+  left: 1rem;
+}
+.import_export_icon {
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  display: flex;
+  padding-left: 16px;
+  background-color: white;
+  border-radius: 10px;
+  margin-left: 25px;
+}
+
+.import_border {
+  border-right: 1px solid rgb(189, 183, 183);
+}
+/*--------------------------------------------------------*/
+.modal_title {
+  text-align: center !important;
+  font-family: Poppins;
+}
+.input_field {
+  border: 1px solid #cdcdcd;
+  border-radius: 5px;
+  width: 441px;
+  height: 90px;
+}
+
+.customModal {
+  max-width: 450px;
+  width: 100%;
+  border-radius: 15px;
+}
+.Modal_title {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 30px;
+  color: #4b4b4b;
+  padding-bottom: 10px;
+}
+.Modal_subtitle {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 10px;
+
+  color: #858585;
+}
+.TextArea_style {
+  outline: none;
+  border: 1px solid #cdcdcd;
+  border-radius: 5px;
+  width: 441px;
+  height: 90px;
+  padding: 10px;
+}
+.TextArea_style::-webkit-input-placeholder {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 15px;
+  color: #858585;
+  width: 108px;
+  height: 18px;
+}
+.TextArea_style::-webkit-scrollbar {
+  width: 5px;
+}
+.TextArea_style::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px rgba(94, 92, 92, 0.3);
+}
+.TextArea_style::-webkit-scrollbar-thumb {
+  background-color: #913bde;
+  border-radius: 10px;
+}
+
+.BtnStyle {
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 32%;
+  height: 48px;
+  border: none;
+  font-family: Poppins;
+  background: #913bde;
+  border-radius: 5px;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+}
+.template_section1 {
+  margin: 2%;
+  padding: 2%;
+  width: 50%;
+  height: 100%;
+  border: 2px dotted #5536db;
+  background-color: #f5f6fa;
+  text-align: center;
+}
+
+.template__images {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  padding-top: 20px;
+  padding-bottom: 25px;
+}
+
+.customModal {
+  max-width: 1000px;
+  /* height: 100vh; */
+}

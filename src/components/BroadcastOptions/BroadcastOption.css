@@ -1,0 +1,16 @@
+.broadcast_option {
+  width: 22%;
+  height: 100vh;
+  border-right: 1px solid rgb(233, 222, 222);
+  cursor: pointer;
+}
+
+.options__list {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
+.options__list:hover {
+  color: #5536db;
+}
