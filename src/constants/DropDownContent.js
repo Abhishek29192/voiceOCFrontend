@@ -3,7 +3,7 @@ export const optionSort = [
   { value: "Latest", label: "Latest" },
 ];
 
-export const optionSort1 = [
+export const optionCategoary = [
   { value: "Account Update", label: "Account Update" },
   { value: "Alert Update", label: "Alert Update" },
   { value: "Appointment Update", label: "Appointment Update" },
@@ -17,7 +17,8 @@ export const optionSort1 = [
   { value: "Transportation Update", label: "Transportation Update" },
 ];
 
-export const oprtionSortHeader = [
+export const optionSortHeader = [
+  { value: "None", label: "None" },
   { value: "Text", label: "Text" },
   { value: "Media", label: "Media" },
 ];
@@ -101,4 +102,5 @@ export const optionLanguage = [
 export const OptionButton = [
   { value: "Call to action", label: "Call to action" },
   { value: "Quick reply", label: "Quick reply" },
+  { value: "None", label: "None" },
 ];

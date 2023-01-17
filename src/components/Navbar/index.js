@@ -1,5 +1,4 @@
 import React from "react";
-import "./Navbar.css";
 import { TbInbox } from "react-icons/tb";
 import { RiContactsBook2Line } from "react-icons/ri";
 import { VscListSelection } from "react-icons/vsc";
@@ -11,12 +10,35 @@ import { BsBroadcast } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { Routes as AppRoute } from "../../constants/RoutesNames";
 import ResponsiveNavbar from "../ResponsiveNavbar";
+import "./Navbar.css";
+import { TemplateData } from "../../hook/Query";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const handlebroadcast = () => {
     navigate(`${AppRoute.broadcast}`);
   };
+
+  const handleContacts = () => {
+    navigate(`${AppRoute.contacts}`);
+  };
+
+  const handleInbox = () => {
+    navigate("/");
+  };
+
+  const { data } = TemplateData();
+  // console.log(data.data[0].title, "dataa");
+
+  // const { data } = useQuery("templateData", fetchTempalteMessageData, {
+  //   cacheTime: 5000, // to remain data in cache memory
+  //   staleTime: 10000, //is the data dosent changes we can use to decrease network request
+  //   // enabled: false,  //TO DIABLE THE API CALL
+  //   select: (data) => {
+  //     const title = data.data.map((i) => console.log(i.title));
+  //   },
+  // });
+  //
 
   return (
     <div className="nav-container">
@@ -26,11 +48,15 @@ export const Navbar = () => {
       <div className="ml-28 xl:flex hidden">
         <div className="icon-container">
           <TbInbox className="icon-style" />
-          <p className="text-base">Team Inbox</p>
+          <p className="text-base" onClick={handleInbox}>
+            Team Inbox
+          </p>
         </div>
         <div className="icon-container">
           <RiContactsBook2Line className="icon-style" />
-          <p className="text-base">Contacts</p>
+          <p className="text-base" onClick={handleContacts}>
+            Contacts
+          </p>
         </div>
         <div className="icon-container">
           <BsBroadcast className="icon-style" />
