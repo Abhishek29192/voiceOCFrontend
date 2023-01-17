@@ -166,16 +166,22 @@ export const TemplateMessage = () => {
               </div>
               <div className="flex">
                 <div
-                  className="template_section1"
+                  className={styles.template_section1}
                   onClick={handleCreateNewTemplate}>
-                  <img src={newTemplateBlue} className="template__images" />
+                  <img
+                    src={newTemplateBlue}
+                    className={styles.template__images}
+                  />
                   <Paragraph1>Start From Scratch</Paragraph1>
                   <Paragraph3 className="pt-3 poppins pb-3">
                     Start from a blank template
                   </Paragraph3>
                 </div>
-                <div className="template_section1">
-                  <img src={templateOption} className="template__images" />
+                <div className={styles.template_section1}>
+                  <img
+                    src={templateOption}
+                    className={styles.template__images}
+                  />
                   <Paragraph1>Use A Template</Paragraph1>
                   <Paragraph3 className="pt-3 poppins">
                     Use one of our pre-defined templates and edit them
@@ -191,9 +197,9 @@ export const TemplateMessage = () => {
             open={createTemplate}
             onClose={() => setCreateNewTemplate(false)}
             showCloseIcon={true}
-            classNames={{ modal: "customModal" }}>
-            <div className="items-center h-full pb-3">
-              <Base1Strong className=" items-center">
+            classNames={{ modal: `${styles.customModal}` }}>
+            <div className="items-center h-full pb-3 ">
+              <Base1Strong className="items-center">
                 Create template message
               </Base1Strong>
             </div>

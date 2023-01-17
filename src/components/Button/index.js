@@ -1,9 +1,9 @@
 import React from "react";
-import "./Button.css";
+import styles from "./Button.module.css";
 
 export const PrimaryButton = ({ text, onClick }) => {
   return (
-    <button className="btn__primary" onClick={onClick}>
+    <button className={styles.btn__primary} onClick={onClick}>
       {text}
     </button>
   );
@@ -11,7 +11,9 @@ export const PrimaryButton = ({ text, onClick }) => {
 
 export const SecondaryButton = ({ text, onClick, className }) => {
   return (
-    <button className={`btn__secondary ${className}`} onClick={onClick}>
+    <button
+      className={`${styles.btn__secondary} ${className}`}
+      onClick={onClick}>
       {text}
     </button>
   );

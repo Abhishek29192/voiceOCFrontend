@@ -56,7 +56,7 @@ export const Contacts = () => {
             </div>
           </div>
           <div>
-            <PrimaryButton text={" + Add Contact List"} />
+            <PrimaryButton text={"+ Add Contact List"} />
           </div>
         </div>
         <div className={styles.background__color}>

@@ -10,8 +10,8 @@ import { BsBroadcast } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { Routes as AppRoute } from "../../constants/RoutesNames";
 import ResponsiveNavbar from "../ResponsiveNavbar";
-import "./Navbar.css";
 import { TemplateData } from "../../hook/Query";
+import styles from "./Navbar.module.css";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -41,25 +41,25 @@ export const Navbar = () => {
   //
 
   return (
-    <div className="nav-container">
+    <div className={styles.nav__container}>
       <div className="flex xl:hidden h-full p-3 w-[18rem] ">
         <ResponsiveNavbar />
       </div>
       <div className="ml-28 xl:flex hidden">
-        <div className="icon-container">
-          <TbInbox className="icon-style" />
+        <div className={styles.icon__container}>
+          <TbInbox className={styles.icon__style} />
           <p className="text-base" onClick={handleInbox}>
             Team Inbox
           </p>
         </div>
-        <div className="icon-container">
-          <RiContactsBook2Line className="icon-style" />
+        <div className={styles.icon__container}>
+          <RiContactsBook2Line className={styles.icon__style} />
           <p className="text-base" onClick={handleContacts}>
             Contacts
           </p>
         </div>
-        <div className="icon-container">
-          <BsBroadcast className="icon-style" />
+        <div className={styles.icon__container}>
+          <BsBroadcast className={styles.icon__style} />
           <p className="text-base" onClick={handlebroadcast}>
             Broadcast
           </p>
@@ -75,10 +75,10 @@ export const Navbar = () => {
       </div>
       <div className="pl-9 hidden xl:block ">
         <div className="flex item-center justify-center">
-          <p className="connectedText">CONNECTED</p>
+          <p className={styles.connectedText}>CONNECTED</p>
           <BsExclamationCircle className="pl-1 text-blue-700" />
         </div>
-        <p className="number-style">+14798024855</p>
+        <p className={styles.number__style}>+14798024855</p>
       </div>
       <HiOutlineUserCircle size={"2.4rem"} />
     </div>
