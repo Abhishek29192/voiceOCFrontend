@@ -10,7 +10,6 @@ import { BsBroadcast } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { Routes as AppRoute } from "../../constants/RoutesNames";
 import ResponsiveNavbar from "../ResponsiveNavbar";
-import { TemplateData } from "../../hook/Query";
 import styles from "./Navbar.module.css";
 
 export const Navbar = () => {
@@ -27,7 +26,9 @@ export const Navbar = () => {
     navigate("/");
   };
 
-  const { data } = TemplateData();
+  // const { data } = TemplateData();
+  // console.log(data.data, "fdghjj");
+
   // console.log(data.data[0].title, "dataa");
 
   // const { data } = useQuery("templateData", fetchTempalteMessageData, {

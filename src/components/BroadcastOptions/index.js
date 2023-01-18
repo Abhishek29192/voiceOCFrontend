@@ -9,12 +9,20 @@ import styles from "./BroadcastOption.module.css";
 
 export const BroadcastOptions = () => {
   const navigate = useNavigate();
+
   const handleTemplateMessage = () => {
     navigate(`${AppRoute.templateMessage}`);
   };
+
+  const handleBoradcastHistory = () => {
+    navigate(`${AppRoute.history}`);
+  };
+
   return (
     <div className={styles.broadcast_option}>
-      <div className={`${styles.options__list} pt-11`}>
+      <div
+        className={`${styles.options__list} pt-11`}
+        onClick={handleBoradcastHistory}>
         <RiHistoryFill className="Options" size={"1.3rem"} />
         <Options>Broadcast History</Options>
       </div>
