@@ -6,7 +6,7 @@ import { TfiExport, TfiImport } from "react-icons/tfi";
 import { PrimaryButton } from "../../components/Button";
 import { InputField } from "../../components/InputField";
 import Navbar from "../../components/Navbar/index";
-import { SelectOptionBUtton } from "../../components/SelectOptions";
+import { SelectOptionButton } from "../../components/SelectOptions";
 import { optionSort } from "../../constants/DropDownContent";
 import { Base2 } from "../../components/Typography";
 import styles from "./Contact.module.css";
@@ -65,7 +65,7 @@ export const Contacts = () => {
               <div className="flex items-center">
                 <Base2 className={styles.sort__text}>Sorted By :</Base2>
                 <div className="h-12 ml-3 ">
-                  <SelectOptionBUtton
+                  <SelectOptionButton
                     className={colourStyles}
                     options={optionSort}
                   />
@@ -124,8 +124,8 @@ export const Contacts = () => {
               </div>
             </div>
           </div>
-          <BasicTable />
-          <div className="mt-5">hdsgfv</div>
+          {/* <BasicTable /> */}
+          {/* <div className="mt-5">hdsgfv</div> */}
         </div>
       </div>
     </div>

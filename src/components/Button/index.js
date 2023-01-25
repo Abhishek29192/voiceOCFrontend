@@ -18,3 +18,7 @@ export const SecondaryButton = ({ text, onClick, className }) => {
     </button>
   );
 };
+
+export const ApprovedButton = () => {
+  return <button className={styles.Approved_btn}>Approved</button>;
+};

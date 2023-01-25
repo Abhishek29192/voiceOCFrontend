@@ -1,24 +1,28 @@
 import React from "react";
 import Select from "react-select";
 
-export const SelectOptionBUtton = ({
+export const SelectOptionButton = ({
   className,
   options,
   placeholder,
-  setCurrentlySelectedOption,
+  // setCurrentlySelectedOption,
+  value,
+  selectedValue,
+  onChange,
 }) => {
-  const handleChange = (value) => {
-    setCurrentlySelectedOption(value.value);
-  };
+  // console.log(selectedValue, "valuee");
+  // const handleChange = (value) => {
+  //   setCurrentlySelectedOption(value.value);
+  // };
   return (
     <>
       <Select
         options={options}
         styles={className}
-        defaultValue={options[0].value || "Select"}
+        defaultValue={selectedValue || "Select"}
         autoSize={true}
         placeholder={placeholder}
-        onChange={handleChange}
+        onChange={onChange}
       />
     </>
   );

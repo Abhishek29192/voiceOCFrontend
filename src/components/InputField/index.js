@@ -1,22 +1,18 @@
 import React, { useState } from "react";
 
 //INPUT FIELD
-export const InputField = ({ placeholder, className, showCount }) => {
-  const [charCount, setCharCount] = useState(0);
-  const [disableOption, setDisableOption] = useState(false);
-  const calCount = (e) => {
-    setCharCount(e.target.value.length);
-    if (charCount >= 59) {
-      setDisableOption(true);
-    }
-  };
+export const InputField = ({
+  placeholder,
+  className,
+  // showCount,
+  value,
+  onChange,
+  charCountInput,
+  maxLength,
+}) => {
   return (
     <>
-      {showCount ? (
-        <p className="float-right mr-5 text-xs">{`${charCount}/60`}</p>
-      ) : (
-        ""
-      )}
+      <div className="float-right mr-5 text-[0.65rem]">{`${charCountInput}/${maxLength}`}</div>
       <input
         placeholder={placeholder}
         style={{
@@ -25,26 +21,51 @@ export const InputField = ({ placeholder, className, showCount }) => {
           outline: " none",
         }}
         className={className}
-        onChange={calCount}
-        disabled={disableOption}
+        onChange={onChange}
+        // disabled={disableOption}
+        value={value}
+        maxLength={maxLength !== undefined ? maxLength : 1024}
       />
     </>
   );
 };
 
-//TEXT AREA
-export const InputTextArea = ({ placeholder, className, onChange }) => {
-  const [textAreaCount, setTextAreaCount] = useState(0);
-  const [disableTextArea, setDisableTextArea] = useState(false);
-
-  const recalculate = (e) => {
-    setTextAreaCount(e.target.value.length);
-    if (textAreaCount >= 1024) setDisableTextArea(true);
-  };
-
+export const InputFieldWithoutCounter = ({
+  placeholder,
+  className,
+  // showCount,
+  value,
+  onChange,
+}) => {
   return (
     <>
-      <p className="float-right mr-5 text-xs">{`${textAreaCount}/1024`}</p>
+      <input
+        placeholder={placeholder}
+        style={{
+          borderRadius: "5px",
+          padding: "5px",
+          outline: " none",
+        }}
+        className={className}
+        onChange={onChange}
+        // disabled={disableOption}
+        value={value}
+      />
+    </>
+  );
+};
+//TEXT AREA
+export const InputTextArea = ({
+  placeholder,
+  className,
+  onChange,
+  text,
+  charCount,
+  maxLength,
+}) => {
+  return (
+    <>
+      <p className="float-right mr-5 text-xs">{`${charCount}/${maxLength}`}</p>
       <textarea
         placeholder={placeholder}
         style={{
@@ -52,9 +73,12 @@ export const InputTextArea = ({ placeholder, className, onChange }) => {
           outline: "none",
           borderRadius: "10px",
           width: "97%",
+          resize: "none",
         }}
         className={className}
-        onChange={recalculate}
+        onChange={onChange}
+        value={text}
+        maxLength={maxLength !== undefined ? maxLength : 1024}
       />
     </>
   );

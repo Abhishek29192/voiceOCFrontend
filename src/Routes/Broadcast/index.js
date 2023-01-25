@@ -4,13 +4,12 @@ import BroadcastOptions from "../../components/BroadcastOptions";
 
 export const Broadcast = () => {
   return (
-    <div className="h-screen">
+    <div className="h-full">
       <Navbar />
       {/* --------------------------------- */}
       <div className="hidden xl:flex">
         <BroadcastOptions />
       </div>
-      <div>ywtshf</div>
     </div>
     // </div>
   );

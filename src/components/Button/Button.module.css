@@ -21,3 +21,27 @@
   color: #5536db;
   font-size: small;
 }
+
+.Approved_btn {
+  background-color: rgb(233, 246, 238);
+  /* margin: 0px auto; */
+  min-width: 134px;
+  height: 42px;
+  display: block;
+  border-radius: 100px;
+  font-size: 17px;
+  padding: 8px;
+  align-items: center;
+  color: #5332eb;
+}
+
+.template_btn {
+  /* display: inline-flex; */
+  width: 32px;
+  height: 32px;
+  background: rgb(171, 185, 241);
+  /* border: 1px solid rgb(231, 231, 231); */
+  border: 1px solid red;
+  box-sizing: border-box;
+  border-radius: 5px;
+}

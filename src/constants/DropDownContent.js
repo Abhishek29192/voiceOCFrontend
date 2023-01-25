@@ -4,8 +4,8 @@ export const optionSort = [
 ];
 
 export const optionCategoary = [
-  { value: "Account Update", label: "Account Update" },
-  { value: "Alert Update", label: "Alert Update" },
+  { value: "ACCOUNT_UPDATE", label: "Account Update" },
+  { value: "ALERT_UPDATE", label: "Alert Udate" },
   { value: "Appointment Update", label: "Appointment Update" },
   { value: "Auto Reply", label: "Auto Reply" },
   { value: "Issue Resolution", label: "Issue Resolution" },
@@ -24,48 +24,7 @@ export const optionSortHeader = [
 ];
 
 export const optionLanguage = [
-  // Irish
-  // Italian
-  // Japanese
-  // Kannada
-  // Kazakh
-  // Kinyarwanda
-  // Korean
-  // Kyrgyz (Kyrgyzstan)
-  // Lao
-  // Latvian
-  // Lithuanian
-  // Macedonian
-  // Malay
-  // Malayalam
-  // Marathi
-  // Norwegian
-  // Persian
-  // Polish
-  // Portuguese (BR)
-  // Portuguese (POR)
-  // Punjabi
-  // Romanian
-  // Russian
-  // Serbian
-  // Slovak
-  // Slovenian
-  // Spanish
-  // Spanish (ARG)
-  // Spanish (SPA)
-  // Spanish (MEX)
-  // Swahili
-  // Swedish
-  // Tamil
-  // Telugu
-  // Thai
-  // Turkish
-  // Ukrainian
-  // Urdu
-  // Uzbek
-  // Vietnamese
-  // Zulu
-  { value: "English(US)", label: "English(US)" },
+  { value: "English (en)", label: "English(US)" },
   { value: "Afrikaans", label: "Afrikaans" },
   { value: "Albanian", label: "Albanian" },
   { value: "Arabic", label: "Arabic" },
@@ -100,7 +59,20 @@ export const optionLanguage = [
 ];
 
 export const OptionButton = [
-  { value: "Call to action", label: "Call to action" },
+  { value: "Call To Action", label: "Call to action" },
   { value: "Quick reply", label: "Quick reply" },
   { value: "None", label: "None" },
 ];
+
+export const CallActionSubButton1 = [
+  { value: "Call Phone Number", label: "Call Phone Number " },
+  { value: "Visit Website", label: "Visit Website" },
+];
+
+export const CallActionSubButton2 = [
+  { value: "STATIC", label: "Static" },
+  { value: "DYNAMIC", label: "Dynamic" },
+];
+
+export const CallPhoneAction = "Call Phone Number";
+export const VisitWebsiteAction = "Visit Website";

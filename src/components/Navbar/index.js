@@ -25,22 +25,6 @@ export const Navbar = () => {
   const handleInbox = () => {
     navigate("/");
   };
-
-  // const { data } = TemplateData();
-  // console.log(data.data, "fdghjj");
-
-  // console.log(data.data[0].title, "dataa");
-
-  // const { data } = useQuery("templateData", fetchTempalteMessageData, {
-  //   cacheTime: 5000, // to remain data in cache memory
-  //   staleTime: 10000, //is the data dosent changes we can use to decrease network request
-  //   // enabled: false,  //TO DIABLE THE API CALL
-  //   select: (data) => {
-  //     const title = data.data.map((i) => console.log(i.title));
-  //   },
-  // });
-  //
-
   return (
     <div className={styles.nav__container}>
       <div className="flex xl:hidden h-full p-3 w-[18rem] ">

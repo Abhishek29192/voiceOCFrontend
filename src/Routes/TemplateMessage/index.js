@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Base1Strong,
   Base2,
@@ -12,13 +12,28 @@ import {
   optionCategoary,
   optionLanguage,
   optionSort,
+  CallActionSubButton,
+  CallActionSubButton1,
+  CallActionSubButton2,
+  VisitWebsiteAction,
 } from "../../constants/DropDownContent";
-import { PrimaryButton, SecondaryButton } from "../../components/Button";
+import {
+  ApprovedButton,
+  PrimaryButton,
+  SecondaryButton,
+} from "../../components/Button";
 import { IoSearchOutline } from "react-icons/io5";
-import { InputField, InputTextArea } from "../../components/InputField";
-import { SelectOptionBUtton } from "../../components/SelectOptions";
+import {
+  InputField,
+  InputFieldWithoutCounter,
+  InputTextArea,
+} from "../../components/InputField";
+import { SelectOptionButton } from "../../components/SelectOptions";
 import { FaFilter } from "react-icons/fa";
 import { TfiImport, TfiExport } from "react-icons/tfi";
+import { RxCopy } from "react-icons/rx";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { HiOutlineEye } from "react-icons/hi";
 import Navbar from "../../components/Navbar";
 import BroadcastOptions from "../../components/BroadcastOptions";
 import BasicTable from "../../components/Table";
@@ -26,38 +41,31 @@ import CustomModal from "../../components/Modal";
 import newTemplateBlue from "../../components/Images/newTemplateBlue.svg";
 import templateOption from "../../components/Images/storedTemplate.svg";
 import styles from "./TemplateMessage.module.css";
-// import { TemplateData } from "../../hook/Query";
-// //////////////////////////////////
-// import PropTypes from "prop-types";
-// import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-// import Table from "@mui/material/Table";
-// import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
-// import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
-// import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-// import Toolbar from "@mui/material/Toolbar";
-// import Typography from "@mui/material/Typography";
-// import Paper from "@mui/material/Paper";
-// import Checkbox from "@mui/material/Checkbox";
-// import IconButton from "@mui/material/IconButton";
-// import Tooltip from "@mui/material/Tooltip";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Switch from "@mui/material/Switch";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { fetchTempalteMessageData } from "../../api";
-
-////////////////////////////////
+import { useTemplateData } from "../../hooks/useQueryApi";
+import moment from "moment";
+import { CreateTemplatePopup } from "../../components/CreateTemplatePopup";
+import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 
 export const TemplateMessage = () => {
+  const { isLoading, data } = useTemplateData();
+  const { setCreateTemplateValues, setSelectedRowData } =
+    useAppCommonDataProvider();
+  // const [selectedRowData, setselectedRowData] = useState("");
+  //
   const [open, setOpen] = useState(false);
   const [createTemplate, setCreateNewTemplate] = useState(false);
+  const [viewTemplate, setViewTemplate] = useState(false);
   const [currentlySelectedOption, setCurrentlySelectedOption] = useState("");
+  const [currntlySelectedSubButton, setCurrntlySelectedSubButton] =
+    useState("");
+  const [staticDynamicButton, setStaticDynamicButton] = useState("");
+
   const [category, setCategory] = useState("");
   const [language, setLanguage] = useState("");
   const [headerOption, setHeaderOption] = useState("");
@@ -68,47 +76,52 @@ export const TemplateMessage = () => {
 
   const handleCreateNewTemplate = () => {
     setCreateNewTemplate(!createTemplate);
-    setOpen(!open);
+    // setOpen(!open);
   };
 
-  const result = fetchTempalteMessageData();
-  console.log(result.data, "fggjgmb");
-
-  ////////////////////////////////////////////////////
-
-  function createData(
-    templateName,
-    category,
-    status,
-    language,
-    lastUpdated,
-    action
-  ) {
-    return {
-      templateName,
-      category,
-      status,
-      language,
-      lastUpdated,
-      action,
-    };
+  function createData(data) {
+    const rows = data?.map((entry, index) => ({
+      templateName: entry.template_name,
+      category: entry.Category,
+      status: entry.status ? <ApprovedButton /> : null,
+      language: entry.Langauge,
+      lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
+      action: (
+        <div className="flex">
+          <div
+            className={`${styles.template_btn}`}
+            onClick={() => {
+              console.log(entry);
+              setTimeout(() => {
+                setViewTemplate(true);
+              }, 200);
+              setCreateTemplateValues({
+                templateName: entry?.template_name,
+                category: entry?.Category,
+                language: entry?.Language,
+                header: entry?.headerOption,
+                body: entry?.Body,
+                footer: entry?.Footer,
+                optionalButtonValue: entry?.ButtonType,
+                ctaButtons: entry?.Buttons,
+                ctaButtonLabels: entry?.Buttons.map((e) => e.typeOfAction),
+                footer: entry?.Footer,
+              });
+              setSelectedRowData?.(entry);
+            }}>
+            <RxCopy size={"1.2rem"} />
+          </div>
+          <div className={`ml-4  ${styles.template_btn}`}>
+            <HiOutlineEye size={"1.2rem"} />
+          </div>
+          <div className="ml-4">
+            <RiDeleteBin5Line size={"1.2rem"} />
+          </div>
+        </div>
+      ),
+    }));
+    return rows;
   }
-
-  const rows = [
-    createData("Cupcake", 2, 3.7, 67, 4.3),
-    createData("Donut", 452, 25.0, 51, 4.9),
-    createData("Eclair", 262, 16.0, 24, 6.0),
-    createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-    createData("Gingerbread", 356, 16.0, 49, 3.9),
-    createData("Honeycomb", 408, 3.2, 87, 6.5),
-    createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-    createData("Jelly Bean", 375, 0.0, 94, 0.0),
-    createData("KitKat", 518, 26.0, 65, 7.0),
-    createData("Lollipop", 392, 0.2, 98, 0.0),
-    createData("Marshmallow", 318, 0, 81, 2.0),
-    createData("Nougat", 360, 19.0, 9, 37.0),
-    createData("Oreo", 437, 18.0, 63, 4.0),
-  ];
 
   const headCells = [
     {
@@ -203,78 +216,6 @@ export const TemplateMessage = () => {
     );
   }
 
-  // EnhancedTableHead.propTypes = {
-  //   numSelected: PropTypes.number.isRequired,
-  //   onRequestSort: PropTypes.func.isRequired,
-  //   onSelectAllClick: PropTypes.func.isRequired,
-  //   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  //   orderBy: PropTypes.string.isRequired,
-  //   rowCount: PropTypes.number.isRequired,
-  // };
-
-  // function EnhancedTableToolbar(props) {
-  //   const { numSelected } = props;
-
-  //   return (
-  //     <Toolbar
-  //       sx={{
-  //         pl: { sm: 2 },
-  //         pr: { xs: 1, sm: 1 },
-  //         ...(numSelected > 0 && {
-  //           bgcolor: (theme) =>
-  //             alpha(
-  //               theme.palette.primary.main,
-  //               theme.palette.action.activatedOpacity
-  //             ),
-  //         }),
-  //       }}>
-  //       {numSelected > 0 ? (
-  //         <Typography
-  //           sx={{ flex: "1 1 100%" }}
-  //           color="inherit"
-  //           variant="subtitle1"
-  //           component="div">
-  //           {numSelected} selected
-  //         </Typography>
-  //       ) : (
-  //         <Typography
-  //           sx={{ flex: "1 1 100%" }}
-  //           variant="h6"
-  //           id="tableTitle"
-  //           component="div">
-  //           Nutrition
-  //         </Typography>
-  //       )}
-
-  //       {numSelected > 0 ? (
-  //         <Tooltip title="Delete">
-  //           <IconButton>
-  //             <DeleteIcon />
-  //           </IconButton>
-  //         </Tooltip>
-  //       ) : (
-  //         <Tooltip title="Filter list">
-  //           <IconButton>
-  //             <FilterListIcon />
-  //           </IconButton>
-  //         </Tooltip>
-  //       )}
-  //     </Toolbar>
-  //   );
-  // }
-
-  // EnhancedTableToolbar.propTypes = {
-  //   numSelected: PropTypes.number.isRequired,
-  // };
-
-  //////////////////////////////////////////////////////////////////
-  // const { data } = TemplateData();
-  // console.log(data, "gfbdv");
-  // console.log(data.data, "gfdgfhnhmb");
-  // const result = data.data.map((e) => {
-  //   console.log(e);
-  // });
-
   const colourStyles = {
     control: (styles) => {
       return {
@@ -336,26 +277,29 @@ export const TemplateMessage = () => {
 
   return (
     <>
-      <div className="h-screen">
+      <div className="">
         <Navbar />
-        <div className=" xl:flex h-full">
+        <div className=" xl:flex ">
           {/* <div className=""> */}
           <BroadcastOptions />
           {/* </div> */}
           <div className={styles.Brodcast_section}>
-            <div className="flex items-center justify-between mt-3">
+            <div className="flex items-center justify-between mt-1">
               <div className="flex items-center">
                 <Base2 className={styles.sort__text}>Sorted By :</Base2>
                 <div className="h-12 ml-2 ">
-                  <SelectOptionBUtton
+                  <SelectOptionButton
                     className={colourStyles}
                     options={optionSort}
                   />
                 </div>
                 <div className={styles.input__container}>
-                  <InputField placeholder="Search ..." className={"h-11"} />
+                  <InputFieldWithoutCounter
+                    placeholder="Search ..."
+                    className={"h-11"}
+                  />
                   <IoSearchOutline
-                    className="absolute top-3 right-0"
+                    className="absolute top-[0.65rem] right-2"
                     size={"1.6rem"}
                   />
                 </div>
@@ -380,8 +324,21 @@ export const TemplateMessage = () => {
                 onClick={handleNewTemplate}
               />
             </div>
-            <div className="mt-20">
-              <BasicTable rows={rows} EnhancedTableHead={EnhancedTableHead} />
+            <div className="mt-8">
+              {isLoading ? (
+                <h2 className="poppins justify-center items-center">
+                  Loading...
+                </h2>
+              ) : (
+                <BasicTable
+                  rows={createData(data?.data)}
+                  EnhancedTableHead={EnhancedTableHead}
+                />
+              )}
+              {/* <BasicTable
+                rows={createData(data?.data)}
+                EnhancedTableHead={EnhancedTableHead}
+              /> */}
             </div>
           </div>
         </div>
@@ -398,7 +355,8 @@ export const TemplateMessage = () => {
               <div className="flex">
                 <div
                   className={styles.template_section1}
-                  onClick={handleCreateNewTemplate}>
+                  // onClick={handleCreateNewTemplate}
+                >
                   <img
                     src={newTemplateBlue}
                     className={styles.template__images}
@@ -423,7 +381,7 @@ export const TemplateMessage = () => {
           </CustomModal>
         )}
 
-        {createTemplate && (
+        {/* {createTemplate && (
           <CustomModal
             open={createTemplate}
             onClose={() => setCreateNewTemplate(false)}
@@ -651,9 +609,7 @@ export const TemplateMessage = () => {
                   </div>
                 </div>
               </div>
-              <div className="w-2/5 flex p-2 templateViewBackground">
-                <div className="flex m-2 bold poppins">Preview</div>
-              </div>
+             
             </div>
             <div className="float-right flex m-2">
               <div className="mr-4 ">
@@ -667,6 +623,166 @@ export const TemplateMessage = () => {
               </div>
             </div>
           </CustomModal>
+        )}  */}
+
+        {viewTemplate && (
+          <CreateTemplatePopup
+            isOpen={viewTemplate}
+            onClose={() => setViewTemplate(false)}
+            className={`${styles.customModal}`}
+          />
+
+          //
+          //
+          //
+          //       <div>
+          //         <Paragraph3 className="p-2 pt-4">
+          //           Buttons (Optional)
+          //         </Paragraph3>
+          //         <Caption1 className="p-2">
+          //           Create upto 2 buttons that let customers respond to your
+          //           message or take action.
+          //         </Caption1>
+          //         <div className="p-2">
+          //           <SelectOptionButton
+          //             options={OptionButton.filter(
+          //               (btn) => btn.value !== currentlySelectedOption
+          //             )}
+          //             selectedValue={OptionButton.filter((ele) => {
+          //               if (ele.value === selectedRowData.ButtonType) {
+          //               }
+          //               return ele?.label;
+          //             })}
+          //             onChange={(e) => {
+          //               setCurrentlySelectedOption({
+          //                 value: e.value,
+          //               });
+          //             }}
+          //             className={colourStyles}
+          //             placeholder="None"
+          //           />
+          //           {/* Buttons Sections---------------------------------------------------- */}
+          //           {currentlySelectedOption?.value ===
+          //           OptionButton[0].value ? (
+          //             <div className="flex">
+          //               <div className="w-[85%]">
+          //                 <div className="flex pt-5">
+          //                   <div className="mt-2">
+          //                     <div className="w-full flex">
+          //                       <SelectOptionButton
+          //                         options={CallActionSubButton1}
+          //                         className={colourStyles}
+          //                         placeholder="None"
+          //                         selectedValue={CallActionSubButton1.filter(
+          //                           (ele) => {
+          //                             if (
+          //                               ele.value ===
+          //                               selectedRowData.Buttons[0].typeOfAction
+          //                             )
+          //                               return ele.label;
+          //                           }
+          //                         )}
+          //                         onChange={(e) => {
+          //                           setCurrntlySelectedSubButton({
+          //                             value: e.value,
+          //                           });
+          //                         }}
+          //                       />
+          //                       <div>
+          //                         <InputField
+          //                           placeholder="Button text..."
+          //                           value={currntlySelectedSubButton?.value}
+          //                           className={
+          //                             "bg-slate-100 w-[72%] h-[85%] p-3 mt-1 ml-14 text-[12px] pb-5"
+          //                           }
+          //                           showCount={false}
+          //                         />
+          //                       </div>
+          //                     </div>
+
+          //                     {currntlySelectedSubButton?.value ===
+          //                     CallActionSubButton1[0].value ? (
+          //                       <div className="-top-[2.5rem] h-full ml-96 relative">
+          //                         <InputField
+          //                           placeholder="Phone Number with Contry Code"
+          //                           value={
+          //                             selectedRowData.Buttons[0]?.phoneNumber
+          //                           }
+          //                           className={
+          //                             "bg-slate-100 w-[100%] h-[50%] text-[12px]"
+          //                           }
+          //                           showCount={false}
+          //                         />
+          //                       </div>
+          //                     ) : (
+          //                       <>
+          //                         <div>
+          //                           <div className="flex mt-5">
+          //                             <div className="mt-2">
+          //                               <SelectOptionButton
+          //                                 options={CallActionSubButton2}
+          //                                 className={colourStyles}
+          //                                 placeholder="None"
+          //                                 selectedValue={CallActionSubButton2.filter(
+          //                                   (ele) => {
+          //                                     if (
+          //                                       ele.value ===
+          //                                       selectedRowData.Buttons[0]
+          //                                         .urlType
+          //                                     )
+          //                                       return ele.label;
+          //                                   }
+          //                                 )}
+          //                                 onChange={(e) => {
+          //                                   setStaticDynamicButton({
+          //                                     value: e.value,
+          //                                   });
+          //                                 }}
+          //                               />
+          //                             </div>
+          //                             <div>
+          //                               <InputField
+          //                                 placeholder="http://www.xyz.com"
+          //                                 value={
+          //                                   selectedRowData.Buttons[0]
+          //                                     ?.websiteUrl
+          //                                 }
+          //                                 className={
+          //                                   "bg-slate-100 w-[72%] h-[75%] p-3 mt-3 ml-14 text-[12px]"
+          //                                 }
+          //                                 showCount={false}
+          //                               />
+          //                             </div>
+          //                           </div>
+          //                         </div>
+          //                       </>
+          //                     )}
+          //                   </div>
+          //                 </div>
+          //               </div>
+          //               <div className="float-right -mt-8">
+          //                 <SecondaryButton text="Add Button" />
+          //               </div>
+          //             </div>
+          //           ) : null}
+
+          //           {currentlySelectedOption?.value ===
+          //           OptionButton[1].value ? (
+          //             <div className="w-1/2">
+          //               <InputField
+          //                 placeholder="Button text.."
+          //                 className={"bg-slate-100 w-80%] p-2  mt-7"}
+          //               />
+          //             </div>
+          //           ) : null}
+          //         </div>
+          //       </div>
+          //
+
+          //
+          //   </div>
+          //
+          // </CustomModal>
         )}
       </div>
     </>

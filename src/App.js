@@ -9,26 +9,31 @@ import { Contacts } from "./Routes/Contacts";
 import { TeamInbox } from "./Routes/TeamInbox";
 import { BroadcastHistory } from "./Routes/Broadcast/BroadcastHistory";
 import "./App.css";
+import { AppCommonDataProvider } from "./components/AppCommonDataProvider/AppCommonDataProvider";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<TeamInbox />}></Route>
-          <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
-          <Route path={AppRoute.contacts} element={<Contacts />}></Route>
-          <Route path={AppRoute.broadcast} element={<Broadcast />}></Route>
-          <Route path={AppRoute.history} element={<BroadcastHistory />}></Route>
-          <Route
-            path={AppRoute.templateMessage}
-            element={<TemplateMessage />}></Route>
-        </Routes>
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
-    </QueryClientProvider>
+    <AppCommonDataProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<TeamInbox />}></Route>
+            <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
+            <Route path={AppRoute.contacts} element={<Contacts />}></Route>
+            <Route path={AppRoute.broadcast} element={<Broadcast />}></Route>
+            <Route
+              path={AppRoute.history}
+              element={<BroadcastHistory />}></Route>
+            <Route
+              path={AppRoute.templateMessage}
+              element={<TemplateMessage />}></Route>
+          </Routes>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
+      </QueryClientProvider>
+    </AppCommonDataProvider>
   );
 }
 
