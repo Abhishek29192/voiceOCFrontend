@@ -15,14 +15,14 @@ export const CreateTemplatePopup = ({ isOpen, onClose, className }) => {
       onClose={onClose}
       showCloseIcon
       classNames={{ modal: className }}>
-      <div className="">
-        <div className="items-center h-full pb-3 ">
+      <div>
+        <div className="items-center h-full w-full pb-3 ">
           <Base1Strong className="items-center">
             Create template message
           </Base1Strong>
         </div>
-        <div className="flex ">
-          <div className="flex border">
+        <div className="flex w-full">
+          <div className="flex border w-2/3">
             <div className="w-full">
               <CreateTemplateBasicDetails />
               <hr />

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import React from "react";
+import styles from "../InputField/InputField.module.css";
 //INPUT FIELD
 export const InputField = ({
   placeholder,
@@ -11,8 +11,8 @@ export const InputField = ({
   maxLength,
 }) => {
   return (
-    <>
-      <div className="float-right mr-5 text-[0.65rem]">{`${charCountInput}/${maxLength}`}</div>
+    <div className="relative">
+      <div className="right-0 -top-3 mr-5 text-[0.65rem] absolute">{`${charCountInput}/${maxLength}`}</div>
       <input
         placeholder={placeholder}
         style={{
@@ -26,7 +26,7 @@ export const InputField = ({
         value={value}
         maxLength={maxLength !== undefined ? maxLength : 1024}
       />
-    </>
+    </div>
   );
 };
 
@@ -36,7 +36,9 @@ export const InputFieldWithoutCounter = ({
   // showCount,
   value,
   onChange,
+  type,
 }) => {
+  console.log(type,"type")
   return (
     <>
       <input
@@ -47,6 +49,7 @@ export const InputFieldWithoutCounter = ({
           outline: " none",
         }}
         className={className}
+        type={type}
         onChange={onChange}
         // disabled={disableOption}
         value={value}
@@ -80,6 +83,25 @@ export const InputTextArea = ({
         value={text}
         maxLength={maxLength !== undefined ? maxLength : 1024}
       />
+    </>
+  );
+};
+
+export const FileUploadbutton = ({ onChange, fileName }) => {
+  return (
+    <>
+      <input
+        type="file"
+        hidden
+        id="actual-btn"
+        name="file"
+        onChange={onChange}
+        // value={value}
+      />
+      <label for="actual-btn" className={`${styles.label} justify-center mr-4`}>
+        Upload file
+      </label>
+      <span className="pr-9 text-sm">{fileName}</span>
     </>
   );
 };

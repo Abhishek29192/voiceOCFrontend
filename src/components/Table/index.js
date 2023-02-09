@@ -9,6 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import { Checkbox } from "@mui/material";
+import { red } from "@mui/material/colors";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -31,15 +33,15 @@ function getComparator(order, orderBy) {
 // only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
 // with exampleArray.slice().sort(exampleComparator)
 function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
+  const stabilizedThis = array?.map((el, index) => [el, index]);
+  stabilizedThis?.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) {
       return order;
     }
     return a[1] - b[1];
   });
-  return stabilizedThis.map((el) => el[0]);
+  return stabilizedThis?.map((el) => el[0]);
 }
 
 // function EnhancedTableHead(props) {
@@ -161,7 +163,12 @@ function stableSort(array, comparator) {
 //
 //
 
-export default function BasicTable({ rows, EnhancedTableHead }) {
+export default function BasicTable({
+  rows,
+  EnhancedTableHead,
+  tableContent,
+  EnhancedTableToolbar,
+}) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -237,25 +244,27 @@ export default function BasicTable({ rows, EnhancedTableHead }) {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={rows?.length}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                ?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                ?.map((row, index) => {
                   const isItemSelected = isSelected(row.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}>
-                      {/* <TableCell padding="checkbox">
+                    <>
+                      {tableContent === "templateMessage" && (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.name)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.name}
+                          selected={isItemSelected}>
+                          {/* <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -264,15 +273,91 @@ export default function BasicTable({ rows, EnhancedTableHead }) {
                           }}
                         />
                       </TableCell> */}
-                      <TableCell component="th" id={labelId} scope="row">
-                        {row.templateName}
-                      </TableCell>
-                      <TableCell align="center">{row.category}</TableCell>
-                      <TableCell align="center">{row.status}</TableCell>
-                      <TableCell align="center">{row.language}</TableCell>
-                      <TableCell align="center">{row.lastUpdated}</TableCell>
-                      <TableCell align="center">{row.action}</TableCell>
-                    </TableRow>
+                          <TableCell component="th" id={labelId} scope="row">
+                            {row.templateName}
+                          </TableCell>
+                          <TableCell align="center">{row.category}</TableCell>
+                          <TableCell align="center">{row.status}</TableCell>
+                          <TableCell align="center">{row.language}</TableCell>
+                          <TableCell align="center">
+                            {row.lastUpdated}
+                          </TableCell>
+                          <TableCell align="center">{row.action}</TableCell>
+                        </TableRow>
+                      )}
+                      {tableContent === "ContactData" && (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.name)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.name}
+                          selected={isItemSelected}>
+                          {/* <TableCell padding="checkbox">
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                "aria-labelledby": labelId,
+                              }}
+                            />
+                          </TableCell> */}
+                          <TableCell component="th" id={labelId} scope="row">
+                            {row.basicInfo}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              width: "auto",
+                            }}>
+                            {row.customAttributes}
+                          </TableCell>
+                          <TableCell width="200px" align="center">
+                            {row.createdDate}
+                          </TableCell>
+                          <TableCell align="center">{row.broadcast}</TableCell>
+                          <TableCell align="center">{row.sms}</TableCell>
+                        </TableRow>
+                      )}
+                      {tableContent === "broadcastData" && (
+                        <TableRow
+                          hover
+                          onClick={(event) => handleClick(event, row.name)}
+                          role="checkbox"
+                          aria-checked={isItemSelected}
+                          tabIndex={-1}
+                          key={row.name}
+                          selected={isItemSelected}>
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                "aria-labelledby": labelId,
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell component="th" id={labelId} scope="row">
+                            {row.basicInfo}
+                          </TableCell>
+                          <TableCell
+                            align="center"
+                            sx={{
+                              display: "flex",
+                              flexWrap: "wrap",
+                              width: "auto",
+                            }}>
+                            {row.customAttributes}
+                          </TableCell>
+                          <TableCell width="400px" align="center">
+                            {row.createdDate}
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </>
                   );
                 })}
               {emptyRows > 0 && (
@@ -289,7 +374,7 @@ export default function BasicTable({ rows, EnhancedTableHead }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={rows?.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -298,7 +383,7 @@ export default function BasicTable({ rows, EnhancedTableHead }) {
       </Paper>
       <FormControlLabel
         control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
+        label="Dense Table"
       />
     </Box>
   );

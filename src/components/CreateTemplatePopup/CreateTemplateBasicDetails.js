@@ -52,6 +52,7 @@ export const CreateTemplateBasicDetails = () => {
               " bg-slate-100 w-[98%] border border-#5b3ddc-500 text-[12px] p-2 h-[2.4rem]"
             }
             placeholder="Template Name"
+            type={"text"}
             value={templateName}
             onChange={(e) => {
               setCreateTemplateValues?.({
@@ -73,7 +74,6 @@ export const CreateTemplateBasicDetails = () => {
             onChange={(e) => {
               setCreateTemplateValues?.({
                 ...createTemplateValues,
-                // currentlySelectdOption: e.value,
                 category: e.value,
               });
             }}

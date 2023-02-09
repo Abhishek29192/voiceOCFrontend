@@ -10,7 +10,7 @@ export const TemplateMessageBody = () => {
   const { body } = createTemplateValues;
 
   return (
-    <div>
+    <div className="p-3">
       <Paragraph3 className="p-2">Body</Paragraph3>
       <Caption1 className="p-2">
         To add a custom variable, please add a variable in double curly brackets

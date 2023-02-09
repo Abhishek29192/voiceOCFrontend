@@ -2,32 +2,13 @@ import React, { useEffect, useState } from "react";
 import {
   Base1Strong,
   Base2,
-  Caption1,
   Paragraph1,
   Paragraph3,
 } from "../../components/Typography";
-import {
-  optionSortHeader,
-  OptionButton,
-  optionCategoary,
-  optionLanguage,
-  optionSort,
-  CallActionSubButton,
-  CallActionSubButton1,
-  CallActionSubButton2,
-  VisitWebsiteAction,
-} from "../../constants/DropDownContent";
-import {
-  ApprovedButton,
-  PrimaryButton,
-  SecondaryButton,
-} from "../../components/Button";
+import { optionSort } from "../../constants/DropDownContent";
+import { ApprovedButton, PrimaryButton } from "../../components/Button";
 import { IoSearchOutline } from "react-icons/io5";
-import {
-  InputField,
-  InputFieldWithoutCounter,
-  InputTextArea,
-} from "../../components/InputField";
+import { InputFieldWithoutCounter } from "../../components/InputField";
 import { SelectOptionButton } from "../../components/SelectOptions";
 import { FaFilter } from "react-icons/fa";
 import { TfiImport, TfiExport } from "react-icons/tfi";
@@ -53,22 +34,23 @@ import { CreateTemplatePopup } from "../../components/CreateTemplatePopup";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 
 export const TemplateMessage = () => {
-  const { isLoading, data } = useTemplateData();
+  const { isLoading, refetch } = useTemplateData();
+  const [templateData, setTemplateData] = useState(null);
   const { setCreateTemplateValues, setSelectedRowData } =
     useAppCommonDataProvider();
-  // const [selectedRowData, setselectedRowData] = useState("");
-  //
   const [open, setOpen] = useState(false);
   const [createTemplate, setCreateNewTemplate] = useState(false);
   const [viewTemplate, setViewTemplate] = useState(false);
-  const [currentlySelectedOption, setCurrentlySelectedOption] = useState("");
-  const [currntlySelectedSubButton, setCurrntlySelectedSubButton] =
-    useState("");
-  const [staticDynamicButton, setStaticDynamicButton] = useState("");
+  const [tableData, setTableData] = useState([]);
 
-  const [category, setCategory] = useState("");
-  const [language, setLanguage] = useState("");
-  const [headerOption, setHeaderOption] = useState("");
+  useEffect(() => {
+    refetch().then((res) => {
+      if (res.isError === false) createData(res.data?.data);
+      setTemplateData(res?.data.data);
+    });
+  }, []);
+
+  // console.log(templateData, "template data");
 
   const handleNewTemplate = () => {
     setOpen(!open);
@@ -80,46 +62,51 @@ export const TemplateMessage = () => {
   };
 
   function createData(data) {
-    const rows = data?.map((entry, index) => ({
-      templateName: entry.template_name,
-      category: entry.Category,
-      status: entry.status ? <ApprovedButton /> : null,
-      language: entry.Langauge,
-      lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
-      action: (
-        <div className="flex">
-          <div
-            className={`${styles.template_btn}`}
-            onClick={() => {
-              console.log(entry);
-              setTimeout(() => {
-                setViewTemplate(true);
-              }, 200);
-              setCreateTemplateValues({
-                templateName: entry?.template_name,
-                category: entry?.Category,
-                language: entry?.Language,
-                header: entry?.headerOption,
-                body: entry?.Body,
-                footer: entry?.Footer,
-                optionalButtonValue: entry?.ButtonType,
-                ctaButtons: entry?.Buttons,
-                ctaButtonLabels: entry?.Buttons.map((e) => e.typeOfAction),
-                footer: entry?.Footer,
-              });
-              setSelectedRowData?.(entry);
-            }}>
-            <RxCopy size={"1.2rem"} />
+    const rows =
+      data &&
+      data?.map((entry, index) => ({
+        templateName: entry?.template_name,
+        category: entry?.Category,
+        status: entry?.status ? (
+          <ApprovedButton text={"Approved"} className="text-sm font-semibold" />
+        ) : null,
+        language: entry?.Langauge,
+        lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
+        action: (
+          <div className="flex">
+            <div
+              className={`${styles.template_btn}`}
+              onClick={() => {
+                console.log(entry);
+                setTimeout(() => {
+                  setViewTemplate(true);
+                }, 200);
+                setCreateTemplateValues({
+                  templateName: entry?.template_name,
+                  category: entry?.Category,
+                  language: entry?.Language,
+                  header: entry?.headerOption,
+                  body: entry?.Body,
+                  footer: entry?.Footer,
+                  optionalButtonValue: entry?.ButtonType,
+                  ctaButtons: entry?.Buttons,
+                  ctaButtonLabels: entry?.Buttons.map((e) => e.typeOfAction),
+                  footer: entry?.Footer,
+                });
+                setSelectedRowData?.(entry);
+              }}>
+              <RxCopy size={"1.2rem"} />
+            </div>
+            <div className={`ml-4  ${styles.template_btn}`}>
+              <HiOutlineEye size={"1.2rem"} />
+            </div>
+            <div className="ml-4">
+              <RiDeleteBin5Line size={"1.2rem"} />
+            </div>
           </div>
-          <div className={`ml-4  ${styles.template_btn}`}>
-            <HiOutlineEye size={"1.2rem"} />
-          </div>
-          <div className="ml-4">
-            <RiDeleteBin5Line size={"1.2rem"} />
-          </div>
-        </div>
-      ),
-    }));
+        ),
+      }));
+    setTableData(rows);
     return rows;
   }
 
@@ -246,35 +233,6 @@ export const TemplateMessage = () => {
     },
   };
 
-  const colourStyles1 = {
-    control: (styles) => {
-      return {
-        ...styles,
-        backgroundColor: "white",
-        width: "13rem",
-        height: "2.2rem",
-        boxShadow: "none",
-        fontSize: "12px",
-        fontFamily: "poppins",
-        // border: "1px solid #5536db",
-        // "&:hover": {
-        //   border: "1px solid #5536db",
-        // },
-      };
-    },
-    option: (styles, { data, isDisabled }) => {
-      return {
-        ...styles,
-        backgroundColor: isDisabled ? "red" : "white",
-        color: "#000",
-        width: "12rem",
-        fontSize: "12px",
-        fontFamily: "poppins",
-        cursor: isDisabled ? "not-allowed" : "pointer",
-      };
-    },
-  };
-
   return (
     <>
       <div className="">
@@ -295,6 +253,7 @@ export const TemplateMessage = () => {
                 </div>
                 <div className={styles.input__container}>
                   <InputFieldWithoutCounter
+                    type={'text'}
                     placeholder="Search ..."
                     className={"h-11"}
                   />
@@ -331,14 +290,12 @@ export const TemplateMessage = () => {
                 </h2>
               ) : (
                 <BasicTable
-                  rows={createData(data?.data)}
+                  tableContent="templateMessage"
+                  // rows={createData(data?.data)}
+                  rows={tableData}
                   EnhancedTableHead={EnhancedTableHead}
                 />
               )}
-              {/* <BasicTable
-                rows={createData(data?.data)}
-                EnhancedTableHead={EnhancedTableHead}
-              /> */}
             </div>
           </div>
         </div>
@@ -631,158 +588,6 @@ export const TemplateMessage = () => {
             onClose={() => setViewTemplate(false)}
             className={`${styles.customModal}`}
           />
-
-          //
-          //
-          //
-          //       <div>
-          //         <Paragraph3 className="p-2 pt-4">
-          //           Buttons (Optional)
-          //         </Paragraph3>
-          //         <Caption1 className="p-2">
-          //           Create upto 2 buttons that let customers respond to your
-          //           message or take action.
-          //         </Caption1>
-          //         <div className="p-2">
-          //           <SelectOptionButton
-          //             options={OptionButton.filter(
-          //               (btn) => btn.value !== currentlySelectedOption
-          //             )}
-          //             selectedValue={OptionButton.filter((ele) => {
-          //               if (ele.value === selectedRowData.ButtonType) {
-          //               }
-          //               return ele?.label;
-          //             })}
-          //             onChange={(e) => {
-          //               setCurrentlySelectedOption({
-          //                 value: e.value,
-          //               });
-          //             }}
-          //             className={colourStyles}
-          //             placeholder="None"
-          //           />
-          //           {/* Buttons Sections---------------------------------------------------- */}
-          //           {currentlySelectedOption?.value ===
-          //           OptionButton[0].value ? (
-          //             <div className="flex">
-          //               <div className="w-[85%]">
-          //                 <div className="flex pt-5">
-          //                   <div className="mt-2">
-          //                     <div className="w-full flex">
-          //                       <SelectOptionButton
-          //                         options={CallActionSubButton1}
-          //                         className={colourStyles}
-          //                         placeholder="None"
-          //                         selectedValue={CallActionSubButton1.filter(
-          //                           (ele) => {
-          //                             if (
-          //                               ele.value ===
-          //                               selectedRowData.Buttons[0].typeOfAction
-          //                             )
-          //                               return ele.label;
-          //                           }
-          //                         )}
-          //                         onChange={(e) => {
-          //                           setCurrntlySelectedSubButton({
-          //                             value: e.value,
-          //                           });
-          //                         }}
-          //                       />
-          //                       <div>
-          //                         <InputField
-          //                           placeholder="Button text..."
-          //                           value={currntlySelectedSubButton?.value}
-          //                           className={
-          //                             "bg-slate-100 w-[72%] h-[85%] p-3 mt-1 ml-14 text-[12px] pb-5"
-          //                           }
-          //                           showCount={false}
-          //                         />
-          //                       </div>
-          //                     </div>
-
-          //                     {currntlySelectedSubButton?.value ===
-          //                     CallActionSubButton1[0].value ? (
-          //                       <div className="-top-[2.5rem] h-full ml-96 relative">
-          //                         <InputField
-          //                           placeholder="Phone Number with Contry Code"
-          //                           value={
-          //                             selectedRowData.Buttons[0]?.phoneNumber
-          //                           }
-          //                           className={
-          //                             "bg-slate-100 w-[100%] h-[50%] text-[12px]"
-          //                           }
-          //                           showCount={false}
-          //                         />
-          //                       </div>
-          //                     ) : (
-          //                       <>
-          //                         <div>
-          //                           <div className="flex mt-5">
-          //                             <div className="mt-2">
-          //                               <SelectOptionButton
-          //                                 options={CallActionSubButton2}
-          //                                 className={colourStyles}
-          //                                 placeholder="None"
-          //                                 selectedValue={CallActionSubButton2.filter(
-          //                                   (ele) => {
-          //                                     if (
-          //                                       ele.value ===
-          //                                       selectedRowData.Buttons[0]
-          //                                         .urlType
-          //                                     )
-          //                                       return ele.label;
-          //                                   }
-          //                                 )}
-          //                                 onChange={(e) => {
-          //                                   setStaticDynamicButton({
-          //                                     value: e.value,
-          //                                   });
-          //                                 }}
-          //                               />
-          //                             </div>
-          //                             <div>
-          //                               <InputField
-          //                                 placeholder="http://www.xyz.com"
-          //                                 value={
-          //                                   selectedRowData.Buttons[0]
-          //                                     ?.websiteUrl
-          //                                 }
-          //                                 className={
-          //                                   "bg-slate-100 w-[72%] h-[75%] p-3 mt-3 ml-14 text-[12px]"
-          //                                 }
-          //                                 showCount={false}
-          //                               />
-          //                             </div>
-          //                           </div>
-          //                         </div>
-          //                       </>
-          //                     )}
-          //                   </div>
-          //                 </div>
-          //               </div>
-          //               <div className="float-right -mt-8">
-          //                 <SecondaryButton text="Add Button" />
-          //               </div>
-          //             </div>
-          //           ) : null}
-
-          //           {currentlySelectedOption?.value ===
-          //           OptionButton[1].value ? (
-          //             <div className="w-1/2">
-          //               <InputField
-          //                 placeholder="Button text.."
-          //                 className={"bg-slate-100 w-80%] p-2  mt-7"}
-          //               />
-          //             </div>
-          //           ) : null}
-          //         </div>
-          //       </div>
-          //
-
-          //
-          //   </div>
-          //
-          // </CustomModal>
         )}
       </div>
     </>

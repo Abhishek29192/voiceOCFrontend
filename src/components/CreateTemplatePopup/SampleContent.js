@@ -6,7 +6,7 @@ import { Paragraph3 } from "../Typography";
 export const SampleContent = () => {
   return (
     <>
-      <div>
+      <div className="p-3">
         <Paragraph3 className="p-2 pt-4">Sample Content</Paragraph3>
         <InputField
           placeholder="Enter text.."

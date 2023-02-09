@@ -19,17 +19,19 @@
   font-family: poppins;
   font-weight: 400;
   color: #5536db;
-  font-size: small;
+  /* font-size: small; */
 }
 
 .Approved_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: rgb(233, 246, 238);
-  /* margin: 0px auto; */
   min-width: 134px;
-  height: 42px;
-  display: block;
+  /* height: 42px; */
+  /* display: block; */
   border-radius: 100px;
-  font-size: 17px;
+  /* font-size: 15px; */
   padding: 8px;
   align-items: center;
   color: #5332eb;

@@ -1,18 +1,200 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaFilter } from "react-icons/fa";
 import { IoSearchOutline } from "react-icons/io5";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { TfiExport, TfiImport } from "react-icons/tfi";
-import { PrimaryButton } from "../../components/Button";
-import { InputField } from "../../components/InputField";
+import { ApprovedButton, PrimaryButton } from "../../components/Button";
+import { InputFieldWithoutCounter } from "../../components/InputField";
 import Navbar from "../../components/Navbar/index";
 import { SelectOptionButton } from "../../components/SelectOptions";
 import { optionSort } from "../../constants/DropDownContent";
 import { Base2 } from "../../components/Typography";
 import styles from "./Contact.module.css";
+import { AddContactList } from "../../components/Contact/AddContact";
+import moment from "moment";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Box from "@mui/material/Box";
+import { visuallyHidden } from "@mui/utils";
+import {
+  useContactDataToClient,
+  useContactDataToServer,
+} from "../../hooks/useQueryApi";
+import { TiTick } from "react-icons/ti";
 import BasicTable from "../../components/Table";
+import { CheckBox } from "@mui/icons-material";
+import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 
 export const Contacts = () => {
+  const { mutate: addContact } = useContactDataToServer();
+
+  const { isLoading, refetch } = useContactDataToClient();
+
+  const { createContactDetails, setCreateContactDetails } =
+    useAppCommonDataProvider();
+
+  const [handleContactListModal, sethandleContactListModal] = useState(false);
+  const [fileName, setFileName] = useState("");
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [tableData, setTableData] = useState([]);
+
+  useEffect(() => {
+    refetch().then((res) => {
+      if (res.isError === false) {
+        createData(res.data.data.contactList);
+      }
+    });
+  }, []);
+
+  function createData(data) {
+    const rows = data?.map((entry) => ({
+      basicInfo: entry?.ContactList.fileName,
+      customAttributes: entry?.ContactList.customAttributes.map((e) => {
+        return (
+          <ApprovedButton
+            text={`${e}`}
+            className="flex text-xs m-2 font-semibold border"
+          />
+        );
+      }),
+      createdDate: moment(`${entry?.ContactList.createdAt}`)
+        .utc()
+        .format("YYYY-MM-DD"),
+      broadcast: <TiTick size={"1.5rem"} />,
+      sms: <TiTick size={"1.5rem"} />,
+    }));
+
+    setTableData(rows);
+    setCreateContactDetails?.({
+      basicInfo: data?.map((entry) => entry.ContactList.fileName),
+    });
+    // console.log(rows);
+    // const rows = data.data.contactList?.map((entry, index) => ({
+    //   templateName: entry.template_name,
+    //   category: entry.Category,
+    //   status: entry.status ? <ApprovedButton /> : null,
+    //   language: entry.Langauge,
+    //   lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
+    //   action: (
+    //     <div className="flex">
+    //       <div
+    //         className={`${styles.template_btn}`}
+    //         onClick={() => {
+    //           setTimeout(() => {
+    //           console.log(entry);
+    //             <p>jhm</p>;
+    //             // setViewTemplate(true);
+    //           }, 200);
+    //           setCreateTemplateValues({
+    //             templateName: entry?.template_name,
+    //             category: entry?.Category,
+    //             language: entry?.Language,
+    //             header: entry?.headerOption,
+    //             body: entry?.Body,
+    //             footer: entry?.Footer,
+    //             optionalButtonValue: entry?.ButtonType,
+    //             ctaButtons: entry?.Buttons,
+    //             ctaButtonLabels: entry?.Buttons.map((e) => e.typeOfAction),
+    //             footer: entry?.Footer,
+    //           });
+    //           setSelectedRowData?.(entry);
+    //         }}>
+    //       </div>
+    //     </div>
+    //   ),
+    // }));
+    return rows;
+  }
+
+  const headCells = [
+    {
+      id: "basicInfo",
+      numeric: false,
+      disablePadding: false,
+      label: "Basic Info",
+    },
+    {
+      id: "customAttributes",
+      numeric: true,
+      disablePadding: false,
+      label: "Custom Attributes",
+    },
+    {
+      id: "createdDate",
+      numeric: true,
+      disablePadding: false,
+      label: "Created Date",
+      width: "100px",
+    },
+    {
+      id: "broadcast",
+      numeric: true,
+      disablePadding: false,
+      label: "Broadcast",
+    },
+    {
+      id: "sms",
+      numeric: true,
+      disablePadding: false,
+      label: "SMS",
+    },
+    // {
+    //   id: "action",
+    //   numeric: true,
+    //   disablePadding: false,
+    //   label: "Edit/Delete",
+    // },
+  ];
+
+  function EnhancedTableHead(props) {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          {/* <TableCell padding="checkbox">
+            <CheckBox
+              color="primary"
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              // onChange={onSelectAllClick}
+              inputProps={{
+                "aria-label": "select all desserts",
+              }}
+            />
+          </TableCell> */}
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "center" : "left"}
+              padding={headCell.disablePadding ? "none" : "normal"}
+              sortDirection={orderBy === headCell.id ? order : false}>
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                // sx={{ border: "1px solid red", alignItems: "left" }}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}>
+                <b>{headCell.label}</b>
+                {orderBy === headCell.id ? (
+                  <Box component="span" sx={visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </Box>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
   const colourStyles = {
     control: (styles) => {
       return {
@@ -43,6 +225,20 @@ export const Contacts = () => {
     },
   };
 
+  const handleUploadedFile = (e) => {
+    setSelectedFile(e.target.files[0]);
+    setFileName(e.target.files[0].name);
+    // setIsFilePicked(true);
+  };
+
+  const handleSubmitFile = () => {
+    const formData = new FormData();
+
+    formData.append("name", selectedFile);
+    formData.append("UserId", "one");
+    addContact(formData);
+  };
+  if (isLoading) return <p>Loading...</p>;
   return (
     <div>
       <Navbar />
@@ -56,7 +252,12 @@ export const Contacts = () => {
             </div>
           </div>
           <div>
-            <PrimaryButton text={"+ Add Contact List"} />
+            <PrimaryButton
+              text={"+ Add Contact List"}
+              onClick={() => {
+                sethandleContactListModal(true);
+              }}
+            />
           </div>
         </div>
         <div className={styles.background__color}>
@@ -71,7 +272,7 @@ export const Contacts = () => {
                   />
                 </div>
                 <div className={styles.input__container}>
-                  <InputField
+                  <InputFieldWithoutCounter
                     placeholder="Search ..."
                     className={"h-10 mt-1"}
                   />
@@ -124,10 +325,32 @@ export const Contacts = () => {
               </div>
             </div>
           </div>
-          {/* <BasicTable /> */}
-          {/* <div className="mt-5">hdsgfv</div> */}
+        </div>
+        <div>
+          {isLoading ? (
+            <h2 className="poppins justify-center items-center">Loading...</h2>
+          ) : (
+            <BasicTable
+              tableContent="ContactData"
+              rows={tableData}
+              EnhancedTableHead={EnhancedTableHead}
+            />
+          )}
         </div>
       </div>
+
+      {handleContactListModal && (
+        <AddContactList
+          isOpen={handleContactListModal}
+          onClose={() => {
+            sethandleContactListModal(false);
+          }}
+          className="rounded-xl"
+          onChange={(e) => handleUploadedFile(e)}
+          fileName={fileName}
+          handleSubmitFile={handleSubmitFile}
+        />
+      )}
     </div>
   );
 };

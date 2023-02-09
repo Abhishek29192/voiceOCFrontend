@@ -1,6 +1,33 @@
 .section1 {
   display: flex;
   width: 100%;
-  height: 5%;
-  border: 1px solid red;
+  height: 8%;
+  margin-top: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.customModal {
+  max-width: 70%vw;
+  max-height: 75%vh;
+  width: 100%;
+  border-radius: 15px;
+}
+
+.broadcast__list {
+  font-family: Poppins, Montserrat;
+  color: rgb(51, 51, 51);
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 2rem;
+  background-color: rgb(245, 246, 250);
+  margin-top: 10px;
+}
+
+.input__container {
+  width: fit-content;
+  height: auto;
+  position: relative;
+  margin-left: 15px;
 }

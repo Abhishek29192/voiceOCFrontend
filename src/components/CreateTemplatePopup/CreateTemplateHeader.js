@@ -90,6 +90,7 @@ export const CreateTemplateHeader = () => {
               <InputFieldWithoutCounter
                 placeholder="Enter Url..."
                 className={"bg-slate-100 w-[65%]"}
+                type={"text"}
               />
               <Paragraph1 className="items-center justify-center ml-5">
                 or

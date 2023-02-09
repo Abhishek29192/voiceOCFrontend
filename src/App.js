@@ -10,6 +10,7 @@ import { TeamInbox } from "./Routes/TeamInbox";
 import { BroadcastHistory } from "./Routes/Broadcast/BroadcastHistory";
 import "./App.css";
 import { AppCommonDataProvider } from "./components/AppCommonDataProvider/AppCommonDataProvider";
+import { Login } from "./Routes/Login/Login";
 
 const queryClient = new QueryClient();
 
@@ -19,7 +20,8 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<TeamInbox />}></Route>
+            <Route path="/" element={<Login />}></Route>
+            <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
             <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
             <Route path={AppRoute.contacts} element={<Contacts />}></Route>
             <Route path={AppRoute.broadcast} element={<Broadcast />}></Route>

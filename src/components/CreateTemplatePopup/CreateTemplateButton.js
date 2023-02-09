@@ -188,7 +188,6 @@ export const CreateTemplateButton = () => {
               }
               charCountInput={buttonText.length}
               maxLength={20}
-              // disableOption={disable}
             />
           </div>
         </div>
@@ -237,14 +236,20 @@ export const CreateTemplateButton = () => {
 
   const QRSection = () => {
     return (
-      <div>
-        <div>wshghk,hn</div>
+      <div className="w-1/3 mt-4">
+        <InputField
+          placeholder="Button text..."
+          value={selectedRowData.ButtonType}
+          className={"bg-slate-100 w-full h-full p-3 mb-4  text-[12px] pb-5"}
+          charCountInput={0}
+          maxLength={20}
+        />
       </div>
     );
   };
 
   return (
-    <div>
+    <div className="p-3">
       <Paragraph3 className="p-2 pt-4">Buttons (Optional)</Paragraph3>
       <Caption1 className="p-2">
         Create upto 2 buttons that let customers respond to your message or take
@@ -268,229 +273,8 @@ export const CreateTemplateButton = () => {
           placeholder="None"
         />
 
-        {optionalButtonValue === "Call To Action" ? (
-          <CTASection />
-        ) : (
-          <QRSection />
-        )}
-
-        {/* {optionalButtonValue === "Call To Action"
-          ? buttons.map((e) => {
-              if (e.typeOfAction === "Call Phone Number") {
-                return (
-                  <div className="mt-5">
-                    <div className="w-full flex">
-                      <SelectOptionButton
-                        options={CallActionSubButton1}
-                        className={colourStyles}
-                        placeholder="None"
-                        selectedValue={CallActionSubButton1.filter((ele) => {
-                          if (
-                            ele.value ===
-                            selectedRowData.Buttons[1].typeOfAction
-                          )
-                            return ele.label;
-                        })}
-                        onChange={(e) => {
-                          setCreateTemplateValues({
-                            ...createTemplateValues,
-                            typeOfAction: e.value,
-                          });
-                        }}
-                      />
-                      <div>
-                        <InputField
-                          placeholder="Button text..."
-                          value={selectedRowData.Buttons[1].buttonText}
-                          className={
-                            "bg-slate-100 w-[72%] h-[85%] p-3 mt-1 ml-14 text-[12px] pb-5"
-                          }
-                          showCount={false}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex mt-4 mb-3">
-                        <div className="mt-2">
-                          <SelectOptionButton
-                            options={CallActionSubButton2}
-                            className={colourStyles}
-                            placeholder="None"
-                            // selectedValue={CallActionSubButton2.filter(
-                            //   (ele) => {
-                            //     if (
-                            //       ele.value ===
-                            //       selectedRowData.Buttons[0].urlType
-                            //     )
-                            //       return ele.label;
-                            //   }
-                            // )}
-                            // onChange={(e) => {
-                            //   setStaticDynamicButton({
-                            //     value: e.value,
-                            //   });
-                            // }}
-                          />
-                        </div>
-                        <div>
-                          <InputField
-                            placeholder="http://www.xyz.com"
-                            // value={selectedRowData.Buttons[0]?.websiteUrl}
-                            className={
-                              "bg-slate-100 w-[72%] h-[75%] p-3 mt-3 ml-14 text-[12px]"
-                            }
-                            showCount={false}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              } else {
-                return (
-                  <div className="w-full flex mt-6 mb-5">
-                    <SelectOptionButton
-                      options={CallActionSubButton1}
-                      className={colourStyles}
-                      placeholder="None"
-                      selectedValue={CallActionSubButton1.filter((ele) => {
-                        if (
-                          ele.value === selectedRowData.Buttons[0].typeOfAction
-                        )
-                          return ele.label;
-                      })}
-                      // onChange={(e) => {
-                      //   setCurrntlySelectedSubButton({
-                      //     value: e.value,
-                      //   });
-                      // }}
-                    />
-                    <div>
-                      <InputField
-                        placeholder="Button text..."
-                        // value={currntlySelectedSubButton?.value}
-                        className={
-                          "bg-slate-100 w-[72%] h-[85%] p-3 mt-1 ml-14 text-[12px] pb-5"
-                        }
-                        showCount={false}
-                      />
-                    </div>
-                    <div>
-                      <InputField
-                        placeholder="Button text..."
-                        // value={currntlySelectedSubButton?.value}
-                        className={
-                          "bg-slate-100 w-[72%] h-[85%] p-3 mt-1 ml-14 text-[12px] pb-5"
-                        }
-                        showCount={false}
-                      />
-                    </div>
-                  </div>
-                );
-              }
-            })
-          : null} */}
-
-        {/* Buttons Sections---------------------------------------------------- */}
-        {/* {optionalButtonValue?.value === OptionButton[0].value ? (
-          <div className="flex">
-            <div className="w-[85%]">
-              <div className="flex pt-5">
-                <div className="mt-2">
-                  <div className="w-full flex">
-                    <SelectOptionButton
-                      options={CallActionSubButton1}
-                      className={colourStyles}
-                      placeholder="None"
-                      selectedValue={CallActionSubButton1.filter((ele) => {
-                        if (
-                          ele.value === selectedRowData.Buttons[0].typeOfAction
-                        )
-                          return ele.label;
-                      })}
-                      onChange={(e) => {
-                        setCurrntlySelectedSubButton({
-                          value: e.value,
-                        });
-                      }}
-                    />
-                    <div>
-                      <InputField
-                        placeholder="Button text..."
-                        value={currntlySelectedSubButton?.value}
-                        className={
-                          "bg-slate-100 w-[72%] h-[85%] p-3 mt-1 ml-14 text-[12px] pb-5"
-                        }
-                        showCount={false}
-                      />
-                    </div>
-                  </div>
-
-                  {currntlySelectedSubButton?.value ===
-                  CallActionSubButton1[0].value ? (
-                    <div className="-top-[2.5rem] h-full ml-96 relative">
-                      <InputField
-                        placeholder="Phone Number with Contry Code"
-                        value={selectedRowData.Buttons[0]?.phoneNumber}
-                        className={"bg-slate-100 w-[100%] h-[50%] text-[12px]"}
-                        showCount={false}
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <div>
-                        <div className="flex mt-5">
-                          <div className="mt-2">
-                            <SelectOptionButton
-                              options={CallActionSubButton2}
-                              className={colourStyles}
-                              placeholder="None"
-                              selectedValue={CallActionSubButton2.filter(
-                                (ele) => {
-                                  if (
-                                    ele.value ===
-                                    selectedRowData.Buttons[0].urlType
-                                  )
-                                    return ele.label;
-                                }
-                              )}
-                              onChange={(e) => {
-                                setStaticDynamicButton({
-                                  value: e.value,
-                                });
-                              }}
-                            />
-                          </div>
-                          <div>
-                            <InputField
-                              placeholder="http://www.xyz.com"
-                              value={selectedRowData.Buttons[0]?.websiteUrl}
-                              className={
-                                "bg-slate-100 w-[72%] h-[75%] p-3 mt-3 ml-14 text-[12px]"
-                              }
-                              showCount={false}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="float-right -mt-8">
-              <SecondaryButton text="Add Button" />
-            </div>
-          </div>
-        ) : null} */}
-        {/* {currentlySelectedOption?.value === OptionButton[1].value ? (
-          <div className="w-1/2">
-            <InputField
-              placeholder="Button text.."
-              className={"bg-slate-100 w-80%] p-2  mt-7"}
-            />
-          </div>
-        ) : null} */}
+        {optionalButtonValue === "Call To Action" && <CTASection />}
+        {optionalButtonValue === "Quick reply" && <QRSection />}
       </div>
     </div>
   );

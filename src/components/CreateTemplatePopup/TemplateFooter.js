@@ -7,7 +7,7 @@ export const TemplateFooter = () => {
   const { createTemplateValues } = useAppCommonDataProvider();
   const { footer } = createTemplateValues;
   return (
-    <div>
+    <div className="p-3">
       <Paragraph3 className="p-2 pt-4">Footer (Optional)</Paragraph3>
       <Caption1 className="p-2">
         Add a short line of text to the bottom of your message template.

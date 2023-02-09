@@ -1,1 +1,4 @@
-export const url1 = "http://127.0.0.1:8008/api/v1/template/all";
+const BaseUrl = "http://127.0.0.1:8000/api/v1/";
+export const fetcemplateData = `${BaseUrl}template/all`;
+export const fetchContacts = `${BaseUrl}contact/`;
+export const sendBroadcastDetails = `${BaseUrl}`;
