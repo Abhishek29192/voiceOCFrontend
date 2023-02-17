@@ -84,6 +84,7 @@ export const TemplateMessage = () => {
                 setCreateTemplateValues({
                   templateName: entry?.template_name,
                   category: entry?.Category,
+                  mediaType: entry?.MediaType,
                   language: entry?.Language,
                   header: entry?.headerOption,
                   body: entry?.Body,
@@ -312,7 +313,7 @@ export const TemplateMessage = () => {
               <div className="flex">
                 <div
                   className={styles.template_section1}
-                  // onClick={handleCreateNewTemplate}
+                // onClick={handleCreateNewTemplate}
                 >
                   <img
                     src={newTemplateBlue}

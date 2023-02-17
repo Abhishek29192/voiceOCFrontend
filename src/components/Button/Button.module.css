@@ -1,6 +1,6 @@
 .btn__primary {
   background-color: #5536db;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 20px;
   border-radius: 6px;
   justify-content: center;
   align-items: center;
@@ -13,7 +13,7 @@
   background-color: white;
   border-radius: 6px;
   border: 1px solid #5536db;
-  padding: 5px 5px 5px 5px;
+  padding: 10px 20px;
   justify-content: center;
   align-items: center;
   font-family: poppins;

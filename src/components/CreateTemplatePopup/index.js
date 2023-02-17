@@ -4,6 +4,7 @@ import { Base1Strong } from "../Typography";
 import { CreateTemplateBasicDetails } from "./CreateTemplateBasicDetails";
 import { CreateTemplateButton } from "./CreateTemplateButton";
 import { CreateTemplateHeader } from "./CreateTemplateHeader";
+import { PreviewSection } from "./PreviewSection";
 import { SampleContent } from "./SampleContent";
 import { TemplateFooter } from "./TemplateFooter";
 import { TemplateMessageBody } from "./TemplateMessageBody";
@@ -38,7 +39,10 @@ export const CreateTemplatePopup = ({ isOpen, onClose, className }) => {
             </div>
           </div>
           <div className="w-1/3 flex p-2 templateViewBackground">
-            <div className="flex m-2 bold poppins">Preview</div>
+            <div className="w-full">
+              <div className="flex m-1 bold poppins">Preview</div>
+              <PreviewSection />
+            </div>
           </div>
         </div>
       </div>

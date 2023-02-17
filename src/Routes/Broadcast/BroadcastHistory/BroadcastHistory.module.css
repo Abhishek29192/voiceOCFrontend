@@ -25,9 +25,22 @@
   margin-top: 10px;
 }
 
+
+.sort__text {
+  font-weight: 600;
+  font-size: 1.4rem;
+  font-family: Poppins;
+  height: full;
+}
 .input__container {
   width: fit-content;
-  height: auto;
+  height: fit-content;
   position: relative;
-  margin-left: 15px;
+}
+
+.Brodcast_section {
+  width: 80%;
+  background-color: rgb(245, 246, 250);
+  justify-content: space-between;
+  padding: 1.25rem;
 }

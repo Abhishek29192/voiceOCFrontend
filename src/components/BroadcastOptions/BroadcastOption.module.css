@@ -1,6 +1,7 @@
 .broadcast_option {
   width: 20%;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   border-right: 1px solid rgb(233, 222, 222);
   cursor: pointer;
 }

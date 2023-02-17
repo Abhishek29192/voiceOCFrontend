@@ -44,7 +44,7 @@ const colourStyles = {
 export const CreateTemplateButton = () => {
   const { setCreateTemplateValues, createTemplateValues, selectedRowData } =
     useAppCommonDataProvider();
-  console.log(selectedRowData, "selected row Data");
+  // console.log(selectedRowData, "selected row Data");
   const { optionalButtonValue, ctaButtons } = createTemplateValues;
 
   const CallPhone = ({ details }) => {

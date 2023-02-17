@@ -2,10 +2,18 @@ import { useMutation, useQuery } from "react-query";
 import {
   fetchContactDetailsToClient,
   fetchContactDetailsToServer,
+  fetchLoginToken,
   fetchTempalteMessageData,
   sendBrodcastData,
 } from "../api";
 
+export const useLogin = (creds) => {
+  return useMutation({
+    mutationKey: ["login-creds"],
+    mutationFn: fetchLoginToken,
+    onError: (e) => e,
+  })
+}
 export const useTemplateData = () => {
   return useQuery({
     queryKey: ["template-data"],

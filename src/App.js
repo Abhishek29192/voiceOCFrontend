@@ -11,6 +11,8 @@ import { BroadcastHistory } from "./Routes/Broadcast/BroadcastHistory";
 import "./App.css";
 import { AppCommonDataProvider } from "./components/AppCommonDataProvider/AppCommonDataProvider";
 import { Login } from "./Routes/Login/Login";
+import { SignUp } from "./Routes/SignUp/SignUp";
+import { ScheduledBroadcast } from "./Routes/Broadcast/BroadcastHistory/ScheduledBroadcast";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Login />}></Route>
+            <Route path={AppRoute.register} element={<SignUp />}></Route>
             <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
             <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
             <Route path={AppRoute.contacts} element={<Contacts />}></Route>
@@ -28,6 +31,9 @@ function App() {
             <Route
               path={AppRoute.history}
               element={<BroadcastHistory />}></Route>
+            <Route
+              path={AppRoute.scheduleBroadcast}
+              element={<ScheduledBroadcast />}></Route>
             <Route
               path={AppRoute.templateMessage}
               element={<TemplateMessage />}></Route>

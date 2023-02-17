@@ -15,8 +15,6 @@ export const UploadMediaFileInBroadcast = ({
   classes,
 }) => {
   const {
-    createTemplateValues,
-    setCreateTemplateValues,
     setCreateContactDetails,
     createContactDetails,
   } = useAppCommonDataProvider();

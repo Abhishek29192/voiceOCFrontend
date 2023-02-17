@@ -12,6 +12,7 @@ export const AppCommonDataContext = createContext({
     optionalButtonValue: "",
     ctaButtons: [],
     ctaButtonLabels: [],
+    mediaType: "",
   },
   createContactDetails: {
     excelSelected: "",
@@ -22,6 +23,13 @@ export const AppCommonDataContext = createContext({
     createdDate: "",
     basicInfo: [],
   },
+  createSampleData: {
+    contentOne: "",
+    contentTwo: "",
+    headerText: "",
+    mediaUpload: [],
+  },
+  setCreateSampleData: null,
   setCreateContactDetails: null,
   setCreateTemplateValues: null,
   selectedRowData: null,
@@ -40,6 +48,7 @@ export const AppCommonDataProvider = ({ children }) => {
     body: "",
     footer: "",
     optionalButtonValue: "",
+    mediaType: "",
     ctaButtons: [],
     ctaButtonLabels: [],
   });
@@ -52,6 +61,12 @@ export const AppCommonDataProvider = ({ children }) => {
     createdDate: "",
     basicInfo: [],
   });
+  const [createSampleData, setCreateSampleData] = useState({
+    contentOne: "",
+    contentTwo: "",
+    headerText: "",
+    mediaUpload: [],
+  })
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedContactRowData, setSelectedContactRowData] = useState(null);
   return (
@@ -65,6 +80,8 @@ export const AppCommonDataProvider = ({ children }) => {
         setSelectedRowData,
         selectedContactRowData,
         setSelectedContactRowData,
+        createSampleData,
+        setCreateSampleData,
       }}>
       {children}
     </AppCommonDataContext.Provider>

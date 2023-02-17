@@ -15,7 +15,7 @@ import styles from "./Navbar.module.css";
 export const Navbar = () => {
   const navigate = useNavigate();
   const handlebroadcast = () => {
-    navigate(`${AppRoute.broadcast}`);
+    navigate(`${AppRoute.history}`);
   };
 
   const handleContacts = () => {
@@ -23,7 +23,7 @@ export const Navbar = () => {
   };
 
   const handleInbox = () => {
-    navigate("/");
+    navigate(`${AppRoute.teamInbox}`);
   };
   return (
     <div className={styles.nav__container}>

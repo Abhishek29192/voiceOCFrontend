@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { optionSortHeader } from "../../constants/DropDownContent";
 import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
 import { SecondaryButton } from "../Button";
-import { InputField, InputFieldWithoutCounter } from "../InputField";
+import { FileUploadbutton, InputField, InputFieldWithoutCounter } from "../InputField";
 import { SelectOptionButton } from "../SelectOptions";
 import { Caption1, Paragraph1, Paragraph3 } from "../Typography";
 
@@ -37,10 +37,21 @@ const colourStyles = {
 };
 
 export const CreateTemplateHeader = () => {
-  const { setCreateTemplateValues, createTemplateValues } =
+
+  const [uploadMedia, setUploadMedia] = useState(null)
+  const { setCreateTemplateValues, createTemplateValues, createSampleData, setCreateSampleData } =
     useAppCommonDataProvider();
 
-  const { header } = createTemplateValues;
+  const { header, mediaType } = createTemplateValues;
+  const { headerText } = createSampleData;
+  console.log(mediaType, "media type")
+  const handleUploadFile = (e) => {
+    setCreateSampleData({
+      ...createSampleData,
+      mediaUpload: e.target.files[0],
+    });
+    setUploadMedia(e.target.files[0].name);
+  };
 
   return (
     <div className="w-full p-3 ">
@@ -65,8 +76,15 @@ export const CreateTemplateHeader = () => {
         />
         {header === optionSortHeader[1].value ? (
           <InputField
-            placeholder="Enter Text"
+            placeholder="Enter Text..."
             className={"bg-slate-100 w-[98%] mt-4 text-[12px]"}
+            value={headerText}
+            onChange={(e) =>
+              setCreateSampleData({
+                ...createSampleData,
+                headerText: e.target.value,
+              })
+            }
           />
         ) : null}
 
@@ -74,15 +92,18 @@ export const CreateTemplateHeader = () => {
           <div>
             <div className="mt-2 flex">
               <div className="flex poppins ml-1 ">
-                <input type="radio" name="radioOption" />
+                <input type="radio" name="radioOption" value="IMAGES" onChange={(e) => setCreateTemplateValues({ ...createTemplateValues, mediaType: e.target._wrapperState.initialValue })} />
+
                 <Paragraph3 className="pl-2">Images</Paragraph3>
               </div>
               <div className="flex poppins ml-4">
-                <input type="radio" name="radioOption" />
+                {/* <input type="radio" name="radioOption" /> */}
+                <input type="radio" name="radioOption" value="VIDEO" onChange={(e) => setCreateTemplateValues({ ...createTemplateValues, mediaType: e.target._wrapperState.initialValue })} />
                 <Paragraph3 className="pl-2">Video</Paragraph3>
               </div>
               <div className="flex poppins ml-4">
-                <input type="radio" name="radioOption" />
+                {/* <input type="radio" name="radioOption" /> */}
+                <input type="radio" name="radioOption" value="DOCUMENT" onChange={(e) => setCreateTemplateValues({ ...createTemplateValues, mediaType: e.target._wrapperState.initialValue })} />
                 <Paragraph3 className="pl-2">Document</Paragraph3>
               </div>
             </div>
@@ -96,7 +117,13 @@ export const CreateTemplateHeader = () => {
                 or
               </Paragraph1>
               <div className="ml-5">
-                <SecondaryButton text="Upload Media" className={colourStyles} />
+                {/* <SecondaryButton text="Upload Media" className={colourStyles} /> */}
+                <FileUploadbutton
+                  onChange={(e) => {
+                    handleUploadFile(e);
+                  }}
+                // fileName={fileName ? fileName : "Select a file"}
+                />
               </div>
             </div>
           </div>

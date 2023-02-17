@@ -18,6 +18,10 @@ export const BroadcastOptions = () => {
     navigate(`${AppRoute.history}`);
   };
 
+  const handleScheduledBroadcast = () => {
+    navigate(`${AppRoute.scheduleBroadcast}`)
+  }
+
   return (
     <div className={styles.broadcast_option}>
       <div
@@ -26,7 +30,7 @@ export const BroadcastOptions = () => {
         <RiHistoryFill className="Options" size={"1.3rem"} />
         <Options>Broadcast History</Options>
       </div>
-      <div className={styles.options__list}>
+      <div className={styles.options__list} onClick={handleScheduledBroadcast}>
         <TbCalendarTime className="Options" size={"1.3rem"} />
         <Options>Scheduled Broadcast</Options>
       </div>

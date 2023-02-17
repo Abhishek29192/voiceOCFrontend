@@ -44,3 +44,14 @@
     cursor: pointer;
     flex: 0 0 auto;
 }
+.registerText{
+    font-size: 0.85rem;
+    color: #5536DB;
+    padding-left: 10px;
+    cursor: pointer;
+}
+
+.errorMsg{
+    color: red;
+    font-size: smaller;
+}

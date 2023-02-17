@@ -1,16 +1,26 @@
 import React from "react";
+import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
 import { PrimaryButton, SecondaryButton } from "../Button";
 import { InputField } from "../InputField";
 import { Paragraph3 } from "../Typography";
 
 export const SampleContent = () => {
+  const { createSampleData, setCreateSampleData } =
+    useAppCommonDataProvider();
+  const { contentOne, contentTwo } = createSampleData;
   return (
     <>
       <div className="p-3">
         <Paragraph3 className="p-2 pt-4">Sample Content</Paragraph3>
         <InputField
           placeholder="Enter text.."
-          value={"Enter text.."}
+          value={contentOne}
+          onChange={(e) => {
+            setCreateSampleData?.({
+              ...createSampleData,
+              contentOne: e.target.value,
+            });
+          }}
           className={"bg-slate-100 w-[97%] p-4 m-2 text-[12px] mb-5 "}
           charCountInput={"0"}
           maxLength={200}
@@ -20,6 +30,13 @@ export const SampleContent = () => {
           className={"bg-slate-100 w-[97%] p-4 m-2 text-[12px] mb-5 "}
           charCountInput={"0"}
           maxLength={200}
+          value={contentTwo}
+          onChange={(e) => {
+            setCreateSampleData?.({
+              ...createSampleData,
+              contentTwo: e.target.value,
+            });
+          }}
         />
         <InputField
           placeholder="Enter text.."

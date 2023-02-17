@@ -41,6 +41,8 @@ export const CreateTemplateBasicDetails = () => {
   const { setCreateTemplateValues, createTemplateValues, selectedRowData } =
     useAppCommonDataProvider();
 
+  console.log(selectedRowData, "selected Row data")
+
   const { templateName, category, language } = createTemplateValues;
   return (
     <>

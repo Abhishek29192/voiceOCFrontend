@@ -6,6 +6,7 @@ export default function ContactTable({
   columns,
   rowHeight,
   onSelectionModelChange,
+  checkboxSelection,
 }) {
   return (
     <div style={{ height: 400, width: "100%" }}>
@@ -14,7 +15,7 @@ export default function ContactTable({
         columns={columns}
         pageSize={5}
         rowsPerPageOptions={[5]}
-        checkboxSelection
+        checkboxSelection={checkboxSelection}
         rowHeight={rowHeight}
         // onSelectionModelChange={(ids) => {
         //   // console.log(ids, "---");

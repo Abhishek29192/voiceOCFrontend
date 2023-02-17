@@ -1,5 +1,5 @@
 import axios from "axios";
-import { fetcemplateData, fetchContacts, sendBroadcastDetails } from "../Urls";
+import { fetcemplateData, fetchContacts, sendBroadcastDetails, fetctokenUrl } from "../Urls";
 import cookie from "react-cookies";
 import { useAppCommonDataProvider } from "../components/AppCommonDataProvider/AppCommonDataProvider";
 
@@ -19,6 +19,9 @@ let headers = {
   Accept: "application/json",
 };
 
+export const fetchLoginToken = async (data) => {
+  return await axios.post(fetctokenUrl, data);
+}
 export const fetchTempalteMessageData = async () => {
   return await axios.get(fetcemplateData, { headers });
 };

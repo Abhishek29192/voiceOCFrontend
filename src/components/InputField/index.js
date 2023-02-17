@@ -37,8 +37,8 @@ export const InputFieldWithoutCounter = ({
   value,
   onChange,
   type,
+  id,
 }) => {
-  console.log(type,"type")
   return (
     <>
       <input
@@ -48,6 +48,7 @@ export const InputFieldWithoutCounter = ({
           padding: "5px",
           outline: " none",
         }}
+        id={id}
         className={className}
         type={type}
         onChange={onChange}
@@ -96,7 +97,7 @@ export const FileUploadbutton = ({ onChange, fileName }) => {
         id="actual-btn"
         name="file"
         onChange={onChange}
-        // value={value}
+      // value={value}
       />
       <label for="actual-btn" className={`${styles.label} justify-center mr-4`}>
         Upload file
