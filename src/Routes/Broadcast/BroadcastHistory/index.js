@@ -15,11 +15,11 @@ import ContactTable from "../../../components/Table/contactTable";
 
 export const BroadcastHistory = () => {
   const [newBroadcastPopup1, setNewBroadcastPopup1] = useState(false);
-  ///////////////////////////////////////
+
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    // { field: 'id', headerName: 'ID', width: 90 },
     {
-      field: 'firstName',
+      field: 'broadcastName',
       // renderCell: (params) => {
       //   return (
       //     <div className="flex flex-wrap text-2xl">
@@ -27,47 +27,100 @@ export const BroadcastHistory = () => {
       //     </div>
       //   );
       // },
-      headerName: 'First name',
-      width: 150,
+      // headerName: 'First name',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Broadcast name
+          Scheduled</p>
+      ),
+      width: 145,
       editable: true,
     },
     {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
+      field: 'successful',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Successful</p>
+      ),
+      // headerName: 'First name',
+      width: 140,
       editable: true,
     },
     {
-      field: 'age',
-      headerName: 'Age',
-      type: 'number',
-      width: 110,
+      field: 'read',
+      // renderCell: (params) => {
+      //   return (
+      //     <div className="flex flex-wrap text-2xl">
+      //       headerName: 'First name',
+      //     </div>
+      //   );
+      // },
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Read</p>
+      ),
+      // headerName: 'First name',
+      width: 140,
       editable: true,
     },
     {
-      field: 'fullName',
-      headerName: 'Full name',
+      field: 'replied',
+      // renderCell: (params) => {
+      //   return (
+      //     <div className="flex flex-wrap text-2xl">
+      //       headerName: 'First name',
+      //     </div>
+      //   );
+      // },
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Replied</p>
+      ),
+      // headerName: 'First name',
+      width: 140,
+      editable: true,
+    },
+    {
+      field: 'status',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Status</p>
+      ),
+      // headerName: 'Last name',
+      width: 140,
+      editable: true,
+    },
+    // {
+    //   field: 'lastName',
+    //   headerName: 'Last name',
+    //   width: 140,
+    //   editable: true,
+    // },
+
+    // {
+    //   field: 'age',
+    //   headerName: 'Age',
+    //   type: 'number',
+    //   width: 100,
+    //   editable: true,
+    // },
+    {
+      field: 'Failed',
+      headerName: 'Failed',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 160,
+      width: 140,
       valueGetter: (params) =>
         `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     },
   ];
 
   const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
+    { id: 1, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 2, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 3, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 4, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 5, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 6, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 7, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 8, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
+    { id: 9, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
   ];
-
-  /////////////////////////////////////////
 
 
   const colourStyles = {
@@ -99,6 +152,7 @@ export const BroadcastHistory = () => {
       };
     },
   };
+
   const colourStyles1 = {
     control: (styles) => {
       return {
@@ -128,6 +182,7 @@ export const BroadcastHistory = () => {
       };
     },
   };
+
   return (
     <div>
       <Navbar />
@@ -142,15 +197,15 @@ export const BroadcastHistory = () => {
               onClick={() => setNewBroadcastPopup1(true)}
             />
           </div>
-          <div className="h-fit items-center pl-2 w-[65%]">
-            <div className="flex m-4 border p-2 w-fit">
+          <div className="h-fit items-center pl-2 w-[85%]">
+            <div className="flex mx-2 p-2 w-fit">
               <div className="w-1/3 m-2 ml-2">
                 <DatePickers label={"Date picker from"} />
               </div>
               <div className="w-1/3 m-2">
                 <DatePickers label={"Date picker to"} />
               </div>
-              <div className="h-17 p-[0.34rem] justify-center items-center">
+              <div className="h-17 w-1/3 p-[0.34rem] justify-center items-center">
                 <SelectOptionButton
                   className={colourStyles}
                   options={optionSort}
@@ -200,7 +255,7 @@ export const BroadcastHistory = () => {
                   />
                 </div>
               </div>
-              <div className={`${styles.input__container} w-[70%]`}>
+              <div className={`${styles.input__container} w-[70%] ml-7`}>
                 <InputFieldWithoutCounter
                   type={'text'}
                   placeholder="Search ..."
@@ -218,7 +273,7 @@ export const BroadcastHistory = () => {
                 rows={rows}
                 columns={columns}
                 rowHeight={140}
-                checkboxSelection
+              // checkboxSelection
               // onSelectionModelChange={onSelectionModelChange}
               />
             </div>

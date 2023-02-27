@@ -6,26 +6,26 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Styles from "./datePicker.module.css";
-import { style } from "@mui/system";
 
-export function DatePickers({ label }) {
-  console.log(label, "label");
-  const [value, setValue] = React.useState(dayjs("2014-08-18T21:11:54"));
+export function DatePickers({ label, date }) {
+  const [value, setValue] = React.useState(dayjs("2023-02-23"));
 
   const handleChange = (newValue) => {
     setValue(newValue);
+    date(newValue.format("DD-MM-YYYY"))
   };
 
+  // console.log(value.format("DD-MM-YYYY"), "date")
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>
         <DesktopDatePicker
           label={label}
-          inputFormat="MM/DD/YYYY"
+          inputFormat="DD/MM/YYYY"
           value={value}
           onChange={handleChange}
           className={Styles.demo}
-          renderInput={(params) => <TextField {...params} sx={{label:{paddingLeft:'10px',paddingRight:'10px'}}}/>}
+          renderInput={(params) => <TextField {...params} sx={{ label: { paddingLeft: '10px', paddingRight: '10px' } }} />}
         />
       </Stack>
     </LocalizationProvider>

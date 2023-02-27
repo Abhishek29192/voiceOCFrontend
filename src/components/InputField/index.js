@@ -97,6 +97,7 @@ export const FileUploadbutton = ({ onChange, fileName }) => {
         id="actual-btn"
         name="file"
         onChange={onChange}
+        accept=".xlsx, .xls,image/*,.doc, .docx,.mp4,.pdf"
       // value={value}
       />
       <label for="actual-btn" className={`${styles.label} justify-center mr-4`}>

@@ -12,17 +12,38 @@ import { PrimaryButton } from '../../components/Button';
 import { useLogin } from '../../hooks/useQueryApi';
 import { Routes as AppRoute } from "../../constants/RoutesNames";
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import cookie from "react-cookies";
+import 'react-toastify/dist/ReactToastify.css'
 
 export const Login = () => {
 
-  const { mutateAsync } = useLogin();
+  const { mutateAsync, data } = useLogin();
   const navigate = useNavigate();
   const [checkbox, setCheckbox] = useState(false)
+  const [passwordType, setPasswordType] = useState("password")
   const [logincreds, setLogincreds] = useState([])
-  console.log(logincreds, "login creds")
 
   const handleSignUp = () => {
     navigate(`${AppRoute.register}`);
+  }
+
+  const showToast = (status) => {
+    console.log(status, "status")
+    if (status === true) {
+      toast.success(" Login Successful!!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+    } else {
+      toast.error("Invalid Credentials !!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+    }
+  };
+
+
+  const handleShowPassword = () => {
+    if (passwordType === "password") {
+      setPasswordType("text")
+      return;
+    }
+    setPasswordType("password")
   }
 
   const schema = Yup.object().shape({
@@ -34,23 +55,34 @@ export const Login = () => {
       .min(8, "Password must be at least 8 characters"),
   });
 
-  ///
-  const handleSubmitLogin = () => {
-    mutateAsync(logincreds)
+  const handleSubmitLogin = (values) => {
+    mutateAsync(values).then(res => {
+      console.log(res.data, "response")
+      if (res.status) {
+        cookie.save(
+          "accessToken",
+          res?.authToken,
+          {}
+        );
+        showToast(res.status);
+        setTimeout(() => {
+          navigate(`${AppRoute.teamInbox}`);
+        }, 1000);
+      } else {
+        showToast(res.status)
+      }
+    })
+
   }
 
   return (
     <>
       <Formik
         validationSchema={schema}
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "", password: "", rememberMe: true }}
         onSubmit={(values) => {
-          // Alert the input values of the form that we filled
-          // alert(JSON.stringify(values));
-          setLogincreds(values)
-          console.log(JSON.stringify(values, "vallllll"));
-
-
+          handleSubmitLogin(values)
+          // console.log(JSON.stringify(values, "vallllll"));
         }}
       >
         {({
@@ -97,9 +129,9 @@ export const Login = () => {
                         placeholder="Password..."
                         className={"h-12 mt-1 w-96"}
                         id={"password"}
-                        type={"password"}
+                        type={passwordType}
                       />
-                      <IoKeyOutline size={'1.5rem'} className='absolute top-4 right-1' />
+                      <IoKeyOutline size={'1.5rem'} className='absolute top-4 right-1' onClick={handleShowPassword} />
                     </div>
                   </div>
                   <p className={Styles.errorMsg}>
@@ -120,6 +152,7 @@ export const Login = () => {
                   </div>
                   <div className='mt-5'>
                     <PrimaryButton text={"Login"} type={"submit"} className={"w-96"} onClick={handleSubmitLogin} />
+                    <ToastContainer theme='light' />
                   </div>
                   <div className='justify-center items-center mt-4 pl-10'>
                     <Paragraph1 className="text-[0.85rem]">Do not have an account?<span className={Styles.registerText} onClick={handleSignUp}>Register here</span></Paragraph1>

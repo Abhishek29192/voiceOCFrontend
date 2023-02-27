@@ -8,8 +8,9 @@
 }
 
 .customModal {
-  max-width: 70%vw;
-  max-height: 75%vh;
+  max-width: 58vw;
+  height:90vh;
+  /* max-height: 98vh; */
   width: 100%;
   border-radius: 15px;
 }
@@ -28,7 +29,7 @@
 
 .sort__text {
   font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   font-family: Poppins;
   height: full;
 }

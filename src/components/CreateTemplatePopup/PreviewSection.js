@@ -9,7 +9,6 @@ export const PreviewSection = () => {
     const { body, footer } = createTemplateValues;
     const { contentOne, contentTwo, headerText } = createSampleData;
     const { mediaType } = createTemplateValues;
-    console.log(mediaType, "media type")
     const content = body;
     const data = content.replace("{{1}}", `${contentOne}`)
 
@@ -56,12 +55,6 @@ export const PreviewSection = () => {
                     <div className='pt-4 pb-2 text-xs'>{contentTwo}</div>
                 </div>
             )}
-            {/* <div className='flex flex-col bg-white w-full rounded-md p-2 pt-4 pb-7 '>
-                <div className='font-bold'>{headerText}</div>
-                <div className='text-xs flex-wrap'>{data}</div>
-                <div>{footer}</div>
-                <div className='pt-4 pb-5 text-xs'>{contentTwo}</div>
-            </div> */}
         </>
     )
 }

@@ -17,18 +17,26 @@ export const AppCommonDataContext = createContext({
   createContactDetails: {
     excelSelected: "",
     brodcastSelectedRowData: [],
-    templateSelected: "",
+    broadcastName: "",
     fileName: "",
     createdAt: "",
     createdDate: "",
     basicInfo: [],
   },
+  // createNewBroadcast: {
+  //   broadcastName: "",
+  //   uploadesmedia: "",
+  //   selectedContactData: {},
+  //   broadcastTime: "",
+  //   broadcastDate: "",
+  // },
   createSampleData: {
     contentOne: "",
     contentTwo: "",
     headerText: "",
-    mediaUpload: [],
+    mediaUpload: "",
   },
+  // setCreateNewBroadcast: null,
   setCreateSampleData: null,
   setCreateContactDetails: null,
   setCreateTemplateValues: null,
@@ -54,12 +62,14 @@ export const AppCommonDataProvider = ({ children }) => {
   });
   const [createContactDetails, setCreateContactDetails] = useState({
     excelSelected: "",
-    templateSelected: "",
+    broadcastName: "",
     brodcastSelectedRowData: [],
     fileName: "",
     createdAt: "",
     createdDate: "",
     basicInfo: [],
+    broadcastTime: "",
+    broadcastDate: "",
   });
   const [createSampleData, setCreateSampleData] = useState({
     contentOne: "",
@@ -67,6 +77,12 @@ export const AppCommonDataProvider = ({ children }) => {
     headerText: "",
     mediaUpload: [],
   })
+  // const [createNewBroadcast, setCreateNewBroadcast] = useState({
+  //   broadcastName: "",
+  //   uploadesmedia: "",
+  //   selectedContactData: {},
+
+  // })
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedContactRowData, setSelectedContactRowData] = useState(null);
   return (
@@ -82,6 +98,8 @@ export const AppCommonDataProvider = ({ children }) => {
         setSelectedContactRowData,
         createSampleData,
         setCreateSampleData,
+        // createNewBroadcast,
+        // setCreateNewBroadcast,
       }}>
       {children}
     </AppCommonDataContext.Provider>

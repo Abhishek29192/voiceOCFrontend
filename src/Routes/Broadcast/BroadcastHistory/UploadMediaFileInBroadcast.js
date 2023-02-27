@@ -32,12 +32,26 @@ export const UploadMediaFileInBroadcast = ({
     setFileName(e.target.files[0].name);
   };
 
+  const bg = {
+    overlay: {
+      backgroundColor: "rgba(0,0,0,0)",
+    },
+    // modal: {
+    //   width: "58vw"
+    // }
+  }
+
+  const { excelSelected } = createContactDetails;
+  console.log(excelSelected, "------------------------------------------------------------")
+
+
   return (
     <Modal
       open={isOpen}
       onClose={onClose}
       showCloseIcon
       center
+      styles={bg}
       classNames={{ modal: `${className} ${classes}` }}>
       <div>
         <div className="items-center h-full pb-3 ">
@@ -47,8 +61,7 @@ export const UploadMediaFileInBroadcast = ({
         </div>
         <hr />
         <div>
-          {/* <div>Use custom media header</div> */}
-          <Paragraph3 className="text-md m-2 mb-3 mt-6">
+          <Paragraph3 className="text-base m-2 mb-3 mt-7 poppins">
             Use custom media header
           </Paragraph3>
         </div>
@@ -60,7 +73,7 @@ export const UploadMediaFileInBroadcast = ({
             fileName={fileName ? fileName : "Select a file"}
           />
         </div>
-        <div className="float-right flex m-2 mt-[22rem]">
+        <div className="float-right flex m-2 mb-2 mt-[18rem]">
           <div className="mr-2 w-32">
             <SecondaryButton
               text="Back"
@@ -83,7 +96,7 @@ export const UploadMediaFileInBroadcast = ({
           isOpen={openBroadcastTabelView}
           onClose={() => setOpenBroadcastTabelView(false)}
           className={`${styles.customModal}`}
-          classes={"h-[610px]"}
+          classes={"max-height: 138vh"}
         />
       )}
     </Modal>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Styles from "./signUp.module.css";
 import register from "../../components/Images/register.svg"
 import { InputFieldWithoutCounter } from '../../components/InputField';
@@ -10,16 +10,32 @@ import { AiOutlineEye } from "react-icons/ai"
 import { BsEyeSlash } from "react-icons/bs";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { useSignUp } from '../../hooks/useQueryApi';
+import { Routes as AppRoute } from "../../constants/RoutesNames";
+import { Checkbox } from '@mui/material';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'
 
 export const SignUp = () => {
+    const navigate = useNavigate()
+    const { mutateAsync } = useSignUp();
     const [checkbox, setCheckbox] = useState(false)
-    const [signUpCreds, setSignUpCreds] = useState([]);
+    const [signUpCreds, setSignUpCreds] = useState();
     const [passwordType, setPasswordType] = useState("password");
     const [confirmPasswordType, setconfirmPasswordType] = useState("password");
-    const navigate = useNavigate()
+
     const handleLoginPage = () => {
         navigate("/")
     }
+
+    const showToast = (status) => {
+        if (status === 200 || 201) {
+            toast.success(" Sign Up Successful!!!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+        } else {
+            toast.error(" Siggn Up Failed !!!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+        }
+    };
+
     const handleShowPassword = () => {
         if (passwordType === "password") {
             setPasswordType("text")
@@ -27,6 +43,13 @@ export const SignUp = () => {
         }
         setPasswordType("password")
     }
+
+    const handleTermsCondition = (e) => {
+        // console.log(e, "eventS")
+        setCheckbox(!checkbox)
+    }
+
+
     const handleShowConfirmPassword = () => {
         if (confirmPasswordType === "password") {
             setconfirmPasswordType("text")
@@ -35,15 +58,25 @@ export const SignUp = () => {
         setconfirmPasswordType("password")
     }
 
-    const handleSignUp = () => {
+    const handleSignUp = (values) => {
+        mutateAsync(values).then(res => {
+            if (res.status = 200) {
+                setTimeout(() => {
+                    navigate(`${AppRoute.teamInbox}`);
+                }, 1700);
+            }
+            showToast(res.status)
+        })
+
     }
 
+
     const schema = Yup.object().shape({
-        firstname: Yup.string()
+        firstName: Yup.string()
             .required("Required field")
             .min(2, 'Too Short!')
             .max(20, 'Too Long!'),
-        lastname: Yup.string()
+        lastName: Yup.string()
             .required("Required field")
             .min(2, 'Too Short!')
             .max(20, 'Too Long!'),
@@ -53,17 +86,26 @@ export const SignUp = () => {
         password: Yup.string()
             .required("Password is a required field")
             .min(8, "Password must be at least 8 characters"),
-        confirmpassword: Yup.string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        confirmPassword: Yup.string()
+            .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+        termsAndCondition: Yup.bool().oneOf([true], 'Accept Terms & Conditions is required')
     });
+
+    // const bakwas = () => {
+    //     console.log("uhu")
+    //     showToast();
+    // }
+
+
 
     return (
         <Formik
             validationSchema={schema}
-            initialValues={{ email: "", password: "", firstname: "", lastname: "", confirmpassword: "" }}
+            initialValues={{ email: "", password: "", firstName: "", lastName: "", confirmPassword: "", termsAndCondition: "false" }}
             onSubmit={(values) => {
-                console.log(JSON.stringify(values, "vallllll"));
-                setSignUpCreds(values);
+                // setSignUpCreds(values);
+                handleSignUp(values)
+                console.log(values)
             }}
         >
             {({
@@ -72,6 +114,7 @@ export const SignUp = () => {
                 touched,
                 handleChange,
                 handleSubmit,
+                setFieldValue
             }) => (<div className='justify-center items-center border h-full flex absolute w-full'>
                 <div className={Styles.body}>
                     <form noValidate onSubmit={handleSubmit}>
@@ -92,12 +135,13 @@ export const SignUp = () => {
                                                     type={"text"}
                                                     onChange={handleChange}
                                                     placeholder="Enter your first name..."
-                                                    id={"firstname"}
+                                                    id="firstName"
+                                                    name="firstName"
                                                     className={"h-12 mt-1 w-44"}
                                                 />
                                             </div>
                                             <p className={Styles.errorMsg}>
-                                                {errors.firstname && touched.firstname && errors.firstname}
+                                                {errors.firstName && touched.firstName && errors.firstName}
                                             </p>
                                         </div>
                                         <div className='pr-12'>
@@ -107,12 +151,13 @@ export const SignUp = () => {
                                                     type={"text"}
                                                     onChange={handleChange}
                                                     placeholder="Enter your last name..."
-                                                    id={"lastname"}
+                                                    id="lastName"
+                                                    name="lastName"
                                                     className={"h-12 mt-1 w-44"}
                                                 />
                                             </div>
                                             <p className={Styles.errorMsg}>
-                                                {errors.lastname && touched.lastname && errors.lastname}
+                                                {errors.lastName && touched.lastName && errors.lastName}
                                             </p>
                                         </div>
                                     </div>
@@ -123,7 +168,8 @@ export const SignUp = () => {
                                                 type={"Email"}
                                                 onChange={handleChange}
                                                 placeholder="Email..."
-                                                id={"email"}
+                                                id="email"
+                                                name="email"
                                                 className={"h-12 mt-1 w-96"}
                                             />
                                         </div>
@@ -139,13 +185,14 @@ export const SignUp = () => {
                                                     onChange={handleChange}
                                                     placeholder="Password..."
                                                     className={"h-12 mt-1 w-44"}
-                                                    id={"password"}
+                                                    id="password"
+                                                    name="password"
                                                     type={passwordType}
                                                 />
                                                 {
                                                     passwordType === "password" ? <BsEyeSlash size={"1.5rem"} color="grey" className={"absolute top-4 right-1"} onClick={handleShowPassword} /> : <AiOutlineEye size={"1.5rem"} className={"absolute top-4 right-1"} onClick={handleShowPassword} />
                                                 }
-                                                {/* <AiOutlineEye size={"1.5rem"} className={"absolute top-4 right-1"} onClick={handleShowPassword} /> */}
+
                                             </div>
                                             <p className={Styles.errorMsg}>
                                                 {errors.password && touched.password && errors.password}
@@ -158,41 +205,45 @@ export const SignUp = () => {
                                                     onChange={handleChange}
                                                     placeholder="Password..."
                                                     className={"h-12 mt-1 w-44"}
-                                                    id={"confirmpassword"}
+                                                    id="confirmPassword"
+                                                    name="confirmPassword"
                                                     type={confirmPasswordType}
                                                 />
                                                 {
                                                     confirmPasswordType === "password" ? <BsEyeSlash size={"1.5rem"} color="grey" className={"absolute top-4 right-1"} onClick={handleShowConfirmPassword} /> : <AiOutlineEye size={"1.5rem"} className={"absolute top-4 right-1"} onClick={handleShowConfirmPassword} />
                                                 }
-                                                {/* <BsEyeSlash size={"1.5rem"} color="grey" className={"absolute top-4 right-1"} /> */}
+
                                             </div>
                                             <p className={Styles.errorMsg}>
-                                                {errors.confirmpassword && touched.confirmpassword && errors.confirmpassword}
+                                                {errors.confirmPassword && touched.confirmPassword && errors.confirmPassword}
                                             </p>
-                                            {/* {
-                                                password !== confirmpassword && (
 
-                                                    <p className={Styles.errorMsg}>
-                                                        {errors.password && touched.password && errors.password}
-                                                    </p>
-                                                )
-                                            } */}
                                         </div>
                                     </div>
                                     <div className='flex items-center justify-between w-96 mt-5'>
                                         <div className='flex items-center w-fit '>
-                                            <div className={Styles.CheckBox__style} onClick={(e) => setCheckbox(!checkbox)}>
-                                                {
-                                                    checkbox && (
-                                                        <TiTick color="#5536DB" size={"1.4rem"} />
-                                                    )
+                                            <Checkbox
+                                                checked={values.termsAndCondition === "true"}
+                                                // sx={{
+                                                //     "&.Mui-checked": {
+                                                //         color: AppColors.PRIMARYCOLOR,
+                                                //     },
+                                                // }}
+                                                onChange={(e) =>
+                                                    // console.log(e.target.checked.toString(), "dfghghmj,k")
+                                                    // termsAndCondition: e.target.checked.toString,
+                                                    setFieldValue("termsAndCondition", e.target.checked.toString())
                                                 }
-                                            </div>
+                                            />
                                             <Paragraph1 className="text-[0.85rem] p-2 w-96 ">I agree to Terms and conditions and Privacy Policy</Paragraph1>
                                         </div>
                                     </div>
+                                    <p className={Styles.errorMsg}>
+                                        {errors.termsAndCondition && touched.termsAndCondition && errors.termsAndCondition}
+                                    </p>
                                     <div className='mt-5'>
-                                        <PrimaryButton text={"Login"} type={"submit"} className={"w-96"} onClick={handleSignUp} />
+                                        <PrimaryButton text={"Login"} type="submit" className={"w-96"} onClick={handleSignUp} />
+                                        < ToastContainer theme='light' />
                                     </div>
                                     <div className='justify-center items-center mt-4 pl-16'>
                                         <Paragraph1 className="justify-center text-[0.85rem]">Already have an account?<span className={Styles.registerText} onClick={handleLoginPage}>Login</span></Paragraph1>
@@ -201,6 +252,7 @@ export const SignUp = () => {
                             </div>
                         </div>
                     </form>
+
                 </div>
             </div>)
             }
