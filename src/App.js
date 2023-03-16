@@ -13,6 +13,7 @@ import { AppCommonDataProvider } from "./components/AppCommonDataProvider/AppCom
 import { Login } from "./Routes/Login/Login";
 import { SignUp } from "./Routes/SignUp/SignUp";
 import { ScheduledBroadcast } from "./Routes/Broadcast/BroadcastHistory/ScheduledBroadcast";
+import { Campaign } from "./Routes/Campaign";
 
 const queryClient = new QueryClient();
 
@@ -27,7 +28,8 @@ function App() {
             <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
             <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
             <Route path={AppRoute.contacts} element={<Contacts />}></Route>
-            <Route path={AppRoute.broadcast} element={<Broadcast />}></Route>
+            <Route path={AppRoute.campaign} element={<Campaign />}></Route>
+            {/* <Route path={AppRoute.broadcast} element={<Broadcast />}></Route> */}
             <Route
               path={AppRoute.history}
               element={<BroadcastHistory />}></Route>

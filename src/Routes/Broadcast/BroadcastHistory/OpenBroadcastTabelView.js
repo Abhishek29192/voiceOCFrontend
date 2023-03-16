@@ -23,6 +23,7 @@ export const OpenBroadcastTabelView = ({
   className,
   classes,
 }) => {
+  console.log(onClose, "oclose")
   const [selectedTabelRow, setSelectedTabelRow] = React.useState("");
   const [tableData, setTableData] = useState([]);
   const { refetch } = useContactDataToClient();
@@ -46,11 +47,8 @@ export const OpenBroadcastTabelView = ({
     UserId: "one",
   }
 
-
   const { mutateAsync } = usePostBordcastData();
   const { mutateAsync: scheduleBroadcast } = usePostBroadcastDataWithDateTime();
-
-
 
   useEffect(() => {
     refetch().then((res) => {
@@ -117,14 +115,18 @@ export const OpenBroadcastTabelView = ({
     });
   };
 
-  const handleSubmitModal = () => {
-
+  const handleSubmitModal = (e) => {
     if (!openDateTimeField) {
       mutateAsync(newBroadcastDetails)
     } else {
       scheduleBroadcast(newBroadcastDetails)
     }
+    onClose()
   };
+
+  const handleBackButton = (e) => {
+    onClose(true)
+  }
 
 
   const bg = {
@@ -169,7 +171,6 @@ export const OpenBroadcastTabelView = ({
             <input type="radio" name="radioOption" onClick={() => setOpenDateTimeField(true)} />
             <Paragraph3 className="items-center font-normal poppins pl-4">Schedule for a specific time</Paragraph3>
           </div>
-          {/* /////////////////// */}
           {
             openDateTimeField && (
 
@@ -196,14 +197,14 @@ export const OpenBroadcastTabelView = ({
             <SecondaryButton
               text="Back"
               className={"h-full p-6 w-32"}
-              onClick={onClose}
+              onClick={(e) => handleBackButton(e)}
             />
           </div>
           <div className="w-32 border">
             <PrimaryButton
               text="Next"
               className="p-6 w-full"
-              onClick={handleSubmitModal}
+              onClick={(e) => handleSubmitModal(e)}
             />
           </div>
         </div>

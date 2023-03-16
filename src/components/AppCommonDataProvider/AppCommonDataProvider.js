@@ -23,20 +23,21 @@ export const AppCommonDataContext = createContext({
     createdDate: "",
     basicInfo: [],
   },
-  // createNewBroadcast: {
-  //   broadcastName: "",
-  //   uploadesmedia: "",
-  //   selectedContactData: {},
-  //   broadcastTime: "",
-  //   broadcastDate: "",
-  // },
+
+  createTeamInboxDetails: {
+    whatsappNumber: "",
+    contactDetailData: [],
+    contactDetailDataName: "",
+    // chatId: id,
+  },
+
   createSampleData: {
     contentOne: "",
     contentTwo: "",
     headerText: "",
     mediaUpload: "",
   },
-  // setCreateNewBroadcast: null,
+  setCreateTeamInboxDetails: null,
   setCreateSampleData: null,
   setCreateContactDetails: null,
   setCreateTemplateValues: null,
@@ -77,17 +78,19 @@ export const AppCommonDataProvider = ({ children }) => {
     headerText: "",
     mediaUpload: [],
   })
-  // const [createNewBroadcast, setCreateNewBroadcast] = useState({
-  //   broadcastName: "",
-  //   uploadesmedia: "",
-  //   selectedContactData: {},
+  const [createTeamInboxDetails, setCreateTeamInboxDetails] = useState({
+    whatsappNumber: "",
+    contactDetailData: [],
+    contactDetailDataName: "",
+  })
 
-  // })
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedContactRowData, setSelectedContactRowData] = useState(null);
   return (
     <AppCommonDataContext.Provider
       value={{
+        createTeamInboxDetails,
+        setCreateTeamInboxDetails,
         createTemplateValues,
         setCreateTemplateValues,
         createContactDetails,

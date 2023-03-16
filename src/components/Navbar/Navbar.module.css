@@ -4,7 +4,7 @@
   height: 80px;
   align-items: center;
   border-bottom: 1px solid rgb(233, 222, 222);
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .icon__container {

@@ -8,4 +8,5 @@ export const Routes = {
   templateMessage: "/broadcast/template-message",
   table: "/table",
   register: "/register",
+  campaign: "/campaign"
 };

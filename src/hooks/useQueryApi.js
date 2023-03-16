@@ -1,15 +1,21 @@
 import { useMutation, useQuery } from "react-query";
 import {
+  fetchBroadcastHistoryData,
+  fetchBroadcastHistoryStatus,
+  fetchBroadcastHistoryTabelData,
   fetchContactDetailsToClient,
   fetchContactDetailsToServer,
   fetchLoginToken,
   fetchScheduleBroadcastData,
   fetchSignUpCreds,
+  fetchSingleChatData,
+  fetchTeamInboxDetails,
   fetchTempalteMessageData,
   sendBrodcastData,
   sendBrodcastDataWithDateTime,
+  sendTeamInboxDetails,
 } from "../api";
-import { fetchScheduleBroadcast } from "../Urls";
+import { fetchScheduleBroadcast, fetchSingleChatdata } from "../Urls";
 
 export const useLogin = (creds) => {
   return useMutation({
@@ -75,11 +81,61 @@ export const usePostBroadcastDataWithDateTime = () => {
   });
 }
 
+export const usePostTeamInboxData = () => {
+  return useMutation({
+    mutationKey: ["post-teamInbox-data"],
+    mutationFn: async (data) => {
+      return sendTeamInboxDetails(data);
+    },
+    onError: (e) => e,
+  });
+}
+
+export const useTeamInboxDetails = () => {
+  return useQuery({
+    queryKey: ["contact-details"],
+    queryFn: fetchTeamInboxDetails,
+    enabled: false,
+    onError: (e) => e,
+  });
+};
+
 
 export const useSchedulBroadcastData = () => {
   return useQuery({
     queryKey: ["Schedule-broadcast"],
     queryFn: fetchScheduleBroadcastData,
+    enabled: false,
+    onError: (e) => e,
+  });
+};
+
+
+
+export const useSingleChatData = () => {
+  return useMutation({
+    mutationKey: ["single-data"],
+    mutationFn: async (data) => {
+      return await fetchSingleChatData(data);
+    },
+    onError: (e) => e,
+  });
+}
+
+
+export const useBroadcastDataHistoryOveraAllStatus = () => {
+  return useQuery({
+    queryKey: ["Broadcast-history-status"],
+    queryFn: fetchBroadcastHistoryStatus,
+    enabled: false,
+    onError: (e) => e,
+  });
+};
+
+export const useBroadcastHistoryTabelData = () => {
+  return useQuery({
+    queryKey: ["broadcast-history-tabel"],
+    queryFn: fetchBroadcastHistoryTabelData,
     enabled: false,
     onError: (e) => e,
   });

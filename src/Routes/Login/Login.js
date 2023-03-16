@@ -22,7 +22,6 @@ export const Login = () => {
   const navigate = useNavigate();
   const [checkbox, setCheckbox] = useState(false)
   const [passwordType, setPasswordType] = useState("password")
-  const [logincreds, setLogincreds] = useState([])
 
   const handleSignUp = () => {
     navigate(`${AppRoute.register}`);

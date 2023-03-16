@@ -4,6 +4,7 @@ import { RiContactsBook2Line } from "react-icons/ri";
 import { VscListSelection } from "react-icons/vsc";
 import { RxDividerVertical } from "react-icons/rx";
 import { BiBell } from "react-icons/bi";
+import { MdOutlineCampaign } from "react-icons/md"
 import { BsExclamationCircle } from "react-icons/bs";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsBroadcast } from "react-icons/bs";
@@ -25,12 +26,16 @@ export const Navbar = () => {
   const handleInbox = () => {
     navigate(`${AppRoute.teamInbox}`);
   };
+
+  const handleCampaign = () => {
+    navigate(`${AppRoute.campaign}`);
+  }
   return (
     <div className={styles.nav__container}>
       <div className="flex xl:hidden h-full p-3 w-[18rem] ">
         <ResponsiveNavbar />
       </div>
-      <div className="ml-28 xl:flex hidden">
+      <div className=" xl:flex hidden w-[60%]">
         <div className={styles.icon__container}>
           <TbInbox className={styles.icon__style} />
           <p className="text-base" onClick={handleInbox}>
@@ -49,24 +54,35 @@ export const Navbar = () => {
             Broadcast
           </p>
         </div>
+        <div className={styles.icon__container}>
+          <MdOutlineCampaign size={"1.5rem"} className={styles.icon__style} />
+          <p className="text-base" onClick={handleCampaign}>
+            Campaign
+          </p>
+        </div>
       </div>
 
-      <div className=" pl-28 hidden xl:flex items-center">
-        <VscListSelection size={"1.5rem"} />
-        <RxDividerVertical className="ml-2 h-7 w-12 items-center text-slate-300" />
-      </div>
-      <div className="hidden xl:flex">
-        <BiBell size={"1.4rem"} />
-      </div>
-      <div className="pl-9 hidden xl:block ">
-        <div className="flex item-center justify-center">
-          <p className={styles.connectedText}>CONNECTED</p>
-          <BsExclamationCircle className="pl-1 text-blue-700" />
+      <div className="flex justify-between items-center w-[35%]">
+        <div className="hidden xl:flex items-center">
+          <VscListSelection size={"1.5rem"} />
+          <RxDividerVertical className="ml-2 h-7 w-12 items-center text-slate-300" />
+          <BiBell size={"1.4rem"} />
         </div>
-        <p className={styles.number__style}>+14798024855</p>
+        <div className=" flex  right-0">
+          <div className="hidden xl:block pl-10">
+            <div className="flex item-center justify-center">
+              <p className={styles.connectedText}>CONNECTED</p>
+              <BsExclamationCircle className="pl-16 text-blue-700" />
+            </div>
+            <p className={styles.number__style}>+14798024855</p>
+          </div>
+          <div className="">
+            <HiOutlineUserCircle size={"2.4rem"} />
+          </div>
+        </div>
       </div>
-      <HiOutlineUserCircle size={"2.4rem"} />
     </div>
+    // </div>
   );
 };
 

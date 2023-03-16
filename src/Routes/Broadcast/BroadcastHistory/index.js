@@ -12,115 +12,25 @@ import { BrodcastHistoryOverview } from "../../../components/BroadcastHistoryOve
 import { IoSearchOutline } from "react-icons/io5";
 import { InputFieldWithoutCounter } from "../../../components/InputField";
 import ContactTable from "../../../components/Table/contactTable";
+import { RiCheckDoubleLine } from "react-icons/ri";
+import { BiCheck } from "react-icons/bi"
+import { AiOutlineEye, AiOutlineSend } from "react-icons/ai"
+import { TbCornerUpLeftDouble } from "react-icons/tb"
+import { MdOutlineSmsFailed } from "react-icons/md"
+import { HiOutlineArrowPath, HiOutlineQueueList } from "react-icons/hi2"
+import { useBroadcastDataHistoryOveraAllStatus, useBroadcastHistoryTabelData } from "../../../hooks/useQueryApi";
+import { BsBarChart } from "react-icons/bs"
+import { useEffect } from "react";
+
+
 
 export const BroadcastHistory = () => {
+  const [rows, setrows] = useState([])
+  const [boradcastHistoryTabelData, setBroadcastHistoryTabelData] = useState()
+  const [boradcastHistoryStatusData, setBroadcastHistoryStatusData] = useState()
   const [newBroadcastPopup1, setNewBroadcastPopup1] = useState(false);
-
-  const columns = [
-    // { field: 'id', headerName: 'ID', width: 90 },
-    {
-      field: 'broadcastName',
-      // renderCell: (params) => {
-      //   return (
-      //     <div className="flex flex-wrap text-2xl">
-      //       headerName: 'First name',
-      //     </div>
-      //   );
-      // },
-      // headerName: 'First name',
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Broadcast name
-          Scheduled</p>
-      ),
-      width: 145,
-      editable: true,
-    },
-    {
-      field: 'successful',
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Successful</p>
-      ),
-      // headerName: 'First name',
-      width: 140,
-      editable: true,
-    },
-    {
-      field: 'read',
-      // renderCell: (params) => {
-      //   return (
-      //     <div className="flex flex-wrap text-2xl">
-      //       headerName: 'First name',
-      //     </div>
-      //   );
-      // },
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Read</p>
-      ),
-      // headerName: 'First name',
-      width: 140,
-      editable: true,
-    },
-    {
-      field: 'replied',
-      // renderCell: (params) => {
-      //   return (
-      //     <div className="flex flex-wrap text-2xl">
-      //       headerName: 'First name',
-      //     </div>
-      //   );
-      // },
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Replied</p>
-      ),
-      // headerName: 'First name',
-      width: 140,
-      editable: true,
-    },
-    {
-      field: 'status',
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Status</p>
-      ),
-      // headerName: 'Last name',
-      width: 140,
-      editable: true,
-    },
-    // {
-    //   field: 'lastName',
-    //   headerName: 'Last name',
-    //   width: 140,
-    //   editable: true,
-    // },
-
-    // {
-    //   field: 'age',
-    //   headerName: 'Age',
-    //   type: 'number',
-    //   width: 100,
-    //   editable: true,
-    // },
-    {
-      field: 'Failed',
-      headerName: 'Failed',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 140,
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-    },
-  ];
-
-  const rows = [
-    { id: 1, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 2, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 3, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 4, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 5, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 6, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 7, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 8, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-    { id: 9, broadcastName: "Abhi1", successful: "true", read: "true", replied: "true", status: "pending", Failed: "--" },
-  ];
+  const { refetch } = useBroadcastHistoryTabelData();
+  const { refetch: getAllStatus } = useBroadcastDataHistoryOveraAllStatus()
 
 
   const colourStyles = {
@@ -183,6 +93,183 @@ export const BroadcastHistory = () => {
     },
   };
 
+  useEffect(() => {
+    refetch().then((res) => setBroadcastHistoryTabelData(res?.data?.data)).catch((err) => console.log(err))
+    getAllStatus().then((res) => setBroadcastHistoryStatusData(res?.data?.data, "dchg")).catch((err) => console.log(err, "err"))
+  }, [])
+
+  // boradcastHistoryStatusData?.filter(e => { if (e.name === "READ") { console.log(e.count) } })
+  // console.log(boradcastHistoryStatusData.Failed, "data")
+
+
+  const columns = [
+    {
+      field: 'broadcastName',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Broadcast name
+          Scheduled</p>
+      ),
+      width: 250,
+      editable: true,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: 'successful',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Successful</p>
+      ),
+      renderCell: (params) => {
+        if (params.row.successful === 1) {
+
+          return (
+            <div className="rounded-full h-20 w-20 bg-[#5536db] flex items-center justify-center">
+              <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
+                100%
+              </div>
+            </div>
+          );
+        } else {
+          return (
+
+            <div className="rounded-full h-20 w-20 bg-slate-300 flex items-center justify-center">
+              <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
+                0%
+              </div>
+            </div>
+          );
+        }
+      },
+      width: 160,
+      editable: true,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: 'read',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Read</p>
+      ),
+      renderCell: (params) => {
+        if (params.row.read === 1) {
+          return (
+            <div className="rounded-full h-20 w-20 bg-[#5536db] flex items-center justify-center">
+              <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
+                100%
+              </div>
+            </div>
+          );
+        } else {
+          return (
+
+            <div className="rounded-full h-20 w-20 bg-slate-300 flex items-center justify-center">
+              <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
+                0%
+              </div>
+            </div>
+          );
+        }
+      },
+      width: 160,
+      editable: true,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: 'replied',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Replied</p>
+      ),
+      renderCell: (params) => {
+        if (params.row.replied === 1) {
+          return (
+            <div className="rounded-full h-20 w-20 bg-[#5536db] flex items-center justify-center">
+              <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
+                100%
+              </div>
+            </div>
+          );
+        } else {
+          return (
+
+            <div className="rounded-full h-20 w-20 bg-slate-300 flex items-center justify-center">
+              <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
+                0%
+              </div>
+            </div>
+          );
+        }
+      },
+      width: 160,
+      editable: true,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: 'status',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ' >Status</p>
+      ),
+      renderCell: (params) => {
+        if (params.row.delivered && params.row.replied && params.row.sent) {
+          return <p className="font-semibold">Completed</p>
+        } else {
+          return <p className="font-semibold">Pending</p>
+        }
+      },
+      width: 160,
+      editable: true,
+      align: "center",
+      headerAlign: "center",
+    },
+    {
+      field: 'Failed',
+      renderHeader: (params) => (
+        <p className='text-lg font-bold ml-5' >Actions</p>
+      ),
+      align: "center",
+      width: 130,
+      editable: true,
+      headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <div className="flex">
+            <div className="border-[1px] p-1 rounded mx-3"> <BsBarChart size={"1.4rem"} /></div>
+            <div className="border-[1px] p-1 rounded "><AiOutlineEye size={"1.5rem"} /></div>
+          </div>
+        )
+        // if (params.row.delivered && params.row.replied && params.row.sent) {
+        //   return <p className="font-semibold">Completed</p>
+        // } else {
+        //   return (
+        //     <div className="border-[1px] p-1 rounded">
+        //       <BsBarChart size={"1.4rem"} />
+        //     </div>
+        //   )
+        // }
+      },
+    },
+
+  ];
+
+
+
+  useEffect(() => {
+    if (boradcastHistoryTabelData) {
+      let data = boradcastHistoryTabelData?.map((e) => ({
+        id: e._id,
+        successful: e.Delivered,
+        read: e.Read,
+        sent: e.Sent,
+        broadcastName: e.broadCastName,
+      }))
+      setrows(data)
+    }
+  }, [boradcastHistoryTabelData])
+
+
+
+
   return (
     <div>
       <Navbar />
@@ -213,33 +300,33 @@ export const BroadcastHistory = () => {
               </div>
             </div>
           </div>
-          {/* <hr /> */}
           <div className="">
             <Base2 className="poppins p-3">Overview</Base2>
             <div className="flex flex-wrap pr-3 pl-3">
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<BiCheck size={"1.3rem"} color={"#5536db"} />} statusText={"Sent"} count={boradcastHistoryStatusData?.Sent} />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<RiCheckDoubleLine size={"1.3rem"} color={"#5536db"} />} statusText={"Delivered"} count={boradcastHistoryStatusData?.Delivered
+                } />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<AiOutlineEye size={"1.3rem"} color={"#5536db"} />} statusText={"Read"} count={boradcastHistoryStatusData?.Read} />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<TbCornerUpLeftDouble size={"1.3rem"} color={"#5536db"} />} statusText={"Replied"} count={0} />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<AiOutlineSend size={"1.3rem"} color={"#5536db"} />} statusText={"Sending"} count={0} />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<MdOutlineSmsFailed size={"1.3rem"} color={"#5536db"} />} statusText={"Failed"} count={boradcastHistoryStatusData?.Failed} />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<HiOutlineArrowPath size={"1.3rem"} color={"#5536db"} />} statusText={"Processing"} count={0} />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview />
+                <BrodcastHistoryOverview component={<HiOutlineQueueList size={"1.3rem"} color={"#5536db"} />} statusText={"Queued"} count={0} />
               </div>
             </div>
             <div className={styles.broadcast__list}>
@@ -283,7 +370,7 @@ export const BroadcastHistory = () => {
       {newBroadcastPopup1 && (
         <NewBroadCast
           isOpen={newBroadcastPopup1}
-          onClose={() => setNewBroadcastPopup1(false)}
+          onClose={() => setNewBroadcastPopup1(!newBroadcastPopup1)}
           className={`${styles.customModal}`}
         />
       )}

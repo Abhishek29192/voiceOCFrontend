@@ -7,7 +7,7 @@ import { SelectOptionButton } from "../../../components/SelectOptions";
 import { Base1Strong, Paragraph3 } from "../../../components/Typography";
 import { useTemplateData } from "../../../hooks/useQueryApi";
 import { UploadMediaFileInBroadcast } from "./UploadMediaFileInBroadcast";
-import { OpenBroadcastTabelView } from "./OpenBroadcasttabelView";
+import { OpenBroadcastTabelView } from "./OpenBroadcastTabelView";
 import styles from "./BroadcastHistory.module.css";
 
 
@@ -16,7 +16,6 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
   const {
     selectedContactRowData,
     setSelectedContactRowData,
-    createTemplateValues,
     setCreateContactDetails,
     createContactDetails,
   } = useAppCommonDataProvider();
@@ -28,7 +27,7 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
   const [broadcastName, setBroadcastName] = useState("");
   const { refetch } = useTemplateData();
 
-  console.log(selectedContactRowData, "selected row data")
+  // console.log(selectedContactRowData, "selected row data")
 
   useEffect(() => {
     refetch().then((res) => {
@@ -46,7 +45,6 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
       value: ele.template_name,
     };
   });
-
 
 
   const colourStyles1 = {
@@ -82,7 +80,9 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
   const handleNextButton = () => {
     if (selectedContactRowData?.Type === "MEDIA") {
       setOpenMediaUpload(true);
+      // setOpenMediaUpload(!openMediaUpload);
     } else {
+      // setOpenBroadcastTable(!openBroadcastTable);
       setOpenBroadcastTable(true);
     }
   };
@@ -173,7 +173,9 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
         <UploadMediaFileInBroadcast
           // mediaType={selectedContactRowData.Type}
           isOpen={openMediaUpload}
-          onClose={() => setOpenMediaUpload(false)}
+          onClose={() => { setOpenMediaUpload(false); onClose() }}
+
+          // onClose={() => setOpenMediaUpload(false)}
           className={`${styles.customModal}`}
           classes={"height:'600px"}
         />
@@ -181,7 +183,8 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
       {openBroadcastTable && (
         <OpenBroadcastTabelView
           isOpen={openBroadcastTable}
-          onClose={() => setOpenBroadcastTable(false)}
+          onClose={() => { setOpenBroadcastTable(false); onClose() }}
+          // onCloseUploadPopUp={() => setOpenMediaUpload(false)}
           className={`${styles.customModal}`}
           classes={"height:'80vh'"}
         />

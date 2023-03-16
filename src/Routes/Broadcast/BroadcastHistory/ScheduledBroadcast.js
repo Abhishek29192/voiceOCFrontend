@@ -1,4 +1,5 @@
 import { CommentsDisabledOutlined } from '@mui/icons-material';
+import moment from 'moment/moment';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
@@ -24,8 +25,10 @@ export const ScheduledBroadcast = () => {
             renderHeader: (params) => (
                 <p className='text-lg font-bold'>Broadcast name</p>
             ),
-            width: 400,
+            width: 300,
             editable: true,
+            // align: "center",
+            // headerAlign: "center",
         },
         {
             field: 'scheduleDate',
@@ -33,18 +36,21 @@ export const ScheduledBroadcast = () => {
             renderHeader: (params) => (
                 <p className='text-lg font-bold ml-5' >Scheduled</p>
             ),
-            width: 400,
+            width: 300,
             editable: true,
+            align: "center",
+            headerAlign: "center",
         },
         {
             field: 'scheduleTime',
-            // headerName: 'Age',
             renderHeader: (params) => (
                 <p className='text-lg font-bold ml-7'>Time</p>
             ),
             type: 'number',
-            width: 110,
+            width: 250,
             editable: true,
+            // align: "center",
+            // headerAlign: "center",
         },
     ];
 
@@ -63,11 +69,11 @@ export const ScheduledBroadcast = () => {
                 {
                     id: index,
                     broadcastName: e.broadCastName,
-                    scheduleDate: e.date,
+                    scheduleDate: `Start In : ${moment(e.date).format("YYYY-MM-DD")}`,
                     scheduleTime: e.time
                 }))
         setTableRows(rowss)
-        console.log(rowss, "rowssss dataaaa")
+        // console.log(rowss, "rowssss dataaaa")
     }, [scheduleBroadcastdata])
 
 
@@ -96,7 +102,7 @@ export const ScheduledBroadcast = () => {
                         </div>
                         <PrimaryButton text={"New Broadcast"} />
                     </div>
-                    <div className='mt-12'>
+                    <div className='mt-12 bg-white'>
                         <ContactTable
                             tableContent="broadcastData" // rows={createData(data?.data)}
                             rows={tableRows}

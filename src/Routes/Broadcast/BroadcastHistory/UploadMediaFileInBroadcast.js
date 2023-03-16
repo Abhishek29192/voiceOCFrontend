@@ -4,7 +4,7 @@ import { useAppCommonDataProvider } from "../../../components/AppCommonDataProvi
 import { PrimaryButton, SecondaryButton } from "../../../components/Button";
 import { FileUploadbutton } from "../../../components/InputField";
 import { Base1Strong, Paragraph3 } from "../../../components/Typography";
-import { OpenBroadcastTabelView } from "./OpenBroadcasttabelView";
+import { OpenBroadcastTabelView } from "./OpenBroadcastTabelView";
 import styles from "./BroadcastHistory.module.css";
 
 
@@ -41,8 +41,10 @@ export const UploadMediaFileInBroadcast = ({
     // }
   }
 
+
+
   const { excelSelected } = createContactDetails;
-  console.log(excelSelected, "------------------------------------------------------------")
+  console.log(excelSelected, "-----------------------")
 
 
   return (
@@ -94,7 +96,7 @@ export const UploadMediaFileInBroadcast = ({
       {openBroadcastTabelView && (
         <OpenBroadcastTabelView
           isOpen={openBroadcastTabelView}
-          onClose={() => setOpenBroadcastTabelView(false)}
+          onClose={() => { setOpenBroadcastTabelView(false); onClose() }}
           className={`${styles.customModal}`}
           classes={"max-height: 138vh"}
         />

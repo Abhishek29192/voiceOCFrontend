@@ -1,18 +1,24 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import validator from 'validator'
 import { PrimaryButton, SecondaryButton } from '../../components/Button'
 import { InputFieldWithoutCounter } from '../../components/InputField'
 import { SelectOptionButton } from '../../components/SelectOptions'
 import { Base2 } from '../../components/Typography'
 import { CiGlobe } from "react-icons/ci"
 import { IoMdCall } from "react-icons/io"
+import { useAppCommonDataProvider } from '../../components/AppCommonDataProvider/AppCommonDataProvider'
 
-export const NewMessage = () => {
+export const NewMessage = ({ setNewMessage, setShowContactList }) => {
+    const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
+    const { whatsappNumber } = createTeamInboxDetails;
+    const [number, setNumber] = useState()
+
     const colourStyles = {
         control: (styles) => {
             return {
                 ...styles,
                 backgroundColor: "white",
-                width: "17rem",
+                width: "14.9rem",
                 height: "2.7rem",
                 boxShadow: "none",
                 fontSize: "12px",
@@ -36,6 +42,19 @@ export const NewMessage = () => {
             };
         },
     };
+
+
+    const handleDemo = () => {
+        // const validation = /^\+[1 - 9]{ 1 } [0 - 9]{ 3, 14 } $/;
+        let validation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        if (number.match(validation)) {
+            setNewMessage(false);
+            setShowContactList(true);
+            console.log("clickeed", number)
+        } else {
+            alert("Enter valid number")
+        }
+    }
     return (
         <div className="w-full h-[80vh] p-4">
             <div className="flex bg-slate-200 rounded-md py-3 px-6">
@@ -47,11 +66,10 @@ export const NewMessage = () => {
                     </div>
                     <div className="flex justify-between py-4 items-center ">
                         <div className="flex relative bg-white p-1 rounded-md justify-center w-[20%] h-12 items-center">
-
                             <IoMdCall size={"2rem"} className="absolute left-[1px] top-3" />
-                            <CiGlobe size={"2.5rem"} color={"grey"} className="" />
+                            <CiGlobe size={"2.5rem"} color={"grey"} />
                         </div>
-                        <InputFieldWithoutCounter placeholder={"Enter whatsapp number"} className="ml-5 h-12 w-[80%]" />
+                        <InputFieldWithoutCounter type='tel' placeholder={"Enter whatsapp number"} className="ml-5 h-12 w-[80%]" onChange={(e) => { setCreateTeamInboxDetails({ ...createTeamInboxDetails, whatsappNumber: e.target.value }); setNumber(e.target.value) }} />
                     </div>
                     <div className="flex justify-center pt-2">
                         <Base2>Or</Base2>
@@ -68,10 +86,16 @@ export const NewMessage = () => {
                     </div>
                     <div className="flex justify-end mt-7">
                         <div>
-                            <SecondaryButton text={"Close"} className={"border-transparent"} />
+                            <SecondaryButton text={"Close"} className={"border-transparent"} onClick={() => setNewMessage(false)} />
                         </div>
                         <div className="ml-4">
-                            <PrimaryButton text={"Next"} />
+                            <PrimaryButton text={"Next"}
+                                disabled={!number}
+                                // onClick={() => { setNewMessage(false); setShowContactList(true); }}
+                                onClick={() => handleDemo()}
+
+                            />
+                            {/* <PrimaryButton text={"Next"} disabled={!number} onClick={handleNextButton()} /> */}
                         </div>
                     </div>
                 </div>

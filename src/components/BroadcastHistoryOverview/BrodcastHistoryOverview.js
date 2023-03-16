@@ -2,17 +2,17 @@ import React from "react";
 import Styles from "./BroadcastHistoryoverview.module.css";
 import { RiCheckDoubleLine } from "react-icons/ri";
 
-export const BrodcastHistoryOverview = () => {
+export const BrodcastHistoryOverview = ({ component, statusText, count }) => {
   return (
     <div>
       <div className={Styles.box}>
         <div className="info_left">
-          <div>0</div>
-          <div className="pt-4">Failed!</div>
+          <div className="font-semibold">{count}</div>
+          <div className="pt-5 font-semibold">{statusText}</div>
         </div>
-        <div className="info_right">
-          <div>
-            <RiCheckDoubleLine size={"1.3rem"} />
+        <div className="bg-white h-fit rounded-full ">
+          <div className="p-2">
+            {component}
           </div>
         </div>
       </div>
