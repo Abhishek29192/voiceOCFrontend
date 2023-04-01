@@ -31,13 +31,13 @@ export const AddContactList = ({
           }
           placeholder="File Name..."
           type={"text"}
-          // value={templateName}
-          // onChange={(e) => {
-          //   setCreateTemplateValues?.({
-          //     ...createTemplateValues,
-          //     templateName: e.target.value,
-          //   });
-          // }}
+        // value={templateName}
+        // onChange={(e) => {
+        //   setCreateTemplateValues?.({
+        //     ...createTemplateValues,
+        //     templateName: e.target.value,
+        //   });
+        // }}
         />
         <Paragraph1 className="text-sm p-2">Document Type</Paragraph1>
         <div className="p-2">

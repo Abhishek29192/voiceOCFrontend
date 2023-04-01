@@ -29,15 +29,14 @@ import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import { visuallyHidden } from "@mui/utils";
 import { useTemplateData } from "../../hooks/useQueryApi";
-import moment from "moment";
 import { CreateTemplatePopup } from "../../components/CreateTemplatePopup";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import moment from "moment";
 
 export const TemplateMessage = () => {
   const { isLoading, refetch } = useTemplateData();
   const [templateData, setTemplateData] = useState(null);
-  const { setCreateTemplateValues, setSelectedRowData } =
-    useAppCommonDataProvider();
+  const { setCreateTemplateValues, setSelectedRowData } = useAppCommonDataProvider();
   const [open, setOpen] = useState(false);
   const [createTemplate, setCreateNewTemplate] = useState(false);
   const [viewTemplate, setViewTemplate] = useState(false);
@@ -50,7 +49,7 @@ export const TemplateMessage = () => {
     });
   }, []);
 
-  // console.log(templateData, "template data");
+  console.log(templateData, "template data");
 
   const handleNewTemplate = () => {
     setOpen(!open);
@@ -68,8 +67,8 @@ export const TemplateMessage = () => {
         templateName: entry?.template_name,
         category: entry?.Category,
         status: entry?.status ? (
-          <ApprovedButton text={"Approved"} className="text-sm font-semibold" />
-        ) : null,
+          <ApprovedButton text={entry.status} className="text-sm font-semibold" />
+        ) : (<ApprovedButton text={entry.status} className="text-sm font-semibold" />),
         language: entry?.Langauge,
         lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
         action: (

@@ -5,6 +5,8 @@ import {
   fetchBroadcastHistoryTabelData,
   fetchContactDetailsToClient,
   fetchContactDetailsToServer,
+  fetchContactListOptions,
+  fetchExcelFile,
   fetchLoginToken,
   fetchScheduleBroadcastData,
   fetchSignUpCreds,
@@ -14,6 +16,7 @@ import {
   sendBrodcastData,
   sendBrodcastDataWithDateTime,
   sendTeamInboxDetails,
+  sendVideoData,
 } from "../api";
 import { fetchScheduleBroadcast, fetchSingleChatdata } from "../Urls";
 
@@ -46,11 +49,36 @@ export const useContactDataToServer = () => {
   return useMutation({
     mutationKey: ["contact-data-to-server"],
     mutationFn: async (data) => {
+      // console.log(data, "datatatatataa")
       return fetchContactDetailsToServer(data);
     },
     onError: (e) => e,
   });
 };
+
+
+export const useDPostExcelToDownload = () => {
+  return useMutation({
+    mutationKey: ["download-excel"],
+    mutationFn: async (data) => {
+      return fetchExcelFile(data);
+    },
+    onError: (e) => e,
+  });
+};
+
+
+// export const useDPostExcelToDownload = (id) => {
+//   return useQuery({
+//     queryKey: ["download-excel"],
+//     queryFn: fetchExcelFile(id),
+//     enabled: !!id,
+//     onError: (e) => e,
+//   });
+// };
+
+
+
 
 export const useContactDataToClient = () => {
   return useQuery({
@@ -122,6 +150,16 @@ export const useSingleChatData = () => {
   });
 }
 
+export const useUploadVideo = () => {
+  return useMutation({
+    mutationKey: ["video-Upload"],
+    mutationFn: async (data) => {
+      return await sendVideoData(data);
+    },
+    onError: (e) => e,
+  });
+}
+
 
 export const useBroadcastDataHistoryOveraAllStatus = () => {
   return useQuery({
@@ -136,6 +174,16 @@ export const useBroadcastHistoryTabelData = () => {
   return useQuery({
     queryKey: ["broadcast-history-tabel"],
     queryFn: fetchBroadcastHistoryTabelData,
+    enabled: false,
+    onError: (e) => e,
+  });
+};
+
+
+export const useContactListOptions = () => {
+  return useQuery({
+    queryKey: ["contact-List"],
+    queryFn: fetchContactListOptions,
     enabled: false,
     onError: (e) => e,
   });

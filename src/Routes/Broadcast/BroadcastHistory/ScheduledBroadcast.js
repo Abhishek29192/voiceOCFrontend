@@ -66,10 +66,12 @@ export const ScheduledBroadcast = () => {
     useEffect(() => {
         let rowss =
             scheduleBroadcastdata?.map((e, index) => (
+
                 {
                     id: index,
                     broadcastName: e.broadCastName,
-                    scheduleDate: `Start In : ${moment(e.date).format("YYYY-MM-DD")}`,
+                    // scheduleDate: `Start In : ${moment(e.date).format("YYYY-MM-DD")}`,
+                    scheduleDate: `Start In : ${e.date}`,
                     scheduleTime: e.time
                 }))
         setTableRows(rowss)

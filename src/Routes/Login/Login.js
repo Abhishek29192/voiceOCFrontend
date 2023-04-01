@@ -51,7 +51,12 @@ export const Login = () => {
       .email("Invalid email format"),
     password: Yup.string()
       .required("Password is a required field")
-      .min(8, "Password must be at least 8 characters"),
+      .min(8, "Password must be at least 8 characters")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+      )
+    ,
   });
 
   const handleSubmitLogin = (values) => {

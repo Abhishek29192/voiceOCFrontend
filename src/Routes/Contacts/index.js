@@ -21,32 +21,99 @@ import { visuallyHidden } from "@mui/utils";
 import {
   useContactDataToClient,
   useContactDataToServer,
+  useDPostExcelToDownload,
 } from "../../hooks/useQueryApi";
 import { TiTick } from "react-icons/ti";
+import { AiOutlineCloudDownload } from "react-icons/ai";
+import { HiOutlineEye } from "react-icons/hi"
 import BasicTable from "../../components/Table";
-import { CheckBox } from "@mui/icons-material";
+import XLSX from "sheetjs-style";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import { ExcelPopUp } from "./ExcelPopUp";
 
 export const Contacts = () => {
-  const { mutate: addContact } = useContactDataToServer();
-
-  const { isLoading, refetch } = useContactDataToClient();
-
-  const { createContactDetails, setCreateContactDetails } =
-    useAppCommonDataProvider();
-
+  const [selectedContactListqueryId, setSelectedContactListQueryId] = useState(null);
+  const [selectedContactExcel, setSelectedContactExcel] = useState([])
   const [handleContactListModal, sethandleContactListModal] = useState(false);
   const [fileName, setFileName] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [tableData, setTableData] = useState([]);
+  const [contactDataFromServer, setContactDataFromServer] = useState([])
+  const [viewContacts, setViewContacts] = useState([])
+  const { mutate: addContact, isSuccess, isLoading: Load } = useContactDataToServer();
+  const { isLoading, refetch } = useContactDataToClient();
+  const { createContactDetails, setCreateContactDetails } =
+    useAppCommonDataProvider();
+  const { mutateAsync: postExcelData, } = useDPostExcelToDownload(selectedContactListqueryId);
+
+
+  // useEffect(() => {
+  //   postExcelData().then((res) => setSelectedContactExcel(res?.data?.contacts)).catch((err) => console.log(err))
+  // }, [selectedContactExcel])
+
+  const handleSubmitFile = () => {
+    const formData = new FormData();
+    formData.append("name", selectedFile);
+    formData.append("UserId", "one");
+    addContact(formData)
+    sethandleContactListModal(false)
+  };
+
+  const handleDownload = (entry) => {
+    const data = {
+      UserId: "one",
+      ExcelId: entry.ContactList._id,
+    }
+
+    setSelectedContactListQueryId(entry.ContactList._id);
+    postExcelData(data).then((res) => {
+
+      const workSheet = XLSX.utils.json_to_sheet(res?.data?.contacts);
+      const workBook = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(workBook, workSheet, "contacts");
+
+      XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+
+      XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+
+      XLSX.writeFile(workBook, "./" + res?.data?.fileName);
+      console.log(workBook, "workbook")
+    }
+    ).catch((err) => console.log(err))
+
+  }
+
+  const handleViewExcel = (entry) => {
+    setViewContacts(true)
+    const data = {
+      UserId: "one",
+      ExcelId: entry.ContactList._id,
+    }
+
+    setSelectedContactListQueryId(entry.ContactList._id);
+    postExcelData(data).then((res) => setSelectedContactExcel(res.data.contacts)).catch((err) => console.log(err))
+  }
+  console.log(selectedContactExcel, "rgdgfcgvb")
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch().then((res) => {
+        setContactDataFromServer(res?.data?.data?.contactList)
+        createData(res?.data?.data?.contactList);
+      }).catch((err) => console.log(err));
+    }
+  }, [isSuccess])
+
+
 
   useEffect(() => {
     refetch().then((res) => {
-      if (res.isError === false) {
-        createData(res.data.data.contactList);
-      }
-    });
-  }, []);
+      setContactDataFromServer(res?.data?.data?.contactList)
+      createData(res?.data?.data?.contactList);
+    }).catch((err) => console.log(err))
+  }, [contactDataFromServer, handleContactListModal]);
+
 
   function createData(data) {
     const rows = data?.map((entry) => ({
@@ -62,49 +129,21 @@ export const Contacts = () => {
       createdDate: moment(`${entry?.ContactList.createdAt}`)
         .utc()
         .format("YYYY-MM-DD"),
-      broadcast: <TiTick size={"1.5rem"} />,
-      sms: <TiTick size={"1.5rem"} />,
+      broadcast: <TiTick size={"1.5rem"} style={{ margin: "auto" }} />,
+      action: <div className="flex  justify-center">
+        <div className="mx-3">
+          <AiOutlineCloudDownload size={"1.5rem"} style={{ margin: "auto" }} onClick={() => handleDownload(entry)} />
+        </div>
+        <div>
+          <HiOutlineEye size={"1.5rem"} style={{ margin: "auto" }} onClick={() => handleViewExcel(entry)} />
+        </div>
+      </div>
     }));
 
     setTableData(rows);
     setCreateContactDetails?.({
-      basicInfo: data?.map((entry) => entry.ContactList.fileName),
+      basicInfo: contactDataFromServer?.map((entry) => entry.ContactList.fileName),
     });
-    // console.log(rows);
-    // const rows = data.data.contactList?.map((entry, index) => ({
-    //   templateName: entry.template_name,
-    //   category: entry.Category,
-    //   status: entry.status ? <ApprovedButton /> : null,
-    //   language: entry.Langauge,
-    //   lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
-    //   action: (
-    //     <div className="flex">
-    //       <div
-    //         className={`${styles.template_btn}`}
-    //         onClick={() => {
-    //           setTimeout(() => {
-    //           console.log(entry);
-    //             <p>jhm</p>;
-    //             // setViewTemplate(true);
-    //           }, 200);
-    //           setCreateTemplateValues({
-    //             templateName: entry?.template_name,
-    //             category: entry?.Category,
-    //             language: entry?.Language,
-    //             header: entry?.headerOption,
-    //             body: entry?.Body,
-    //             footer: entry?.Footer,
-    //             optionalButtonValue: entry?.ButtonType,
-    //             ctaButtons: entry?.Buttons,
-    //             ctaButtonLabels: entry?.Buttons.map((e) => e.typeOfAction),
-    //             footer: entry?.Footer,
-    //           });
-    //           setSelectedRowData?.(entry);
-    //         }}>
-    //       </div>
-    //     </div>
-    //   ),
-    // }));
     return rows;
   }
 
@@ -114,6 +153,7 @@ export const Contacts = () => {
       numeric: false,
       disablePadding: false,
       label: "Basic Info",
+      headerAlign: "center"
     },
     {
       id: "customAttributes",
@@ -127,25 +167,27 @@ export const Contacts = () => {
       disablePadding: false,
       label: "Created Date",
       width: "100px",
+      align: "center",
+      headerAlign: "center",
     },
     {
       id: "broadcast",
       numeric: true,
       disablePadding: false,
       label: "Broadcast",
+      align: "center",
+      headerAlign: "center",
     },
     {
-      id: "sms",
+      id: "action",
       numeric: true,
       disablePadding: false,
-      label: "SMS",
+      label: "Actions",
+      align: "center",
+      headerAlign: "center",
+
     },
-    // {
-    //   id: "action",
-    //   numeric: true,
-    //   disablePadding: false,
-    //   label: "Edit/Delete",
-    // },
+
   ];
 
   function EnhancedTableHead(props) {
@@ -228,129 +270,132 @@ export const Contacts = () => {
   const handleUploadedFile = (e) => {
     setSelectedFile(e.target.files[0]);
     setFileName(e.target.files[0].name);
-    // setIsFilePicked(true);
   };
 
-  const handleSubmitFile = () => {
-    const formData = new FormData();
-
-    formData.append("name", selectedFile);
-    formData.append("UserId", "one");
-    addContact(formData);
-  };
   if (isLoading) return <p>Loading...</p>;
   return (
-    <div>
-      <Navbar />
-      <div className="p-5 ">
-        <div className="flex justify-between">
-          <div className="w-1/2">
-            <div className="text-2xl poppins font-semibold">Contacts</div>
-            <div className="poppins text-md max-w-1/2">
-              Contact list stores the list of numbers that you've interacted
-              with. You can even manually export or import contacts.
+    <>
+      <div>
+        <Navbar />
+        <div className="p-5 ">
+          <div className="flex justify-between">
+            <div className="w-1/2">
+              <div className="text-2xl poppins font-semibold">Contacts</div>
+              <div className="poppins text-md max-w-1/2">
+                Contact list stores the list of numbers that you've interacted
+                with. You can even manually export or import contacts.
+              </div>
+            </div>
+            <div>
+              <PrimaryButton
+                text={"+ Add Contact List"}
+                onClick={() => {
+                  sethandleContactListModal(true);
+                }}
+              />
+            </div>
+          </div>
+          <div className={styles.background__color}>
+            <div className={styles.Brodcast_section}>
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center">
+                  <Base2 className={styles.sort__text}>Sorted By :</Base2>
+                  <div className="h-12 ml-3 ">
+                    <SelectOptionButton
+                      className={colourStyles}
+                      options={optionSort}
+                    />
+                  </div>
+                  <div className={styles.input__container}>
+                    <InputFieldWithoutCounter
+                      placeholder="Search ..."
+                      className={"h-10 mt-1"}
+                    />
+                    <IoSearchOutline
+                      className="absolute top-3 right-0"
+                      size={"1.6rem"}
+                    />
+                  </div>
+                  <button className={styles.filter__icon}>
+                    <FaFilter
+                      size={"1.2rem"}
+                      color={"white"}
+                      className={styles.filter}
+                    />
+                  </button>
+                </div>
+                <div className="flex items-center">
+                  <a className={styles.ationbar__downloadlink}>
+                    Download sample Excel
+                  </a>
+                  <div className={styles.import_export_icon}>
+                    <div className={styles.import_border}>
+                      <TfiImport />
+                    </div>
+                    <div className="p-3">
+                      <TfiExport />
+                    </div>
+                  </div>
+                  <div className="flex ml-5">
+                    <div className="ml-4">
+                      <input type="radio" />
+                      <label for="html" className="ml-2">
+                        Rewrite All
+                      </label>
+                    </div>
+                    <div className="ml-4">
+                      <input type="radio" />
+                      <label for="html" className="ml-2">
+                        Skip All
+                      </label>
+                    </div>
+                  </div>
+                  <div className={styles.delete__icon}>
+                    <RiDeleteBin5Line
+                      size={"1.2rem"}
+                      color={"red"}
+                      className="absolute"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
           <div>
-            <PrimaryButton
-              text={"+ Add Contact List"}
-              onClick={() => {
-                sethandleContactListModal(true);
-              }}
-            />
+            {isLoading || Load ? (
+              <h2 className="poppins flex justify-center items-center">Loading...</h2>
+            ) : (
+              <BasicTable
+                tableContent="ContactData"
+                rows={tableData}
+                EnhancedTableHead={EnhancedTableHead}
+              />
+            )}
           </div>
         </div>
-        <div className={styles.background__color}>
-          <div className={styles.Brodcast_section}>
-            <div className="flex items-center justify-between w-full">
-              <div className="flex items-center">
-                <Base2 className={styles.sort__text}>Sorted By :</Base2>
-                <div className="h-12 ml-3 ">
-                  <SelectOptionButton
-                    className={colourStyles}
-                    options={optionSort}
-                  />
-                </div>
-                <div className={styles.input__container}>
-                  <InputFieldWithoutCounter
-                    placeholder="Search ..."
-                    className={"h-10 mt-1"}
-                  />
-                  <IoSearchOutline
-                    className="absolute top-3 right-0"
-                    size={"1.6rem"}
-                  />
-                </div>
-                <button className={styles.filter__icon}>
-                  <FaFilter
-                    size={"1.2rem"}
-                    color={"white"}
-                    className={styles.filter}
-                  />
-                </button>
-              </div>
-              <div className="flex items-center">
-                <a className={styles.ationbar__downloadlink}>
-                  Download sample Excel
-                </a>
-                <div className={styles.import_export_icon}>
-                  <div className={styles.import_border}>
-                    <TfiImport />
-                  </div>
-                  <div className="p-3">
-                    <TfiExport />
-                  </div>
-                </div>
-                <div className="flex ml-5">
-                  <div className="ml-4">
-                    <input type="radio" />
-                    <label for="html" className="ml-2">
-                      Rewrite All
-                    </label>
-                  </div>
-                  <div className="ml-4">
-                    <input type="radio" />
-                    <label for="html" className="ml-2">
-                      Skip All
-                    </label>
-                  </div>
-                </div>
-                <div className={styles.delete__icon}>
-                  <RiDeleteBin5Line
-                    size={"1.2rem"}
-                    color={"red"}
-                    className="absolute"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          {isLoading ? (
-            <h2 className="poppins justify-center items-center">Loading...</h2>
-          ) : (
-            <BasicTable
-              tableContent="ContactData"
-              rows={tableData}
-              EnhancedTableHead={EnhancedTableHead}
-            />
-          )}
-        </div>
-      </div>
 
-      {handleContactListModal && (
-        <AddContactList
-          isOpen={handleContactListModal}
-          onClose={() => {
-            sethandleContactListModal(false);
-          }}
-          className="rounded-xl"
-          onChange={(e) => handleUploadedFile(e)}
-          fileName={fileName}
-          handleSubmitFile={handleSubmitFile}
+        {handleContactListModal && (
+          <AddContactList
+            isOpen={handleContactListModal}
+            onClose={() => {
+              sethandleContactListModal(false);
+            }}
+            className="rounded-xl"
+            onChange={(e) => handleUploadedFile(e)}
+            fileName={fileName}
+            handleSubmitFile={handleSubmitFile}
+          />
+        )}
+      </div>
+      {viewContacts && (
+        <ExcelPopUp
+          isOpen={viewContacts}
+          onClose={() => setViewContacts(!viewContacts)}
+          className={`${styles.customModal}`}
+          selectedContactExcel={selectedContactExcel}
         />
-      )}
-    </div>
+      )
+      }
+    </>
   );
 };

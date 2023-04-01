@@ -1,60 +1,100 @@
-import { message } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
 import socketIOClient from "socket.io-client";
 import { useChatScroll, UseChatScroll } from '../../hooks/UseChatScroll';
 import { useAppCommonDataProvider } from '../AppCommonDataProvider/AppCommonDataProvider';
-import { ChatBoxReciver, ChatBoxSender } from './ChatBox';
+import { ChatBoxImageReciver, ChatBoxImageSender, ChatBoxReciver, ChatBoxSender } from './ChatBox';
 import { InputChatField } from './InputChatField';
 
 export const ChatContainer = ({ singleChat, initialChat }) => {
-    console.log(initialChat, "fshngbvdsj")
     const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
     const { contactDetailData } = createTeamInboxDetails;
-    let socketio = socketIOClient("http://localhost:8000")
-    const [chats, setChats] = useState([])
+    const [chats, setChats] = useState(initialChat)
     // const [user, setUser] = useState(localStorage.getItem("user"))
+    const [image, setImage] = useState("")
     const [term, setTerm] = useState("")
+    const [typeOfMessage, setTypeOfMessage] = useState("text");
+    const [messageStatus, setMessageStatus] = useState(false)
 
-    const ref = useChatScroll(chats)
+
+    // let socketio = socketIOClient("http://127.0.0.1:8000")
+    let socketio = socketIOClient("http://3.6.197.151:3057")
+    const ref = useChatScroll(chats);
 
     useEffect(() => {
         socketio.on('chat_client', senderChats => {
-            console.log(senderChats, "last message")
+            // console.log(senderChats, "gdhhm")
             setChats([...senderChats])
+        })
+        socketio.on('disconnect_socket', disconnect => {
+            console.log(disconnect, "disconnect")
+        })
+        socketio.on("firstMessage", firstMessage => {
+            setMessageStatus(firstMessage)
+
         })
     }, [])
 
-    ////--------------Apend object into single chat---------------////
+
     useEffect(() => {
         setChats(singleChat)
     }, [singleChat])
 
+    // console.log(chats, "chats---------------------")
+
+
+    useEffect(() => {
+        setChats(initialChat)
+    }, [initialChat])
+
+
     function sendChatToSocket(chat) {
-        socketio.emit("chat", [{
-            message: chat,
-            mobileNumber: contactDetailData?.customerId?.mobileNumber,
-            chatId: contactDetailData?._id,
-        }])
+        // console.log(chat, typeof chat, "videosssssssssssssss")
+        if (typeof chat === "object") {
+            socketio.emit("chat", [{
+                messageType: typeOfMessage,
+                message: chat,
+                fileName: chat.name,
+                mobileNumber: contactDetailData?.customerId?.mobileNumber || initialChat[0].fullContactNumber,
+                chatId: contactDetailData?._id || initialChat[0].chatId,
+            }])
+        } else {
+            socketio.emit("chat", [{
+                messageType: typeOfMessage,
+                message: chat,
+                mobileNumber: contactDetailData?.customerId?.mobileNumber || initialChat[0].fullContactNumber,
+                chatId: contactDetailData?._id || initialChat[0].chatId,
+            }])
+        }
+
+        // socketio.emit("chat", [{
+        //     messageType: typeOfMessage,
+        //     message: chat,
+        //     mobileNumber: contactDetailData?.customerId?.mobileNumber || initialChat[0].fullContactNumber,
+        //     chatId: contactDetailData?._id || initialChat[0].chatId,
+        // }])
     }
 
 
-    function ChatMessageList({ chat, messageTime }) {
-        return <ChatBoxSender message={chat} messageTime={messageTime} />
+    function SenderChat({ chat, messageTime, messageType }) {
+        return <ChatBoxSender message={chat} messageTime={messageTime} messageType={messageType} />
     }
 
-    // function RecieverChat({chat,messageTime}{
-    //     return <ChatBoxReciver message={chat} messageTime={messageTime} />
-    // })
+    function RecieverChat({ chat, messageTime, messageType }) {
+        return <ChatBoxReciver message={chat} messageTime={messageTime} messageType={messageType} />
+    }
 
 
     return (
-        <div className='' >
+        <div>
             <div className='h-[62vh] overflow-y-auto' ref={ref} >
-                {/* {singleChat?.length > 0 && singleChat?.map((e) => console.log(e.message))} */}
-                {chats?.length > 0 && chats?.map((chat, index) => <ChatMessageList chat={chat.message} messageTime={chat.createdAt} key={index.toString()} />)}
+
+                {chats?.length > 0 && chats?.map((chat, index) => chat.messageFrom === "agent" ? <SenderChat chat={chat.message} messageType={chat.type} messageTime={chat.createdAt} key={index.toString()} /> : <RecieverChat chat={chat.message} messageType={chat.type} messageTime={chat.createdAt} key={index.toString()} />)}
+
+                {/* {chats?.length > 0 && chats?.map((chat, index) => chat.messageFrom === "agent" ? <SenderChat chat={chat.message} messageTime={chat.createdAt} key={index.toString()} /> : <RecieverChat chat={chat.message} messageTime={chat.createdAt} key={index.toString()} />)} */}
             </div>
-            {/* <InputChatField placeholder="send message..." onClick={(e) => { console.log(e, "hgnh") }} onChange={(e) => e.target.value} /> */}
-            <InputChatField placeholder="send message..." sendChatToSocket={sendChatToSocket} onKeyPress={sendChatToSocket} />
+
+            {/* <InputChatField placeholder="send message..." openFileUpload={openFileUpload} setOpenFileUpload={setOpenFileUpload} setOpenEmoji={setOpenEmoji} sendChatToSocket={sendChatToSocket} onKeyPress={sendChatToSocket} /> */}
+            <InputChatField placeholder="send message..." sendChatToSocket={sendChatToSocket} onKeyPress={sendChatToSocket} setImage={setImage} setTypeOfMessage={setTypeOfMessage} messageStatus={messageStatus} initialChat={initialChat} />
         </div>
     )
 }

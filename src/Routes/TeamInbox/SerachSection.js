@@ -2,7 +2,8 @@ import React from 'react'
 import { InputFieldWithoutCounter } from '../../components/InputField'
 import { SelectOptionButton } from '../../components/SelectOptions'
 
-export const SerachSection = () => {
+export const SerachSection = ({ contactNameNumber }) => {
+    console.log(contactNameNumber, "fhgh")
     const colourStyles = {
         control: (styles) => {
             return {
@@ -37,7 +38,7 @@ export const SerachSection = () => {
             <div className="flex px-6">
                 <div>
                     <SelectOptionButton
-                        // options={CallActionSubButton1}
+                        options={contactNameNumber}
                         className={colourStyles}
                     // selectedValue={CallActionSubButton1.filter(
                     //   (elem) => elem.value === details.typeOfAction

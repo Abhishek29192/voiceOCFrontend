@@ -276,8 +276,8 @@ export default function BasicTable({
                           <TableCell component="th" id={labelId} scope="row">
                             {row.templateName}
                           </TableCell>
-                          <TableCell align="center">{row.category}</TableCell>
-                          <TableCell align="center">{row.status}</TableCell>
+                          <TableCell align="center" >{row.category}</TableCell>
+                          <TableCell align="center" >{row.status}</TableCell>
                           <TableCell align="center">{row.language}</TableCell>
                           <TableCell align="center">
                             {row.lastUpdated}
@@ -307,19 +307,20 @@ export default function BasicTable({
                             {row.basicInfo}
                           </TableCell>
                           <TableCell
-                            align="center"
+                            align="left"
                             sx={{
                               display: "flex",
                               flexWrap: "wrap",
                               width: "auto",
+                              justifyContent: "center"
                             }}>
                             {row.customAttributes}
                           </TableCell>
                           <TableCell width="200px" align="center">
                             {row.createdDate}
                           </TableCell>
-                          <TableCell align="center">{row.broadcast}</TableCell>
-                          <TableCell align="center">{row.sms}</TableCell>
+                          <TableCell align="center" >{row.broadcast}</TableCell>
+                          <TableCell align="center" >{row.action}</TableCell>
                         </TableRow>
                       )}
                       {tableContent === "broadcastData" && (

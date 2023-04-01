@@ -165,7 +165,7 @@ export const OpenBroadcastTabelView = ({
           <Paragraph3 className="items-center font-extrabold poppins">When to call</Paragraph3>
           <div className="flex m-3">
             <input type="radio" name="radioOption" onClick={() => setOpenDateTimeField(false)} />
-            <Paragraph3 className="items-center font-normal poppins pl-4">Sent it now</Paragraph3>
+            <Paragraph3 className="items-center font-normal poppins pl-4">Send it now</Paragraph3>
           </div>
           <div className="flex m-3">
             <input type="radio" name="radioOption" onClick={() => setOpenDateTimeField(true)} />

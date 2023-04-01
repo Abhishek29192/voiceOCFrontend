@@ -8,7 +8,8 @@ import { CiGlobe } from "react-icons/ci"
 import { IoMdCall } from "react-icons/io"
 import { useAppCommonDataProvider } from '../../components/AppCommonDataProvider/AppCommonDataProvider'
 
-export const NewMessage = ({ setNewMessage, setShowContactList }) => {
+export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumber }) => {
+    console.log(contactNameNumber, "iiiiiiiiiiiiiiiiiiiiiiiiii")
     const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
     const { whatsappNumber } = createTeamInboxDetails;
     const [number, setNumber] = useState()
@@ -50,7 +51,6 @@ export const NewMessage = ({ setNewMessage, setShowContactList }) => {
         if (number.match(validation)) {
             setNewMessage(false);
             setShowContactList(true);
-            console.log("clickeed", number)
         } else {
             alert("Enter valid number")
         }
@@ -76,7 +76,7 @@ export const NewMessage = ({ setNewMessage, setShowContactList }) => {
                     </div>
                     <div className="flex justify-center pt-3">
                         <SelectOptionButton
-                            // options={CallActionSubButton1}
+                            options={contactNameNumber}
                             className={colourStyles}
                         // selectedValue={CallActionSubButton1.filter(
                         //   (elem) => elem.value === details.typeOfAction

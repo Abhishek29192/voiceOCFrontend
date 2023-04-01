@@ -1,5 +1,5 @@
 import axios from "axios";
-import { fetcemplateData, fetchContacts, sendBroadcastDetails, fetctokenUrl, signUpUrl, sendBroadcastDetailsWithDateTime, fetchScheduleBroadcast, sendTeamInboxData, fetchSingleChatdata, fetchSingleChatdataUrl, fetchBroadcastHistoryDataUrl, fetchBroadcastHistoryStatusUrl } from "../Urls";
+import { fetcemplateData, fetchContacts, sendBroadcastDetails, fetctokenUrl, signUpUrl, sendBroadcastDetailsWithDateTime, fetchScheduleBroadcast, sendTeamInboxData, fetchSingleChatdata, fetchSingleChatdataUrl, fetchBroadcastHistoryDataUrl, fetchBroadcastHistoryStatusUrl, contactOptionsUrl, sendVideoUrl, exportExcel } from "../Urls";
 import cookie from "react-cookies";
 import { useAppCommonDataProvider } from "../components/AppCommonDataProvider/AppCommonDataProvider";
 
@@ -31,8 +31,17 @@ export const fetchContactDetailsToServer = async (data) => {
   return await axios.post(fetchContacts, data, { headers });
 };
 
+
+export const fetchExcelFile = async (data) => {
+  return await axios.post(`${exportExcel}`, data, { headers });
+};
+
 export const sendBrodcastData = async (data) => {
   return await axios.post(sendBroadcastDetails, data, { headers });
+};
+
+export const sendVideoData = async (data) => {
+  return await axios.post(sendVideoUrl, data, { headers });
 };
 
 export const sendBrodcastDataWithDateTime = async (data) => {
@@ -63,4 +72,8 @@ export const fetchBroadcastHistoryStatus = async () => {
 
 export const fetchBroadcastHistoryTabelData = async () => {
   return await axios.get(`${fetchBroadcastHistoryDataUrl}`, { headers })
+}
+
+export const fetchContactListOptions = async () => {
+  return await axios.get(`${contactOptionsUrl}`, { headers })
 }

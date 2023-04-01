@@ -41,7 +41,7 @@ function App() {
               element={<TemplateMessage />}></Route>
           </Routes>
         </BrowserRouter>
-        <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"} />
+        <ReactQueryDevtools initialIsOpen={false} position={"bottom-left"} />
       </QueryClientProvider>
     </AppCommonDataProvider>
   );

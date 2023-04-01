@@ -80,9 +80,7 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
   const handleNextButton = () => {
     if (selectedContactRowData?.Type === "MEDIA") {
       setOpenMediaUpload(true);
-      // setOpenMediaUpload(!openMediaUpload);
     } else {
-      // setOpenBroadcastTable(!openBroadcastTable);
       setOpenBroadcastTable(true);
     }
   };

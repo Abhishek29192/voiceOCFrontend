@@ -17,7 +17,7 @@ export const Heading1Strong = createTypographyComponent(
 );
 
 export const Heading2 = createTypographyComponent(
-  "font-normal text-2xl leading-ui",
+  "font-normal text-2xl leading-ui poppins",
   "h2"
 );
 
@@ -32,7 +32,7 @@ export const Heading3 = createTypographyComponent(
 );
 
 export const Heading3Strong = createTypographyComponent(
-  "font-medium text-xl leading-ui",
+  "font-medium text-xl leading-ui poppins",
   "h2"
 );
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { usePostTeamInboxData, useSingleChatData, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
+import { useContactListOptions, usePostTeamInboxData, useSingleChatData, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
 import { PrimaryButton, SecondaryButton } from "../../components/Button";
 import { AiOutlineSearch } from "react-icons/ai"
 import { SerachSection } from "./SerachSection";
@@ -15,6 +15,7 @@ import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider
 import moment from "moment/moment";
 import { ChatContainer } from "../../components/Chat/ChatContainer";
 import styles from "./TeamInbox.module.css";
+import { CountDownTimer, MyTimer } from "../../components/Timer";
 
 
 export const TeamInbox = () => {
@@ -26,16 +27,17 @@ export const TeamInbox = () => {
   const [tellMeButtonID, setTellMeButtonID] = useState();
   const [name, setName] = useState("");
   const [selctedTemplate, setSelectedTemplate] = useState()
+  const [contactDetails, setContactDetails] = useState([])
+  const [singleChat, setSingleChat] = useState();
+  const [initailChat, setInitialChat] = useState([]);
+  const [contactName, setContactName] = useState([]);
   const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
   const { whatsappNumber } = createTeamInboxDetails;
   const { refetch } = useTemplateData();
   const { mutateAsync } = usePostTeamInboxData();
   const { mutateAsync: chatData } = useSingleChatData();
   const { refetch: contatcData } = useTeamInboxDetails();
-  const [contactDetails, setContactDetails] = useState([])
-  const [singleChat, setSingleChat] = useState();
-  const [initailChat, setInitialChat] = useState([]);
-
+  const { refetch: contactNumber } = useContactListOptions()
 
 
   const { contactDetailData } = createTeamInboxDetails;
@@ -43,44 +45,33 @@ export const TeamInbox = () => {
   const getContactData = async () => {
     await contatcData().then((e) => {
       setContactDetails(e.data.data.contactList);
-
       chatData({
         chatId: e.data.data.contactList[0]._id,
-      }).then((res) => setInitialChat(res.data.chats)).catch((err) => console.log(err))
-
+      }).then((res) => { setInitialChat(res?.data?.chats); setName(res?.data?.name) }).catch((err) => console.log(err))
     }).catch((err) => console.log(err))
   }
   useEffect(() => {
     getContactData()
   }, [])
 
+
   useEffect(() => {
     refetch().then((res) => setTemplateDate(res?.data.data)).catch((error) => console.log(error))
+    contactNumber().then((res) => setContactName(res?.data?.data?.contactarray, "contact Numbers")).catch((err) => console.log(err))
   }, [])
 
-  const handleSend = () => {
-    mutateAsync(data).then((res) => {
-      getContactData()
-    }).catch((e) => console.log(e))
-  }
 
-  useEffect(() => {
-    chatData({
-      chatId: contactDetails[0]?._id,
-    }).then((res) => initailChat(res?.data?.chats[0])).catch((err) => console.log(err))
+  const contactNameNumber = []
+  contactName?.map((e) => {
+    const optionContactNumber = {
+      label: `${e.name} (${e.mobileNumber})`,
+      value: `${e.name} (${e.mobileNumber})`
+    }
+    contactNameNumber.push(optionContactNumber)
+    // console.log(optionContactNumber, "-+++++++++++++++++++++")
+  })
 
-  }, [])
 
-  console.log(contactDetails, "gfgh")
-
-  const handleSingleChatData = (ele) => {
-    setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: ele })
-    chatData({
-      chatId: ele._id,
-    }).then((res) => setSingleChat(res.data.chats)).catch((err) => console.log(err))
-  }
-
-  // console.log(singleChat, "dhggh")
   const data = {
     mobileNumber: whatsappNumber,
     userId: null,
@@ -90,6 +81,26 @@ export const TeamInbox = () => {
       name: name,
     }
   }
+
+
+  const handleSend = () => {
+    mutateAsync(data).then((res) => {
+      getContactData()
+    }).catch((e) => console.log(e))
+    setNewMessage(false);
+    setSearch(false);
+    setShowContactList(false);
+  }
+
+
+  const handleSingleChatData = (ele) => {
+    setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: ele })
+    chatData({
+      chatId: ele._id,
+    }).then((res) => { setSingleChat(res.data.chats) }).catch((err) => console.log(err))
+  }
+
+
 
 
   const rowData = [{
@@ -129,6 +140,9 @@ export const TeamInbox = () => {
     },
   };
 
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 600);
+
 
 
   return (
@@ -156,7 +170,7 @@ export const TeamInbox = () => {
           {
             newMessage && !search && !showContactList && (
               <div className="px-2">
-                <NewMessage setNewMessage={setNewMessage} setShowContactList={setShowContactList} />
+                <NewMessage setNewMessage={setNewMessage} setShowContactList={setShowContactList} contactNameNumber={contactNameNumber} />
               </div>
 
             )
@@ -164,13 +178,13 @@ export const TeamInbox = () => {
           {!newMessage && !search && !showContactList && (
             <div className="border-t-[1px] h-[72vh] overflow-y-auto">
               {contactDetails && contactDetails?.map((ele, index) => {
-                // console.log(contactDetails, "gdfgg")
+                // console.log(ele, "gdfgg")
                 return (
                   // <div className="border-b-[1px]" onClick={() => setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: e })}>
                   <div className="border-b-[1px]" onClick={() => handleSingleChatData(ele)}>
                     <div className="flex p-2 rounded-md items-center">
                       <div className="flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center">
-                        <div className="font-extrabold">H</div>
+                        <div className="font-extrabold">{ele?.customerId?.customField?.name?.split("")[0]?.toUpperCase()}</div>
                       </div>
                       <div className="px-7 w-full">
                         <div className="font-semibold">{ele.customerId?.mobileNumber}</div>
@@ -243,21 +257,30 @@ export const TeamInbox = () => {
           }
 
         </div>
-        <div className={`w-[50%] border bg-slate-100 ${styles.slideUpwardMiddle}`}>
-          <div className="h-[10vh] m-1 rounded border bg-white">
-            <div className="items-center flex h-full w-[3vw] justify-center cursor-pointer"><SlOptionsVertical size={"1.1rem"} /></div>
-            <ChatContainer singleChat={singleChat} initailChat={initailChat} />
+        <div className={`w-[50%] border bg-slate-100 overflow-x-hidden ${styles.slideUpwardMiddle}`}>
+          <div className="h-[10vh] m-1 rounded border bg-white ">
+            <div className="flex items-center h-full w-full  px-4 cursor-pointer justify-between">
+              <div>
+                <SlOptionsVertical size={"1.1rem"} />
+              </div>
+              {/* <div className="bg-red-400 p-[0.40rem] rounded-2xl border-[2px] float-right">
+                <CountDownTimer time={86400} />
+              </div> */}
+            </div>
+            <ChatContainer singleChat={singleChat} initialChat={initailChat} />
           </div>
         </div>
         <div className={`w-[25%] p-2 items-center ${styles.slideUpwardRight}`}>
           <div>
             <div className="flex py-5 px-1 border-b-[1px] items-center">
               <div className="flex h-11 px-4 py-[0.70rem] ml-2 bg-slate-200 rounded-3xl items-center justify-center">
-                <div className="font-extrabold">H</div>
+                <div className="font-extrabold">{contactDetailData?.customerId
+                  ?.customField
+                  ?.name.split("")[0]?.toUpperCase() || name.split("")[0]?.toUpperCase()}</div>
               </div>
               <div className="flex px-2 w-full justify-between items-center">
                 <div>
-                  <div className="font-semibold">{contactDetailData?.customerId?.mobileNumber}</div>
+                  <div className="font-semibold">{contactDetailData?.customerId?.mobileNumber || initailChat[0]?.fullContactNumber}</div>
                   <div className="text-sm poppins">Available</div>
                 </div>
                 <div className="flex ">
@@ -274,7 +297,7 @@ export const TeamInbox = () => {
               <div className="poppins font-bold">Basic information</div>
               <div className="flex py-2">
                 <div className="poppins text-sm font-semibold">Phone Number : </div>
-                <div className="poppins text-sm">{contactDetailData?.customerId?.mobileNumber}</div>
+                <div className="poppins text-sm">{contactDetailData?.customerId?.mobileNumber || initailChat[0]?.fullContactNumber}</div>
               </div>
             </div>
             <div className="flex flex-col border-b-[1px]">
@@ -286,14 +309,13 @@ export const TeamInbox = () => {
                 </div>
               </div>
               <div>
-                {/* {rowData.map((e) => {
-                  return ( */}
+
                 <div className="flex flex-col justify-center pt-4">
                   <div className="flex justify-center px-2">
                     <div className="flex pl-2 py-1 border rounded-l-md w-40">Name</div>
                     <div className="border rounded-r-md w-full py-1 flex justify-center">{contactDetailData?.customerId
                       ?.customField
-                      ?.name}</div>
+                      ?.name || name}</div>
                   </div>
 
                 </div>

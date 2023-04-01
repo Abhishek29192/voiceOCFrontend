@@ -81,3 +81,11 @@
   border-radius: 5px;
   padding: 0px;
 }
+
+.customModal {
+  max-width: 58vw;
+  height:80vh;
+  /* max-height: 98vh; */
+  width: 80%;
+  border-radius: 15px;
+}
