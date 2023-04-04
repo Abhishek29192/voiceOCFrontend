@@ -15,9 +15,9 @@ export const ChatContainer = ({ singleChat, initialChat }) => {
     const [typeOfMessage, setTypeOfMessage] = useState("text");
     const [messageStatus, setMessageStatus] = useState(false)
 
-
-    // let socketio = socketIOClient("http://127.0.0.1:8000")
     let socketio = socketIOClient("http://3.6.197.151:3057")
+    // let socketio = socketIOClient("http://127.0.0.1:8000")
+
     const ref = useChatScroll(chats);
 
     useEffect(() => {
@@ -38,8 +38,6 @@ export const ChatContainer = ({ singleChat, initialChat }) => {
     useEffect(() => {
         setChats(singleChat)
     }, [singleChat])
-
-    // console.log(chats, "chats---------------------")
 
 
     useEffect(() => {

@@ -14,6 +14,8 @@ import ResponsiveNavbar from "../ResponsiveNavbar";
 import styles from "./Navbar.module.css";
 
 export const Navbar = () => {
+  const role = JSON.parse(localStorage.getItem("userDetails")).role;
+
   const navigate = useNavigate();
   const handlebroadcast = () => {
     navigate(`${AppRoute.history}`);
@@ -35,7 +37,47 @@ export const Navbar = () => {
       <div className="flex xl:hidden h-full p-3 w-[18rem] ">
         <ResponsiveNavbar />
       </div>
-      <div className=" xl:flex hidden w-[60%]">
+      {
+        role === "admin" ? (
+          <div className=" xl:flex hidden w-[60%]">
+            <div className={styles.icon__container}>
+              <TbInbox className={styles.icon__style} />
+              <p className="text-base" onClick={handleInbox}>
+                Team Inbox
+              </p>
+            </div>
+            <div className={styles.icon__container}>
+              <RiContactsBook2Line className={styles.icon__style} />
+              <p className="text-base" onClick={handleContacts}>
+                Contacts
+              </p>
+            </div>
+            <div className={styles.icon__container}>
+              <BsBroadcast className={styles.icon__style} />
+              <p className="text-base" onClick={handlebroadcast}>
+                Broadcast
+              </p>
+            </div>
+            <div className={styles.icon__container}>
+              <MdOutlineCampaign size={"1.5rem"} className={styles.icon__style} />
+              <p className="text-base" onClick={handleCampaign}>
+                Campaign
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className=" xl:flex hidden w-[60%]">
+            <div className={styles.icon__container}>
+              <TbInbox className={styles.icon__style} />
+              <p className="text-base" onClick={handleInbox}>
+                Team Inbox
+              </p>
+            </div>
+          </div>
+        )
+      }
+
+      {/* <div className=" xl:flex hidden w-[60%]">
         <div className={styles.icon__container}>
           <TbInbox className={styles.icon__style} />
           <p className="text-base" onClick={handleInbox}>
@@ -60,7 +102,7 @@ export const Navbar = () => {
             Campaign
           </p>
         </div>
-      </div>
+      </div> */}
 
       <div className="flex justify-between items-center w-[35%]">
         <div className="hidden xl:flex items-center">

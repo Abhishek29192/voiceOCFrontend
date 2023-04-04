@@ -17,6 +17,11 @@ export const optionCategoary = [
   { value: "Transportation Update", label: "Transportation Update" },
 ];
 
+export const optionRole = [
+  { value: "admin", label: "Admin" },
+  { value: "agent", label: "Agent" },
+];
+
 export const optionSortHeader = [
   { value: "None", label: "None" },
   { value: "Text", label: "Text" },

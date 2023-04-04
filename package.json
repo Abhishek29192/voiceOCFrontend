@@ -44,6 +44,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "uploadBuild" :"npm run build && scp -r build/ ubuntu@3.6.197.151:~/voiceoc2/dist",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

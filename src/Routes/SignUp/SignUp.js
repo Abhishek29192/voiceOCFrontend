@@ -15,6 +15,8 @@ import { Routes as AppRoute } from "../../constants/RoutesNames";
 import { Checkbox } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'
+import { SelectOptionButton } from '../../components/SelectOptions';
+import { optionCategoary, optionRole } from '../../constants/DropDownContent';
 
 export const SignUp = () => {
     const navigate = useNavigate()
@@ -27,6 +29,36 @@ export const SignUp = () => {
     const handleLoginPage = () => {
         navigate("/")
     }
+
+    const colourStyles = {
+        control: (styles) => {
+            return {
+                ...styles,
+                backgroundColor: "white",
+                width: "full",
+                height: "2.7rem",
+                boxShadow: "none",
+                fontSize: "15px",
+                fontFamily: "poppins",
+                marginTop: "2px",
+                // border: "1px solid #5536db",
+                // "&:hover": {
+                //   border: "1px solid #5536db",
+                // },
+            };
+        },
+        option: (styles, { data, isDisabled }) => {
+            return {
+                ...styles,
+                backgroundColor: isDisabled ? "red" : "white",
+                color: "#000",
+                width: "full",
+                fontSize: "15px",
+                fontFamily: "poppins",
+                cursor: isDisabled ? "not-allowed" : "pointer",
+            };
+        },
+    };
 
     const showToast = (status) => {
         if (status === 200 || 201) {
@@ -62,7 +94,7 @@ export const SignUp = () => {
         mutateAsync(values).then(res => {
             if (res.status = 200) {
                 setTimeout(() => {
-                    navigate(`${AppRoute.teamInbox}`);
+                    navigate(`/`);
                 }, 1700);
             }
             showToast(res.status)
@@ -101,7 +133,7 @@ export const SignUp = () => {
     return (
         <Formik
             validationSchema={schema}
-            initialValues={{ email: "", password: "", firstName: "", lastName: "", confirmPassword: "", termsAndCondition: "false" }}
+            initialValues={{ email: "", password: "", firstName: "", lastName: "", confirmPassword: "", role: "", termsAndCondition: "false" }}
             onSubmit={(values) => {
                 // setSignUpCreds(values);
                 handleSignUp(values)
@@ -220,7 +252,18 @@ export const SignUp = () => {
 
                                         </div>
                                     </div>
-                                    <div className='flex items-center justify-between w-96 mt-5'>
+                                    <div className=' my-3 w-96'>
+                                        <div className={Styles.optionText}>Role</div>
+                                        <SelectOptionButton
+                                            options={optionRole.filter((ele) => ele.value)}
+                                            className={colourStyles}
+                                            placeholder="Role"
+                                            onChange={(e) => setFieldValue("role", e.value)}
+                                        // selectedValue={role}
+                                        // setCurrentlySelectedOption={setCategory}
+                                        />
+                                    </div>
+                                    <div className='flex items-center justify-between w-96'>
                                         <div className='flex items-center w-fit '>
                                             <Checkbox
                                                 checked={values.termsAndCondition === "true"}
@@ -241,11 +284,11 @@ export const SignUp = () => {
                                     <p className={Styles.errorMsg}>
                                         {errors.termsAndCondition && touched.termsAndCondition && errors.termsAndCondition}
                                     </p>
-                                    <div className='mt-5'>
+                                    <div className='mt-1'>
                                         <PrimaryButton text={"Login"} type="submit" className={"w-96"} onClick={handleSignUp} />
                                         < ToastContainer theme='light' />
                                     </div>
-                                    <div className='justify-center items-center mt-4 pl-16'>
+                                    <div className='justify-center items-center mt-1 pl-16'>
                                         <Paragraph1 className="justify-center text-[0.85rem]">Already have an account?<span className={Styles.registerText} onClick={handleLoginPage}>Login</span></Paragraph1>
                                     </div>
                                 </div>

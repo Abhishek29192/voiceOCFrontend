@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import {
+  fetchAgentLists,
   fetchBroadcastHistoryData,
   fetchBroadcastHistoryStatus,
   fetchBroadcastHistoryTabelData,
@@ -12,7 +13,9 @@ import {
   fetchSignUpCreds,
   fetchSingleChatData,
   fetchTeamInboxDetails,
+  fetchTeamInboxLists,
   fetchTempalteMessageData,
+  PostAssignAgent,
   sendBrodcastData,
   sendBrodcastDataWithDateTime,
   sendTeamInboxDetails,
@@ -56,6 +59,17 @@ export const useContactDataToServer = () => {
   });
 };
 
+// PostAssignAgent
+export const usePostAssignAgentData = () => {
+  return useMutation({
+    mutationKey: ["assign-agent"],
+    mutationFn: async (data) => {
+      // console.log(data, "datatatatataa")
+      return PostAssignAgent(data);
+    },
+    onError: (e) => e,
+  });
+};
 
 export const useDPostExcelToDownload = () => {
   return useMutation({
@@ -119,14 +133,26 @@ export const usePostTeamInboxData = () => {
   });
 }
 
-export const useTeamInboxDetails = () => {
-  return useQuery({
-    queryKey: ["contact-details"],
-    queryFn: fetchTeamInboxDetails,
-    enabled: false,
+export const useTeamInboxContactList = (userDetails) => {
+  // console.log(userDetails, "----------------")
+  return useMutation({
+    mutationKey: ["contact-details"],
+    mutationFn: async (data) => {
+      return fetchTeamInboxLists(userDetails);
+    },
     onError: (e) => e,
   });
 };
+
+// export const useTeamInboxDetails = (userDetails) => {
+//   // console.log(userDetails, "----------------")
+//   return useQuery({
+//     queryKey: ["contact-details"],
+//     queryFn: fetchTeamInboxDetails(userDetails),
+//     enabled: false,
+//     onError: (e) => e,
+//   });
+// };
 
 
 export const useSchedulBroadcastData = () => {
@@ -180,10 +206,20 @@ export const useBroadcastHistoryTabelData = () => {
 };
 
 
+
 export const useContactListOptions = () => {
   return useQuery({
     queryKey: ["contact-List"],
     queryFn: fetchContactListOptions,
+    enabled: false,
+    onError: (e) => e,
+  });
+};
+
+export const useAgentLists = () => {
+  return useQuery({
+    queryKey: ["agent-list"],
+    queryFn: fetchAgentLists,
     enabled: false,
     onError: (e) => e,
   });

@@ -16,7 +16,7 @@ import { ScheduledBroadcast } from "./Routes/Broadcast/BroadcastHistory/Schedule
 import { Campaign } from "./Routes/Campaign";
 
 const queryClient = new QueryClient();
-
+const role = JSON.parse(localStorage.getItem("userDetails")).role;
 function App() {
   return (
     <AppCommonDataProvider>
@@ -25,10 +25,23 @@ function App() {
           <Routes>
             <Route path="/" element={<Login />}></Route>
             <Route path={AppRoute.register} element={<SignUp />}></Route>
-            <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
-            <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
-            <Route path={AppRoute.contacts} element={<Contacts />}></Route>
-            <Route path={AppRoute.campaign} element={<Campaign />}></Route>
+            {
+              (role === "agent") ? (
+                <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
+              ) : (
+                <>
+                  <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
+                  <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
+                  <Route path={AppRoute.contacts} element={<Contacts />}></Route>
+                  <Route path={AppRoute.campaign} element={<Campaign />}></Route>
+                </>
+
+              )
+            }
+            {/* <Route path={AppRoute.teamInbox} element={<TeamInbox />}></Route>
+           <Route path={AppRoute.dashboard} element={<Dashboard />}></Route>
+           <Route path={AppRoute.contacts} element={<Contacts />}></Route>
+           <Route path={AppRoute.campaign} element={<Campaign />}></Route> */}
             {/* <Route path={AppRoute.broadcast} element={<Broadcast />}></Route> */}
             <Route
               path={AppRoute.history}

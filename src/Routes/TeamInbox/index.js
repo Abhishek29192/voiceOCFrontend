@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { useContactListOptions, usePostTeamInboxData, useSingleChatData, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
+import { useAgentLists, useContactListOptions, usePostAssignAgentData, usePostTeamInboxData, useSingleChatData, useTeamInboxContactList, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
 import { PrimaryButton, SecondaryButton } from "../../components/Button";
 import { AiOutlineSearch } from "react-icons/ai"
 import { SerachSection } from "./SerachSection";
@@ -31,27 +31,34 @@ export const TeamInbox = () => {
   const [singleChat, setSingleChat] = useState();
   const [initailChat, setInitialChat] = useState([]);
   const [contactName, setContactName] = useState([]);
+  const [agentLists, setAgentLists] = useState([])
+  const [openSelectAgents, setOpenSelectAgents] = useState(false)
   const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
   const { whatsappNumber } = createTeamInboxDetails;
   const { refetch } = useTemplateData();
   const { mutateAsync } = usePostTeamInboxData();
   const { mutateAsync: chatData } = useSingleChatData();
-  const { refetch: contatcData } = useTeamInboxDetails();
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
+  const { mutateAsync: contatcData } = useTeamInboxContactList(userDetails);
+  const { mutateAsync: selectedAgentData } = usePostAssignAgentData()
   const { refetch: contactNumber } = useContactListOptions()
-
-
+  const { refetch: agentList } = useAgentLists()
   const { contactDetailData } = createTeamInboxDetails;
+  const role = JSON.parse(localStorage.getItem("userDetails")).role;
+
 
   const getContactData = async () => {
     await contatcData().then((e) => {
-      setContactDetails(e.data.data.contactList);
+      setContactDetails(e?.data?.contactList);
       chatData({
-        chatId: e.data.data.contactList[0]._id,
+        chatId: e?.data?.contactList[0]?._id,
       }).then((res) => { setInitialChat(res?.data?.chats); setName(res?.data?.name) }).catch((err) => console.log(err))
     }).catch((err) => console.log(err))
   }
+
   useEffect(() => {
     getContactData()
+    agentList().then((res) => setAgentLists(res?.data?.data?.agentList, "rsponse")).catch((err) => console.log(err))
   }, [])
 
 
@@ -94,13 +101,26 @@ export const TeamInbox = () => {
 
 
   const handleSingleChatData = (ele) => {
+    console.log(ele, "onclick")
     setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: ele })
     chatData({
       chatId: ele._id,
     }).then((res) => { setSingleChat(res.data.chats) }).catch((err) => console.log(err))
   }
 
+  const handleAgent = () => {
+    setOpenSelectAgents(!openSelectAgents)
+  }
 
+  const handleAssignAgent = (e, ele) => {
+    const agentSelectedDetails = {
+      chatId: contactDetailData?._id,
+      agentId: ele?._id,
+      fullName: `${ele.firstName} ${ele.lastName}`
+    }
+    selectedAgentData(agentSelectedDetails).then((res) => console.log(res)).catch((err) => console.log(err))
+    setOpenSelectAgents(false)
+  }
 
 
   const rowData = [{
@@ -155,7 +175,7 @@ export const TeamInbox = () => {
           <div className="flex w-full justify-center items-center py-3">
             <PrimaryButton text={`New Message`} className="w-[60%] m-5 " onClick={() => { setNewMessage(!newMessage); setSearch(false); setShowContactList(false) }} />
             <div className="bg-slate-200 p-2 h-full rounded-md" onClick={() => { setSearch(!search); setNewMessage(false); setShowContactList(false) }}>
-              <AiOutlineSearch size={"1.5rem"} className="" />
+              <AiOutlineSearch size={"1.5rem"} />
             </div>
           </div>
           {
@@ -178,7 +198,6 @@ export const TeamInbox = () => {
           {!newMessage && !search && !showContactList && (
             <div className="border-t-[1px] h-[72vh] overflow-y-auto">
               {contactDetails && contactDetails?.map((ele, index) => {
-                // console.log(ele, "gdfgg")
                 return (
                   // <div className="border-b-[1px]" onClick={() => setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: e })}>
                   <div className="border-b-[1px]" onClick={() => handleSingleChatData(ele)}>
@@ -260,15 +279,35 @@ export const TeamInbox = () => {
         <div className={`w-[50%] border bg-slate-100 overflow-x-hidden ${styles.slideUpwardMiddle}`}>
           <div className="h-[10vh] m-1 rounded border bg-white ">
             <div className="flex items-center h-full w-full  px-4 cursor-pointer justify-between">
-              <div>
-                <SlOptionsVertical size={"1.1rem"} />
-              </div>
+              {
+                role === "admin" ? (<div>
+                  <SlOptionsVertical size={"1.1rem"} onClick={handleAgent} />
+                </div>) : (null)
+              }
               {/* <div className="bg-red-400 p-[0.40rem] rounded-2xl border-[2px] float-right">
                 <CountDownTimer time={86400} />
               </div> */}
             </div>
             <ChatContainer singleChat={singleChat} initialChat={initailChat} />
           </div>
+          {
+            openSelectAgents && role === "admin" && (
+              <div className="z-555 flex flex-col bg-white w-fit p-4 py-4 rounded-2xl h-auto relative">
+                {
+                  // agentLists?.map((e) => console.log(e.firstName + e.lastName, "element"))
+                  agentLists?.map((ele) => {
+                    return (
+                      <div className="mx-2 my-3 cursor-pointer" onClick={(e) => handleAssignAgent(e, ele)}>
+                        <div className="border-b-2">
+                          {ele.firstName + ele.lastName}
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            )
+          }
         </div>
         <div className={`w-[25%] p-2 items-center ${styles.slideUpwardRight}`}>
           <div>

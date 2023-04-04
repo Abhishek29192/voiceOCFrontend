@@ -1,5 +1,5 @@
 import axios from "axios";
-import { fetcemplateData, fetchContacts, sendBroadcastDetails, fetctokenUrl, signUpUrl, sendBroadcastDetailsWithDateTime, fetchScheduleBroadcast, sendTeamInboxData, fetchSingleChatdata, fetchSingleChatdataUrl, fetchBroadcastHistoryDataUrl, fetchBroadcastHistoryStatusUrl, contactOptionsUrl, sendVideoUrl, exportExcel } from "../Urls";
+import { fetcemplateData, fetchContacts, sendBroadcastDetails, fetctokenUrl, signUpUrl, sendBroadcastDetailsWithDateTime, fetchScheduleBroadcast, sendTeamInboxData, fetchSingleChatdata, fetchSingleChatdataUrl, fetchBroadcastHistoryDataUrl, fetchBroadcastHistoryStatusUrl, contactOptionsUrl, sendVideoUrl, exportExcel, getContactList, agentListUrl, selectedAgentUrl } from "../Urls";
 import cookie from "react-cookies";
 import { useAppCommonDataProvider } from "../components/AppCommonDataProvider/AppCommonDataProvider";
 
@@ -11,7 +11,7 @@ let headers = {
 
 export const fetchLoginToken = async (data) => {
   const { data: response } = await
-    axios.post(fetctokenUrl, data)
+    axios.post(fetctokenUrl, data, { headers: { Accept: "application/json" } })
   return response;
 }
 
@@ -31,6 +31,10 @@ export const fetchContactDetailsToServer = async (data) => {
   return await axios.post(fetchContacts, data, { headers });
 };
 
+// selectedAgentUrl
+export const PostAssignAgent = async (data) => {
+  return await axios.post(selectedAgentUrl, data, { headers });
+};
 
 export const fetchExcelFile = async (data) => {
   return await axios.post(`${exportExcel}`, data, { headers });
@@ -53,12 +57,22 @@ export const sendTeamInboxDetails = async (data) => {
 };
 
 
-export const fetchTeamInboxDetails = async () => {
-  return await axios.get(sendTeamInboxData, { headers });
+export const fetchTeamInboxLists = async (userDetails) => {
+  // console.log(userDetails, "axios api")
+  return await axios.post(getContactList, {
+    role: userDetails.role,
+    agentId: userDetails._id,
+  }, {
+    headers
+  });
 };
 
 export const fetchScheduleBroadcastData = async () => {
   return await axios.get(`${fetchScheduleBroadcast}`, { headers });
+};
+
+export const fetchAgentLists = async () => {
+  return await axios.get(`${agentListUrl}`, { headers });
 };
 
 

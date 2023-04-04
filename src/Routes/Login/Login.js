@@ -60,8 +60,10 @@ export const Login = () => {
   });
 
   const handleSubmitLogin = (values) => {
+    console.log(values, "vvvvvvvvvvvvvvvv")
     mutateAsync(values).then(res => {
-      console.log(res.data, "response")
+      localStorage.setItem('userDetails', JSON.stringify(res.userDetail));
+      console.log(res.userDetail, "response")
       if (res.status) {
         cookie.save(
           "accessToken",
@@ -86,7 +88,7 @@ export const Login = () => {
         initialValues={{ email: "", password: "", rememberMe: true }}
         onSubmit={(values) => {
           handleSubmitLogin(values)
-          // console.log(JSON.stringify(values, "vallllll"));
+          console.log(JSON.stringify(values, "vallllll"));
         }}
       >
         {({
