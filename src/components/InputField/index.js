@@ -37,6 +37,7 @@ export const InputFieldWithoutCounter = ({
   value,
   onChange,
   type,
+  name,
   id,
 }) => {
   return (
@@ -49,6 +50,7 @@ export const InputFieldWithoutCounter = ({
           outline: " none",
         }}
         id={id}
+        name={name}
         className={className}
         type={type}
         onChange={onChange}

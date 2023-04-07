@@ -27,13 +27,16 @@ export const Login = () => {
     navigate(`${AppRoute.register}`);
   }
 
-  const showToast = (status) => {
-    console.log(status, "status")
-    if (status === true) {
-      toast.success(" Login Successful!!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+  const showToast = (res) => {
+    console.log(res.status, "status")
+    if (res.status === true) {
+      toast.success(" Login successful!!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
     } else {
-      toast.error("Invalid Credentials !!! ", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+      toast.error(`${res.message}`, { autoClose: 1500, closeOnClick: true, position: "top-right" })
     }
+    //  else if (status = "400") {
+    //   toast.error("User not Found !!!", { autoClose: 1500, closeOnClick: true, position: "top-right" })
+    // }
   };
 
 
@@ -60,22 +63,22 @@ export const Login = () => {
   });
 
   const handleSubmitLogin = (values) => {
-    console.log(values, "vvvvvvvvvvvvvvvv")
     mutateAsync(values).then(res => {
+      console.log(res, "responseeeeeeeeeeeeee")
       localStorage.setItem('userDetails', JSON.stringify(res.userDetail));
-      console.log(res.userDetail, "response")
       if (res.status) {
         cookie.save(
           "accessToken",
           res?.authToken,
           {}
         );
-        showToast(res.status);
+        showToast(res);
         setTimeout(() => {
           navigate(`${AppRoute.teamInbox}`);
         }, 1000);
       } else {
-        showToast(res.status)
+        console.log("eghhbn")
+        showToast(res)
       }
     })
 
@@ -88,7 +91,7 @@ export const Login = () => {
         initialValues={{ email: "", password: "", rememberMe: true }}
         onSubmit={(values) => {
           handleSubmitLogin(values)
-          console.log(JSON.stringify(values, "vallllll"));
+          // console.log(JSON.stringify(values, "vallllll"));
         }}
       >
         {({

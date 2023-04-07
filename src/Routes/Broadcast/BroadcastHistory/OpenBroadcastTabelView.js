@@ -23,8 +23,7 @@ export const OpenBroadcastTabelView = ({
   className,
   classes,
 }) => {
-  console.log(onClose, "oclose")
-  const [selectedTabelRow, setSelectedTabelRow] = React.useState("");
+  const [selectedTabelRow, setSelectedTabelRow] = useState("");
   const [tableData, setTableData] = useState([]);
   const { refetch } = useContactDataToClient();
   const [data, setData] = useState([]);
@@ -47,6 +46,8 @@ export const OpenBroadcastTabelView = ({
     UserId: "one",
   }
 
+  // console.log(brodcastSelectedRowData, "selected row")
+
   const { mutateAsync } = usePostBordcastData();
   const { mutateAsync: scheduleBroadcast } = usePostBroadcastDataWithDateTime();
 
@@ -60,8 +61,9 @@ export const OpenBroadcastTabelView = ({
 
   useEffect(() => {
     if (data) {
+      console.log(data, "dataaaaaaa")
       const rows = data.map((ele, index) => ({
-        id: index,
+        id: ele.ContactList._id,
         basicInfo: ele?.ContactList.fileName,
         customAttributes: ele?.ContactList.customAttributes,
         createdDate: moment(`${ele?.ContactList.createdAt}`)
@@ -106,8 +108,10 @@ export const OpenBroadcastTabelView = ({
 
   const onSelectionModelChange = (ids) => {
     const selectedRowData = tableData.filter((row) => {
+      console.log(row, "row-----")
       return row.id == ids[0];
     });
+    console.log(selectedRowData, "selected Row Data")
     setSelectedTabelRow(selectedRowData);
     setCreateContactDetails({
       ...createContactDetails,

@@ -17,3 +17,5 @@ export const sendVideoUrl = `${BaseUrl}chat/uploadFile`;
 export const exportExcel = `${BaseUrl}contact/excel`;
 export const agentListUrl = `${BaseUrl}admins/agentLists`;
 export const selectedAgentUrl = `${BaseUrl}/chat/assignAgent`
+export const removeAgentUrl = `${BaseUrl}chat/removeAssignedAgent`
+export const logoutUrl = `${BaseUrl}admins/logOut`

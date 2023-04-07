@@ -11,7 +11,18 @@ export const ChatBoxReciver = ({ message, messageType, messageTime }) => {
             </div>) : ((messageType === "IMAGE") ? (
                 <>
                     <div className="flex flex-col bg-white w-fit px-2 py-2 poppins rounded-r-2xl rounded-b-2xl m-3 mt-4 max-w-[40%] ">
-                        <img src={message} className="h-[50%] rounded-lg" />
+                        <a href={message} download target="_blank">
+                            <img src={message} className="h-[50%] rounded-lg" />
+                        </a>
+                    </div>
+                    <div className='flex text-xs my-1 mx-5'>{moment(messageTime).format("DD-MM-yyyy HH-mm")}</div>
+                </>
+            ) : (messageType === "VIDEO" ? (
+                <>
+                    <div className="flex flex-col bg-white w-fit px-2 py-2 poppins rounded-r-2xl rounded-b-2xl m-3 mt-4 max-w-[40%] ">
+                        <video controls>
+                            <source src={message} />
+                        </video>
                     </div>
                     <div className='flex text-xs my-1 mx-5'>{moment(messageTime).format("DD-MM-yyyy HH-mm")}</div>
                 </>
@@ -28,7 +39,7 @@ export const ChatBoxReciver = ({ message, messageType, messageTime }) => {
                     </div>
                     <div className='text-xs px-5'>{moment(messageTime).format("DD-MM-yyyy HH-mm")}</div>
                 </div>
-            ))
+            )))
     )
 }
 
@@ -42,9 +53,19 @@ export const ChatBoxSender = ({ message, messageTime, messageType }) => {
             </div>) : ((messageType === "IMAGE") ? (
                 <div className="flex flex-col w-full items-end justify-end py-2 h-[50%]">
                     <div className='bg-white p-2 rounded-l-md rounded-br-md mx-2'>
-                        <img src={'http://3.6.197.151:3057/' + message} className="rounded-md" />
+                        <a href={'http://3.6.197.151:3057/' + message} download>
+                            <img src={'http://3.6.197.151:3057/' + message} className="rounded-md" />
+                        </a>
                     </div>
                     <div className='text-xs px-5'>{moment(messageTime).format("DD-MM-yyyy HH-mm")}</div>
+                </div>
+            ) : (messageType === "VIDEO" ? (
+                <div className="flex flex-col w-full items-end justify-end py-2">
+                    <div className="flex flex-col bg-white w-fit px-11 py-4 poppins rounded-l-2xl rounded-b-2xl  max-w-[50%] items-center">
+                        <video controls>
+                            <source src={'http://3.6.197.151:3057/' + message} />
+                        </video>
+                    </div>
                 </div>
             ) : (
                 <div className="flex flex-col w-full items-end justify-end py-2">
@@ -54,7 +75,7 @@ export const ChatBoxSender = ({ message, messageTime, messageType }) => {
                     </div>
                     <div className='text-xs px-5'>{moment(messageTime).format("DD-MM-yyyy HH-mm")}</div>
                 </div>
-            ))
+            )))
     )
 }
 

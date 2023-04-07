@@ -12,7 +12,7 @@ import { useUploadVideo } from '../../hooks/useQueryApi'
 import { useAppCommonDataProvider } from '../AppCommonDataProvider/AppCommonDataProvider'
 
 
-export const InputChatField = ({ placeholder, sendChatToSocket, setImage, setTypeOfMessage, messageStatus }) => {
+export const InputChatField = ({ placeholder, sendChatToSocket, setImage, setTypeOfMessage, messageStatus, initialChat }) => {
     // console.log(messageStatus, "trdgfgfbvjhmgjhgjynhgbkmyh")
     const [message, setMessage] = useState("")
     const [openEmoji, setOpenEmoji] = useState(false)
@@ -47,28 +47,24 @@ export const InputChatField = ({ placeholder, sendChatToSocket, setImage, setTyp
         setMessage(e.target.files[0])
         setOpenFileUpload(false);
         setTypeOfMessage(e.target.files[0].type)
+        setOpenFileUpload(false)
     }
 
+
     const handleVideo = (e) => {
-        console.log("dsfghj")
+        console.log(e.target.value, "entry")
         const data = new FormData()
         data.append("video", e.target.files[0])
-        data.set("mobileNumber", contactDetailData?.customerId?.mobileNumber)
-        data.set("chatId", contactDetailData?._id)
+        data.set("mobileNumber", contactDetailData?.customerId?.mobileNumber || initialChat[0]?.fullContactNumber)
+        data.set("chatId", contactDetailData?._id || initialChat[0]?.chatId)
         setOpenFileUpload(false);
-
-        // const videoData = {
-        //     data: data,
-        //     mobileNumber: contactDetailData?.customerId?.mobileNumber,
-        //     chatId: contactDetailData?._id,
-        // }
         mutateAsync(data).then((e) => console.log(e)).catch((err) => console.log(err))
     }
 
 
 
     return (
-        <form onKeyDown={(e) => handleEnter(e)} className='relative z-[111]'>
+        <form onKeyDown={(e) => handleEnter(e)} className='relative'>
             <div className='flex absolute bottom-0 right-0'>
                 {openEmoji && (
                     <div className='flex'>
@@ -97,11 +93,10 @@ export const InputChatField = ({ placeholder, sendChatToSocket, setImage, setTyp
                     </div>
                 </div>
             )}
-            {/* </div> */}
             {
                 messageStatus ? (
 
-                    <div className="w-full border bg-white p-4  flex items-center rounded relative bottom-0 z-[222] justify-between">
+                    <div className="w-full border bg-white p-4  flex items-center rounded relative bottom-0  justify-between">
                         <div className=" w-fit relative">
                             <InputFieldWithoutCounter placeholder={placeholder} onChange={(e) => setMessage(e.target.value)} value={typeof message !== "string" ? message.name : message} className="bg-slate-200 w-[38vw] h-[7vh]" />
                             <div className='absolute top-3 right-11' onClick={() => { setOpenEmoji(!openEmoji); setOpenFileUpload(false) }}><BsEmojiSmile size={"1.3rem"} /></div>
@@ -118,7 +113,7 @@ export const InputChatField = ({ placeholder, sendChatToSocket, setImage, setTyp
                             <Base2 className='justify-center px-4'>You cannot send message in a closed conversation</Base2>
                         </div>
                         <div className='mx-3'>
-                            <PrimaryButton text={"New Message"} />
+                            <PrimaryButton text={"New Message"} type={"button"} onClick={() => console.log("clicked")} />
                         </div>
 
                     </div>

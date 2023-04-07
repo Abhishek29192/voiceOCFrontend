@@ -2,12 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { Routes as AppRoute } from "../src/constants/RoutesNames";
-import { Broadcast } from "./Routes/Broadcast";
+// import { Broadcast } from "./Routes/Broadcast";
 import { Dashboard } from "./Routes/Dashboard";
 import { TemplateMessage } from "./Routes/TemplateMessage";
 import { Contacts } from "./Routes/Contacts";
 import { TeamInbox } from "./Routes/TeamInbox";
-import { BroadcastHistory } from "./Routes/Broadcast/BroadcastHistory";
+import { BroadcastHistory } from "../src/Routes/Broadcast/BroadcastHistory/index";
 import "./App.css";
 import { AppCommonDataProvider } from "./components/AppCommonDataProvider/AppCommonDataProvider";
 import { Login } from "./Routes/Login/Login";
@@ -16,7 +16,7 @@ import { ScheduledBroadcast } from "./Routes/Broadcast/BroadcastHistory/Schedule
 import { Campaign } from "./Routes/Campaign";
 
 const queryClient = new QueryClient();
-const role = JSON.parse(localStorage.getItem("userDetails")).role;
+const role = JSON.parse(localStorage.getItem("userDetails"))?.role;
 function App() {
   return (
     <AppCommonDataProvider>

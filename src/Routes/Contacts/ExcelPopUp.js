@@ -12,12 +12,13 @@ export const ExcelPopUp = ({
     handleSubmitFile,
     selectedContactExcel
 }) => {
-    console.log("props", selectedContactExcel)
-    const rows = selectedContactExcel.map((e, index) => ({
+
+    const rows = selectedContactExcel?.map((e, index) => ({
         id: index,
         mobileNumber: e["PHONE"],
         name: e["%VAR1"],
     }))
+
     const columns = [
 
         {
@@ -43,19 +44,6 @@ export const ExcelPopUp = ({
         },
 
     ];
-
-    // const rows = [
-    //     { id: 1, name: 'Snow' },
-    //     { id: 2, name: 'Lannister' },
-    //     { id: 3, name: 'Lannister' },
-    //     { id: 4, name: 'Stark' },
-    //     { id: 5, name: 'Targaryen' },
-    //     { id: 6, name: 'Melisandre' },
-    //     { id: 7, name: 'Clifford' },
-    //     { id: 8, name: 'Frances' },
-    //     { id: 9, name: 'Roxie' },
-    // ];
-
 
     return (
         <Modal

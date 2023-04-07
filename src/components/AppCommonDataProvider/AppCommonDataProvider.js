@@ -37,6 +37,7 @@ export const AppCommonDataContext = createContext({
     headerText: "",
     mediaUpload: "",
   },
+
   setCreateTeamInboxDetails: null,
   setCreateSampleData: null,
   setCreateContactDetails: null,
@@ -46,6 +47,7 @@ export const AppCommonDataContext = createContext({
   selectedContactRowData: null,
   setSelectedContactRowData: null,
 });
+
 
 export const AppCommonDataProvider = ({ children }) => {
   const [createTemplateValues, setCreateTemplateValues] = useState({
@@ -83,6 +85,8 @@ export const AppCommonDataProvider = ({ children }) => {
     contactDetailData: [],
     contactDetailDataName: "",
   })
+
+
 
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedContactRowData, setSelectedContactRowData] = useState(null);

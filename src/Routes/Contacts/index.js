@@ -39,7 +39,7 @@ export const Contacts = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [contactDataFromServer, setContactDataFromServer] = useState([])
-  const [viewContacts, setViewContacts] = useState([])
+  const [viewContacts, setViewContacts] = useState(false)
   const { mutate: addContact, isSuccess, isLoading: Load } = useContactDataToServer();
   const { isLoading, refetch } = useContactDataToClient();
   const { createContactDetails, setCreateContactDetails } =
@@ -84,15 +84,17 @@ export const Contacts = () => {
 
   }
 
+  console.log(viewContacts, "view contacts")
+
   const handleViewExcel = (entry) => {
+    console.log(entry, "entryyyyyyyyy")
     setViewContacts(true)
     const data = {
       UserId: "one",
-      ExcelId: entry.ContactList._id,
+      ExcelId: entry?.ContactList._id,
     }
-
     setSelectedContactListQueryId(entry.ContactList._id);
-    postExcelData(data).then((res) => setSelectedContactExcel(res.data.contacts)).catch((err) => console.log(err))
+    postExcelData(data).then((res) => setSelectedContactExcel(res?.data)).catch((err) => console.log(err))
   }
   console.log(selectedContactExcel, "rgdgfcgvb")
 
@@ -106,7 +108,6 @@ export const Contacts = () => {
   }, [isSuccess])
 
 
-
   useEffect(() => {
     refetch().then((res) => {
       setContactDataFromServer(res?.data?.data?.contactList)
@@ -116,7 +117,7 @@ export const Contacts = () => {
 
 
   function createData(data) {
-    const rows = data?.map((entry) => ({
+    const rows = data && data?.map((entry) => ({
       basicInfo: entry?.ContactList.fileName,
       customAttributes: entry?.ContactList.customAttributes.map((e) => {
         return (
@@ -142,7 +143,7 @@ export const Contacts = () => {
 
     setTableData(rows);
     setCreateContactDetails?.({
-      basicInfo: contactDataFromServer?.map((entry) => entry.ContactList.fileName),
+      basicInfo: contactDataFromServer?.map((entry) => entry?.ContactList?.fileName),
     });
     return rows;
   }
@@ -369,6 +370,7 @@ export const Contacts = () => {
                 tableContent="ContactData"
                 rows={tableData}
                 EnhancedTableHead={EnhancedTableHead}
+                getRowId={(rows) => rows._id}
               />
             )}
           </div>
@@ -390,7 +392,7 @@ export const Contacts = () => {
       {viewContacts && (
         <ExcelPopUp
           isOpen={viewContacts}
-          onClose={() => setViewContacts(!viewContacts)}
+          onClose={() => setViewContacts(false)}
           className={`${styles.customModal}`}
           selectedContactExcel={selectedContactExcel}
         />

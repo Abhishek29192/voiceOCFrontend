@@ -377,6 +377,7 @@ export const BroadcastHistory = () => {
           className={`${styles.customModal}`}
         />
       )}
+
     </div>
   );
 };

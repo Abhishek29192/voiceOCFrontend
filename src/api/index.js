@@ -1,5 +1,26 @@
 import axios from "axios";
-import { fetcemplateData, fetchContacts, sendBroadcastDetails, fetctokenUrl, signUpUrl, sendBroadcastDetailsWithDateTime, fetchScheduleBroadcast, sendTeamInboxData, fetchSingleChatdata, fetchSingleChatdataUrl, fetchBroadcastHistoryDataUrl, fetchBroadcastHistoryStatusUrl, contactOptionsUrl, sendVideoUrl, exportExcel, getContactList, agentListUrl, selectedAgentUrl } from "../Urls";
+import {
+  fetcemplateData,
+  fetchContacts,
+  sendBroadcastDetails,
+  fetctokenUrl,
+  signUpUrl,
+  sendBroadcastDetailsWithDateTime,
+  fetchScheduleBroadcast,
+  sendTeamInboxData,
+  fetchSingleChatdata,
+  fetchSingleChatdataUrl,
+  fetchBroadcastHistoryDataUrl,
+  fetchBroadcastHistoryStatusUrl,
+  contactOptionsUrl,
+  sendVideoUrl,
+  exportExcel,
+  getContactList,
+  agentListUrl,
+  selectedAgentUrl,
+  removeAgentUrl,
+  logoutUrl,
+} from "../Urls";
 import cookie from "react-cookies";
 import { useAppCommonDataProvider } from "../components/AppCommonDataProvider/AppCommonDataProvider";
 
@@ -8,16 +29,16 @@ let headers = {
   Accept: "application/json",
 };
 
-
 export const fetchLoginToken = async (data) => {
-  const { data: response } = await
-    axios.post(fetctokenUrl, data, { headers: { Accept: "application/json" } })
+  const { data: response } = await axios.post(fetctokenUrl, data, {
+    headers: { Accept: "application/json" },
+  });
   return response;
-}
+};
 
 export const fetchSignUpCreds = async (data) => {
   return await axios.post(signUpUrl, data);
-}
+};
 
 export const fetchTempalteMessageData = async () => {
   return await axios.get(fetcemplateData, { headers });
@@ -34,6 +55,16 @@ export const fetchContactDetailsToServer = async (data) => {
 // selectedAgentUrl
 export const PostAssignAgent = async (data) => {
   return await axios.post(selectedAgentUrl, data, { headers });
+};
+
+// removeAgentUrl
+export const PostRemoveAssignAgent = async (data) => {
+  return await axios.post(removeAgentUrl, data, { headers });
+};
+
+// logoutUrl
+export const PostLogout = async (data) => {
+  return await axios.post(logoutUrl, data, { headers });
 };
 
 export const fetchExcelFile = async (data) => {
@@ -56,15 +87,18 @@ export const sendTeamInboxDetails = async (data) => {
   return await axios.post(sendTeamInboxData, data, { headers });
 };
 
-
 export const fetchTeamInboxLists = async (userDetails) => {
   // console.log(userDetails, "axios api")
-  return await axios.post(getContactList, {
-    role: userDetails.role,
-    agentId: userDetails._id,
-  }, {
-    headers
-  });
+  return await axios.post(
+    getContactList,
+    {
+      role: userDetails.role,
+      agentId: userDetails._id,
+    },
+    {
+      headers,
+    }
+  );
 };
 
 export const fetchScheduleBroadcastData = async () => {
@@ -75,19 +109,18 @@ export const fetchAgentLists = async () => {
   return await axios.get(`${agentListUrl}`, { headers });
 };
 
-
 export const fetchSingleChatData = async (data) => {
   return await axios.post(`${fetchSingleChatdataUrl}`, data, { headers });
 };
 
 export const fetchBroadcastHistoryStatus = async () => {
-  return await axios.get(`${fetchBroadcastHistoryStatusUrl}`, { headers })
-}
+  return await axios.get(`${fetchBroadcastHistoryStatusUrl}`, { headers });
+};
 
 export const fetchBroadcastHistoryTabelData = async () => {
-  return await axios.get(`${fetchBroadcastHistoryDataUrl}`, { headers })
-}
+  return await axios.get(`${fetchBroadcastHistoryDataUrl}`, { headers });
+};
 
 export const fetchContactListOptions = async () => {
-  return await axios.get(`${contactOptionsUrl}`, { headers })
-}
+  return await axios.get(`${contactOptionsUrl}`, { headers });
+};

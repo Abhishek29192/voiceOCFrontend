@@ -1,0 +1,15 @@
+.pInputClass {
+  height: 48px !important;
+  border-radius: 4px !important;
+  border: 1px solid #dee2e6 !important;
+  width: 100% !important;
+  /* padding-left: 66px !important; */
+  font-size: 12px !important;
+  /* font-family:  !important; */
+  font-weight: 400 !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.pInputClass:focus{
+    border:1px solid #5536db !important;
+}

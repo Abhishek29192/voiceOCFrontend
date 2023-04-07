@@ -16,6 +16,8 @@ import {
   fetchTeamInboxLists,
   fetchTempalteMessageData,
   PostAssignAgent,
+  PostLogout,
+  PostRemoveAssignAgent,
   sendBrodcastData,
   sendBrodcastDataWithDateTime,
   sendTeamInboxDetails,
@@ -71,6 +73,30 @@ export const usePostAssignAgentData = () => {
   });
 };
 
+// PostRemoveAssignAgent
+export const usePostRemoveAssignAgent = () => {
+  return useMutation({
+    mutationKey: ["remove-agent"],
+    mutationFn: async (data) => {
+      // console.log(data, "datatatatataa")
+      return PostRemoveAssignAgent(data);
+    },
+    onError: (e) => e,
+  });
+};
+
+// PostLogout
+
+export const useLogout = () => {
+  return useMutation({
+    mutationKey: ["log-out"],
+    mutationFn: async (data) => {
+      // console.log(data, "datatatatataa")
+      return PostLogout(data);
+    },
+    onError: (e) => e,
+  });
+};
 export const useDPostExcelToDownload = () => {
   return useMutation({
     mutationKey: ["download-excel"],

@@ -13,7 +13,7 @@ import { Routes as AppRoute } from "../../constants/RoutesNames";
 import ResponsiveNavbar from "../ResponsiveNavbar";
 import styles from "./Navbar.module.css";
 
-export const Navbar = () => {
+export const Navbar = ({ setOpenProfile, openProfile }) => {
   const role = JSON.parse(localStorage.getItem("userDetails")).role;
 
   const navigate = useNavigate();
@@ -32,6 +32,8 @@ export const Navbar = () => {
   const handleCampaign = () => {
     navigate(`${AppRoute.campaign}`);
   }
+
+
   return (
     <div className={styles.nav__container}>
       <div className="flex xl:hidden h-full p-3 w-[18rem] ">
@@ -118,13 +120,13 @@ export const Navbar = () => {
             </div>
             <p className={styles.number__style}>+14798024855</p>
           </div>
-          <div className="">
-            <HiOutlineUserCircle size={"2.4rem"} />
+          <div>
+            <HiOutlineUserCircle size={"2.4rem"} onClick={() => setOpenProfile(!openProfile)} />
           </div>
         </div>
       </div>
     </div>
-    // </div>
+
   );
 };
 

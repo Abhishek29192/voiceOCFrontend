@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { useAgentLists, useContactListOptions, usePostAssignAgentData, usePostTeamInboxData, useSingleChatData, useTeamInboxContactList, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
+import { useAgentLists, useContactListOptions, usePostAssignAgentData, usePostRemoveAssignAgent, usePostTeamInboxData, useSingleChatData, useTeamInboxContactList, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
 import { PrimaryButton, SecondaryButton } from "../../components/Button";
 import { AiOutlineSearch } from "react-icons/ai"
 import { SerachSection } from "./SerachSection";
 import { NewMessage } from "./NewMessage";
 import { FaWhatsapp } from "react-icons/fa"
-import { TiMessages } from "react-icons/ti"
+import { TiMessages, TiTick } from "react-icons/ti"
 import { FaPen } from "react-icons/fa"
 import { SlOptionsVertical } from "react-icons/sl"
 import { Base2 } from "../../components/Typography";
 import { InputFieldWithoutCounter } from "../../components/InputField";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
-import moment from "moment/moment";
 import { ChatContainer } from "../../components/Chat/ChatContainer";
 import styles from "./TeamInbox.module.css";
+import moment from "moment/moment";
 import { CountDownTimer, MyTimer } from "../../components/Timer";
+import { RxCross2 } from "react-icons/rx";
+import { Drawer, Drawers } from "../../components/Drawer/Drawer";
+import { Profile } from "./Profile";
 
 
 export const TeamInbox = () => {
@@ -26,25 +29,29 @@ export const TeamInbox = () => {
   const [tellMeButton, setTellMeButton] = useState(false);
   const [tellMeButtonID, setTellMeButtonID] = useState();
   const [name, setName] = useState("");
+  const [selectedMobileNumber, setSelectedMobileNumber] = useState();
   const [selctedTemplate, setSelectedTemplate] = useState()
   const [contactDetails, setContactDetails] = useState([])
   const [singleChat, setSingleChat] = useState();
   const [initailChat, setInitialChat] = useState([]);
   const [contactName, setContactName] = useState([]);
+  const [customVariable, setCustomVaraible] = useState([]);
   const [agentLists, setAgentLists] = useState([])
   const [openSelectAgents, setOpenSelectAgents] = useState(false)
+  const [openProfile, setOpenProfile] = useState(false)
   const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
-  const { whatsappNumber } = createTeamInboxDetails;
   const { refetch } = useTemplateData();
   const { mutateAsync } = usePostTeamInboxData();
   const { mutateAsync: chatData } = useSingleChatData();
   const userDetails = JSON.parse(localStorage.getItem("userDetails"))
+  const role = JSON.parse(localStorage.getItem("userDetails")).role;
   const { mutateAsync: contatcData } = useTeamInboxContactList(userDetails);
   const { mutateAsync: selectedAgentData } = usePostAssignAgentData()
+  const { mutateAsync: removeAgent } = usePostRemoveAssignAgent()
   const { refetch: contactNumber } = useContactListOptions()
   const { refetch: agentList } = useAgentLists()
   const { contactDetailData } = createTeamInboxDetails;
-  const role = JSON.parse(localStorage.getItem("userDetails")).role;
+  const { whatsappNumber } = createTeamInboxDetails;
 
 
   const getContactData = async () => {
@@ -86,11 +93,34 @@ export const TeamInbox = () => {
     customField: {
       templatedSelected: selctedTemplate,
       name: name,
+    },
+    customValues: customVariable,
+  }
+
+  const handleCustomVariable = (e) => {
+    const { name, value } = e.target
+    if (customVariable.length === 0) {
+      setCustomVaraible([...customVariable, {
+        [name]: value
+      }])
+    } else {
+      const data = [...customVariable]
+      const doesExist = data.find(e => Object.keys(e).includes(name))
+      const index = data.findIndex(e => Object.keys(e).includes(name))
+
+      if (doesExist === undefined) {
+        data.push({
+          [name]: value
+        })
+      } else {
+        data[index][name] = value
+      }
+      setCustomVaraible(data)
     }
   }
 
-
   const handleSend = () => {
+    console.log('ustom', customVariable)
     mutateAsync(data).then((res) => {
       getContactData()
     }).catch((e) => console.log(e))
@@ -101,8 +131,8 @@ export const TeamInbox = () => {
 
 
   const handleSingleChatData = (ele) => {
-    console.log(ele, "onclick")
     setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: ele })
+    setSelectedMobileNumber(ele?.customerId?.mobileNumber)
     chatData({
       chatId: ele._id,
     }).then((res) => { setSingleChat(res.data.chats) }).catch((err) => console.log(err))
@@ -119,6 +149,14 @@ export const TeamInbox = () => {
       fullName: `${ele.firstName} ${ele.lastName}`
     }
     selectedAgentData(agentSelectedDetails).then((res) => console.log(res)).catch((err) => console.log(err))
+    setOpenSelectAgents(false)
+  }
+
+
+  const handleRemoveAgent = () => {
+    const removeAgentId = { chatId: contactDetailData?._id };
+    removeAgent(removeAgentId).then((res) => console.log(res)).catch((err) => console.log(err))
+
     setOpenSelectAgents(false)
   }
 
@@ -168,7 +206,7 @@ export const TeamInbox = () => {
   return (
     <div>
       <div>
-        <Navbar />
+        <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} />
       </div>
       <div className="flex">
         <div className={`w-[25%] border justify-center h-[90vh]  ${styles.slideUpwardFirst}`}>
@@ -206,7 +244,10 @@ export const TeamInbox = () => {
                         <div className="font-extrabold">{ele?.customerId?.customField?.name?.split("")[0]?.toUpperCase()}</div>
                       </div>
                       <div className="px-7 w-full">
-                        <div className="font-semibold">{ele.customerId?.mobileNumber}</div>
+                        <div className="flex justify-between">
+                          <div className="font-semibold">{ele.customerId?.mobileNumber}</div>
+                          {/* <div className="bg-red-500 p-1 rounded-full  px-3">1</div> */}
+                        </div>
                         <div className="text-slate-300 text-sm">{moment(ele.createdAt).format("DD/MM/YYYY  HH:mm")} PM</div>
                         <div className="py-2 text-slate-300 text-sm">Hi....</div>
                       </div>
@@ -246,10 +287,21 @@ export const TeamInbox = () => {
                               {
                                 tellMeButton && tellMeButtonID == index && (
                                   <>
-                                    <div className="poppins mx-1 mt-2 font-semibold">Name</div>
+                                    {
+                                      e?.customFields?.map((e, index) => {
+                                        return (<div>
+                                          <div className="poppins mx-1 mt-2 font-semibold">Custom Fields : {index + 1}</div>
+                                          <div className="my-1 font-semibold">
+                                            <InputFieldWithoutCounter placeholder={"Custom Fields"} name={`customField${index}`} className="w-full bg-slate-200" onChange={(e) => handleCustomVariable(e)} />
+                                            {/* <InputFieldWithoutCounter placeholder={"Custom Fields"} name={`customField${index}`} className="w-full bg-slate-200" onChange={(e) => { console.log(e.target.name, 'name'); setCustomVaraible([...customVariable, { [e.target.name]: e.target.value }]); }} /> */}
+                                          </div>
+                                        </div>)
+                                      })
+                                    }
+                                    {/* <div className="poppins mx-1 mt-2 font-semibold">Name</div>
                                     <div className="my-1 font-semibold">
                                       <InputFieldWithoutCounter placeholder={"name"} className="w-full bg-slate-200" onChange={(e) => setName(e.target.value)} />
-                                    </div>
+                                    </div> */}
                                     <div className="flex justify-end my-2">
                                       <div>
                                         <SecondaryButton text={"Back"} onClick={() => {
@@ -288,7 +340,7 @@ export const TeamInbox = () => {
                 <CountDownTimer time={86400} />
               </div> */}
             </div>
-            <ChatContainer singleChat={singleChat} initialChat={initailChat} />
+            <ChatContainer singleChat={singleChat} initialChat={initailChat} selectedMobileNumber={selectedMobileNumber} />
           </div>
           {
             openSelectAgents && role === "admin" && (
@@ -297,9 +349,13 @@ export const TeamInbox = () => {
                   // agentLists?.map((e) => console.log(e.firstName + e.lastName, "element"))
                   agentLists?.map((ele) => {
                     return (
-                      <div className="mx-2 my-3 cursor-pointer" onClick={(e) => handleAssignAgent(e, ele)}>
-                        <div className="border-b-2">
+                      <div className=" flex mx-2 my-3 cursor-pointer border-b-2 pb-2 items-center justify-between" >
+                        <div className="w-13 ">
                           {ele.firstName + ele.lastName}
+                        </div>
+                        <div className="flex items-center mx-3">
+                          <div className="mx-2 bg-[#5536db] p-1 rounded-full" onClick={(e) => handleAssignAgent(e, ele)}><TiTick size={"1.4rem"} color={"white"} /></div>
+                          <div className="mx-2 bg-[#5536db] p-1 rounded-full" onClick={(e, ele) => handleRemoveAgent(e, ele)}><RxCross2 size={"1.4rem"} color={"white"} /></div>
                         </div>
                       </div>
                     )
@@ -363,6 +419,14 @@ export const TeamInbox = () => {
           </div>
         </div>
       </div>
+      {
+        openProfile && (
+          <Drawers isOpen={openProfile} toggleDrawer={!openProfile} direction="right" >
+            <Profile setOpenProfile={setOpenProfile} />
+          </Drawers>
+        )
+      }
     </div>
   );
+
 };

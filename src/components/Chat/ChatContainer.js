@@ -5,7 +5,8 @@ import { useAppCommonDataProvider } from '../AppCommonDataProvider/AppCommonData
 import { ChatBoxImageReciver, ChatBoxImageSender, ChatBoxReciver, ChatBoxSender } from './ChatBox';
 import { InputChatField } from './InputChatField';
 
-export const ChatContainer = ({ singleChat, initialChat }) => {
+export const ChatContainer = ({ singleChat, initialChat, selectedMobileNumber }) => {
+    // console.log(selectedMobileNumber, "selected number")
     const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
     const { contactDetailData } = createTeamInboxDetails;
     const [chats, setChats] = useState(initialChat)
@@ -18,12 +19,18 @@ export const ChatContainer = ({ singleChat, initialChat }) => {
     let socketio = socketIOClient("http://3.6.197.151:3057")
     // let socketio = socketIOClient("http://127.0.0.1:8000")
 
+    // console.log(contactDetailData?.customerId?.mobileNumber, "contact  detailsssssss")
+
     const ref = useChatScroll(chats);
 
     useEffect(() => {
         socketio.on('chat_client', senderChats => {
-            // console.log(senderChats, "gdhhm")
+            console.log(senderChats, "sender   chat")
+            // if (senderChats[0].fullContactNumber == singleChat[0].fullContactNumber) {
             setChats([...senderChats])
+            // } else {
+            //     console.log("contact number")
+            // }
         })
         socketio.on('disconnect_socket', disconnect => {
             console.log(disconnect, "disconnect")
@@ -34,19 +41,22 @@ export const ChatContainer = ({ singleChat, initialChat }) => {
         })
     }, [])
 
+    console.log(chats, "chaatssss")
 
     useEffect(() => {
+        console.log("single chatttt")
         setChats(singleChat)
     }, [singleChat])
 
 
     useEffect(() => {
+        console.log("initial chat ++++++++++")
         setChats(initialChat)
     }, [initialChat])
 
 
     function sendChatToSocket(chat) {
-        // console.log(chat, typeof chat, "videosssssssssssssss")
+        console.log(chat, typeof chat, "videosssssssssssssss")
         if (typeof chat === "object") {
             socketio.emit("chat", [{
                 messageType: typeOfMessage,
@@ -63,32 +73,24 @@ export const ChatContainer = ({ singleChat, initialChat }) => {
                 chatId: contactDetailData?._id || initialChat[0].chatId,
             }])
         }
-
-        // socketio.emit("chat", [{
-        //     messageType: typeOfMessage,
-        //     message: chat,
-        //     mobileNumber: contactDetailData?.customerId?.mobileNumber || initialChat[0].fullContactNumber,
-        //     chatId: contactDetailData?._id || initialChat[0].chatId,
-        // }])
     }
 
 
-    function SenderChat({ chat, messageTime, messageType }) {
-        return <ChatBoxSender message={chat} messageTime={messageTime} messageType={messageType} />
+    function SenderChat({ chat, messageTime, chatType }) {
+        return <ChatBoxSender message={chat} messageTime={messageTime} messageType={chatType} />
     }
 
-    function RecieverChat({ chat, messageTime, messageType }) {
-        return <ChatBoxReciver message={chat} messageTime={messageTime} messageType={messageType} />
+    function RecieverChat({ chat, messageTime, chatType }) {
+        return <ChatBoxReciver message={chat} messageTime={messageTime} messageType={chatType} />
     }
-
 
     return (
         <div>
             <div className='h-[62vh] overflow-y-auto' ref={ref} >
 
-                {chats?.length > 0 && chats?.map((chat, index) => chat.messageFrom === "agent" ? <SenderChat chat={chat.message} messageType={chat.type} messageTime={chat.createdAt} key={index.toString()} /> : <RecieverChat chat={chat.message} messageType={chat.type} messageTime={chat.createdAt} key={index.toString()} />)}
+                {/* {chats?.length > 0 && chats?.map((chat, index) => chat.messageFrom === "agent" ? <SenderChat chat={chat.message} messageType={chat.type} messageTime={chat.createdAt} key={index.toString()} /> : <RecieverChat chat={chat.message} messageType={chat.type} messageTime={chat.createdAt} key={index.toString()} />)} */}
 
-                {/* {chats?.length > 0 && chats?.map((chat, index) => chat.messageFrom === "agent" ? <SenderChat chat={chat.message} messageTime={chat.createdAt} key={index.toString()} /> : <RecieverChat chat={chat.message} messageTime={chat.createdAt} key={index.toString()} />)} */}
+                {chats?.length > 0 && chats?.map((chat, index) => chat.messageFrom === "agent" ? <SenderChat chat={chat.message} messageTime={chat.createdAt} chatType={chat.type} key={index.toString()} /> : <RecieverChat chat={chat.message} messageTime={chat.createdAt} chatType={chat.type} key={index.toString()} />)}
             </div>
 
             {/* <InputChatField placeholder="send message..." openFileUpload={openFileUpload} setOpenFileUpload={setOpenFileUpload} setOpenEmoji={setOpenEmoji} sendChatToSocket={sendChatToSocket} onKeyPress={sendChatToSocket} /> */}

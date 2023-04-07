@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import validator from 'validator'
 import { PrimaryButton, SecondaryButton } from '../../components/Button'
 import { InputFieldWithoutCounter } from '../../components/InputField'
 import { SelectOptionButton } from '../../components/SelectOptions'
@@ -7,12 +6,15 @@ import { Base2 } from '../../components/Typography'
 import { CiGlobe } from "react-icons/ci"
 import { IoMdCall } from "react-icons/io"
 import { useAppCommonDataProvider } from '../../components/AppCommonDataProvider/AppCommonDataProvider'
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/bootstrap.css";
+import styles from "./newMessage.module.css"
 
 export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumber }) => {
-    console.log(contactNameNumber, "iiiiiiiiiiiiiiiiiiiiiiiiii")
     const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
     const { whatsappNumber } = createTeamInboxDetails;
     const [number, setNumber] = useState()
+    // const [phone, setPhone] = useState("");
 
     const colourStyles = {
         control: (styles) => {
@@ -25,7 +27,7 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
                 fontSize: "12px",
                 fontFamily: "poppins",
                 marginTop: "2px",
-                // border: "1px solid #5536db",
+                border: "1px solid #5536db",
                 // "&:hover": {
                 //   border: "1px solid #5536db",
                 // },
@@ -44,10 +46,14 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
         },
     };
 
+    const handleNumber = (num) => {
+        setNumber(num);
+        setCreateTeamInboxDetails({ ...createTeamInboxDetails, whatsappNumber: num })
+    }
 
     const handleDemo = () => {
-        // const validation = /^\+[1 - 9]{ 1 } [0 - 9]{ 3, 14 } $/;
-        let validation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        // let validation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+        let validation = /[0-9]{1,2}[0-9]{10}/;
         if (number.match(validation)) {
             setNewMessage(false);
             setShowContactList(true);
@@ -64,12 +70,29 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
                             <Base2 className="poppins text-base font-extrabold text-[#666666] items-center">Choose contact</Base2>
                         </div>
                     </div>
-                    <div className="flex justify-between py-4 items-center ">
+                    <div className="flex gap-3 w-full py-4 items-center ">
                         <div className="flex relative bg-white p-1 rounded-md justify-center w-[20%] h-12 items-center">
                             <IoMdCall size={"2rem"} className="absolute left-[1px] top-3" />
                             <CiGlobe size={"2.5rem"} color={"grey"} />
                         </div>
-                        <InputFieldWithoutCounter type='tel' placeholder={"Enter whatsapp number"} className="ml-5 h-12 w-[80%]" onChange={(e) => { setCreateTeamInboxDetails({ ...createTeamInboxDetails, whatsappNumber: e.target.value }); setNumber(e.target.value) }} />
+                        {/* code added country code picker--------- */}
+                        {/* <CountryCode /> */}
+                        <div className='w-fit'>
+                            <PhoneInput
+                                country={"in"}
+                                // containerStyle={{ margin: '10px' }}
+                                // buttonStyle={{}}
+                                // dropdownStyle={{ height: '50px' }}
+                                enableSearch={true}
+                                value={number}
+                                inputClass={styles.pInputClass}
+                                // onChange={(number) => {setNumber(number)}}
+                                onChange={(number) => handleNumber(number)}
+                                // setCreateTeamInboxDetails({...createTeamInboxDetails, whatsappNumber: e.target.value }
+                                buttonClass={styles.btn}
+                            />
+                        </div>
+                        {/* <InputFieldWithoutCounter type='tel' placeholder={"Enter whatsapp number"} className="ml-5 h-12 w-[80%]" onChange={(e) => { setCreateTeamInboxDetails({ ...createTeamInboxDetails, whatsappNumber: e.target.value }); setNumber(e.target.value) }} /> */}
                     </div>
                     <div className="flex justify-center pt-2">
                         <Base2>Or</Base2>
