@@ -63,6 +63,7 @@ export const TeamInbox = () => {
     }).catch((err) => console.log(err))
   }
 
+
   useEffect(() => {
     getContactData()
     agentList().then((res) => setAgentLists(res?.data?.data?.agentList, "rsponse")).catch((err) => console.log(err))

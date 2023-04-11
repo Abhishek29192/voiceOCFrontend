@@ -96,7 +96,7 @@ export const InputChatField = ({ placeholder, sendChatToSocket, setImage, setTyp
             {
                 messageStatus ? (
 
-                    <div className="w-full border bg-white p-4  flex items-center rounded relative bottom-0  justify-between">
+                    <div className="w-full border bg-white p-4  flex items-center rounded relative bottom-[-5px]  justify-between">
                         <div className=" w-fit relative">
                             <InputFieldWithoutCounter placeholder={placeholder} onChange={(e) => setMessage(e.target.value)} value={typeof message !== "string" ? message.name : message} className="bg-slate-200 w-[38vw] h-[7vh]" />
                             <div className='absolute top-3 right-11' onClick={() => { setOpenEmoji(!openEmoji); setOpenFileUpload(false) }}><BsEmojiSmile size={"1.3rem"} /></div>
