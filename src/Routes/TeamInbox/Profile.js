@@ -11,18 +11,13 @@ export const Profile = ({ setOpenProfile }) => {
     const navigate = useNavigate();
     const { mutateAsync } = useLogout()
     const profileData = JSON.parse(localStorage.getItem("userDetails"))
-    // const logOut = () => {
-    //     useLogout(profileData._id).then((res) => console.log(res)).catch((err) => console.log(err))
-    // }
+
 
     const handleSignOut = () => {
         localStorage.clear();
         const personId = { _id: profileData._id };
         mutateAsync(personId).then((res) => console.log(res)).catch((err) => console.log(err))
-        // setTimeout(() => {
         navigate("/")
-        // }, 500);
-
     }
 
     return (

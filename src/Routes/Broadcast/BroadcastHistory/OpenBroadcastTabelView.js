@@ -8,6 +8,7 @@ import {
 } from "../../../components/Button";
 import { Base1Strong, Paragraph3 } from "../../../components/Typography";
 import {
+  useBroadcastHistoryTabelData,
   useContactDataToClient,
   usePostBordcastData,
   usePostBroadcastDataWithDateTime,
@@ -22,19 +23,23 @@ export const OpenBroadcastTabelView = ({
   onClose,
   className,
   classes,
+  setBroadcastHistoryTabelData
 }) => {
   const [selectedTabelRow, setSelectedTabelRow] = useState("");
   const [tableData, setTableData] = useState([]);
   const { refetch } = useContactDataToClient();
   const [data, setData] = useState([]);
   const [openDateTimeField, setOpenDateTimeField] = useState(false)
-  const [timePicked, setTimePicked] = useState(moment().format("HH-mm"))
-  const [datePicked, setDatePicked] = useState(moment().format("DD-MM-YYYY"))
+  const [timePicked, setTimePicked] = useState(moment.utc().format("HH:mm"))
+  const [datePicked, setDatePicked] = useState(moment.utc().format("DD-MM-YYYY"))
 
   const { setCreateContactDetails, createContactDetails } =
     useAppCommonDataProvider();
+  const { refetch: getBroadcastStatus } = useBroadcastHistoryTabelData();
 
   const { brodcastSelectedRowData, broadcastName, fileName, excelSelected } = createContactDetails;
+
+  const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
   const newBroadcastDetails = {
     broadCastName: broadcastName,
@@ -44,12 +49,15 @@ export const OpenBroadcastTabelView = ({
     time: timePicked,
     date: datePicked,
     UserId: "one",
+    timezone: timezone,
   }
 
-  // console.log(brodcastSelectedRowData, "selected row")
 
   const { mutateAsync } = usePostBordcastData();
   const { mutateAsync: scheduleBroadcast } = usePostBroadcastDataWithDateTime();
+
+
+
 
   useEffect(() => {
     refetch().then((res) => {
@@ -61,7 +69,6 @@ export const OpenBroadcastTabelView = ({
 
   useEffect(() => {
     if (data) {
-      console.log(data, "dataaaaaaa")
       const rows = data.map((ele, index) => ({
         id: ele.ContactList._id,
         basicInfo: ele?.ContactList.fileName,
@@ -119,9 +126,10 @@ export const OpenBroadcastTabelView = ({
     });
   };
 
-  const handleSubmitModal = (e) => {
+  const handleSubmitModal = async (e) => {
     if (!openDateTimeField) {
-      mutateAsync(newBroadcastDetails)
+      await mutateAsync(newBroadcastDetails)
+      getBroadcastStatus().then((res) => { setBroadcastHistoryTabelData(res?.data?.data); console.log(res?.data?.data, "dataaa") }).catch((err) => console.log(err))
     } else {
       scheduleBroadcast(newBroadcastDetails)
     }

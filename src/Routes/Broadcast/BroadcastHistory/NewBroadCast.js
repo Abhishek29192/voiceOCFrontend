@@ -12,7 +12,7 @@ import styles from "./BroadcastHistory.module.css";
 
 
 //
-export const NewBroadCast = ({ isOpen, onClose, className }) => {
+export const NewBroadCast = ({ isOpen, onClose, className, ...props }) => {
   const {
     selectedContactRowData,
     setSelectedContactRowData,
@@ -52,7 +52,7 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
       return {
         ...styles,
         backgroundColor: "white",
-        width: "31rem",
+        width: "97%",
         height: "2rem",
         boxShadow: "none",
         fontSize: "12px",
@@ -68,7 +68,7 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
         color: "#000",
-        width: "12rem",
+        width: "97%",
         // height: "5rem",
         fontSize: "12px",
         fontFamily: "poppins",
@@ -107,7 +107,7 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
                 <Paragraph3 className="text-md mb-3">Broadcast Name</Paragraph3>
                 <InputFieldWithoutCounter
                   className={
-                    " bg-slate-100 w-[98%] border border-#5b3ddc-500 text-[12px] p-2 h-[2.4rem]"
+                    " bg-slate-100 w-[97%] border border-#5b3ddc-500 text-[12px] p-2 h-[2.4rem]"
                   }
                   type={"text"}
                   placeholder="Broadcast Name"
@@ -185,6 +185,7 @@ export const NewBroadCast = ({ isOpen, onClose, className }) => {
           // onCloseUploadPopUp={() => setOpenMediaUpload(false)}
           className={`${styles.customModal}`}
           classes={"height:'80vh'"}
+          {...props}
         />
       )}
     </>

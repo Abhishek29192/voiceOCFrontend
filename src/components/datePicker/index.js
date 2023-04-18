@@ -6,16 +6,19 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import Styles from "./datePicker.module.css";
+import moment from "moment/moment";
 
 export function DatePickers({ label, date }) {
-  const [value, setValue] = React.useState(dayjs("2023-02-23"));
+  const currentDate = moment(new Date()).format('YYYY-MM-DD');
+  const [value, setValue] = React.useState(dayjs(currentDate));
 
   const handleChange = (newValue) => {
     setValue(newValue);
     date(newValue.format("DD-MM-YYYY"))
   };
 
-  // console.log(value.format("DD-MM-YYYY"), "date")
+  const timeeer = moment().format('LTS');
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Stack spacing={3}>

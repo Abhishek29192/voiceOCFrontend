@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
-import { useAgentLists, useContactListOptions, usePostAssignAgentData, usePostRemoveAssignAgent, usePostTeamInboxData, useSingleChatData, useTeamInboxContactList, useTeamInboxDetails, useTemplateData } from "../../hooks/useQueryApi";
+import {
+  useAgentLists,
+  useAllChatData,
+  useContactListOptions,
+  useNewMessageStatus,
+  usePostAssignAgentData,
+  usePostRemoveAssignAgent,
+  usePostTeamInboxData,
+  useSingleChatData,
+  useTeamInboxContactList,
+  useTeamInboxDetails,
+  useTemplateData,
+} from "../../hooks/useQueryApi";
 import { PrimaryButton, SecondaryButton } from "../../components/Button";
-import { AiOutlineSearch } from "react-icons/ai"
+import { AiOutlineSearch } from "react-icons/ai";
 import { SerachSection } from "./SerachSection";
 import { NewMessage } from "./NewMessage";
-import { FaWhatsapp } from "react-icons/fa"
-import { TiMessages, TiTick } from "react-icons/ti"
-import { FaPen } from "react-icons/fa"
-import { SlOptionsVertical } from "react-icons/sl"
+import { FaWhatsapp } from "react-icons/fa";
+import { TiMessages, TiTick } from "react-icons/ti";
+import { FaPen } from "react-icons/fa";
+import { SlOptionsVertical } from "react-icons/sl";
 import { Base2 } from "../../components/Typography";
 import { InputFieldWithoutCounter } from "../../components/InputField";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
@@ -20,7 +32,6 @@ import { RxCross2 } from "react-icons/rx";
 import { Drawer, Drawers } from "../../components/Drawer/Drawer";
 import { Profile } from "./Profile";
 
-
 export const TeamInbox = () => {
   const [search, setSearch] = useState(false);
   const [newMessage, setNewMessage] = useState(false);
@@ -30,62 +41,123 @@ export const TeamInbox = () => {
   const [tellMeButtonID, setTellMeButtonID] = useState();
   const [name, setName] = useState("");
   const [selectedMobileNumber, setSelectedMobileNumber] = useState();
-  const [selctedTemplate, setSelectedTemplate] = useState()
-  const [contactDetails, setContactDetails] = useState([])
+  const [selctedTemplate, setSelectedTemplate] = useState();
+  const [contactDetails, setContactDetails] = useState([]);
   const [singleChat, setSingleChat] = useState();
-  const [initailChat, setInitialChat] = useState([]);
   const [contactName, setContactName] = useState([]);
   const [customVariable, setCustomVaraible] = useState([]);
-  const [agentLists, setAgentLists] = useState([])
-  const [openSelectAgents, setOpenSelectAgents] = useState(false)
-  const [openProfile, setOpenProfile] = useState(false)
-  const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
+  const [agentLists, setAgentLists] = useState([]);
+  const [openSelectAgents, setOpenSelectAgents] = useState(false);
+  const [openProfile, setOpenProfile] = useState(false);
+  const [allChatData, setAllChatData] = useState([]);
+  const [isChatPromiseFullfilled, setIsChatPromiseFullfilled] =
+    useState(undefined);
+  const [selectedContactIndex, setSelectedContactIndex] = useState("");
+  const [firstMessageObject, setFirstMessageObject] = useState({});
+  const [previouseSelectedNumber, setPreviouseSelectedNumber] =
+    useState(undefined);
+
+  const {
+    createTeamInboxDetails,
+    setCreateTeamInboxDetails,
+    allChat,
+    setAllChat,
+  } = useAppCommonDataProvider();
+  const { chatDataAll } = allChat
   const { refetch } = useTemplateData();
   const { mutateAsync } = usePostTeamInboxData();
-  const { mutateAsync: chatData } = useSingleChatData();
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"))
+  // const { mutateAsync: chatData } = useSingleChatData();
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const role = JSON.parse(localStorage.getItem("userDetails")).role;
+  const currentUserId = JSON.parse(localStorage.getItem("userDetails"))._id;
   const { mutateAsync: contatcData } = useTeamInboxContactList(userDetails);
-  const { mutateAsync: selectedAgentData } = usePostAssignAgentData()
-  const { mutateAsync: removeAgent } = usePostRemoveAssignAgent()
-  const { refetch: contactNumber } = useContactListOptions()
-  const { refetch: agentList } = useAgentLists()
-  const { contactDetailData } = createTeamInboxDetails;
-  const { whatsappNumber } = createTeamInboxDetails;
+  const { mutateAsync: selectedAgentData } = usePostAssignAgentData();
+  const { mutateAsync: removeAgent } = usePostRemoveAssignAgent();
+  const { refetch: contactNumber } = useContactListOptions();
+  const { refetch: agentList } = useAgentLists();
+  const { contactDetailData, whatsappNumber } = createTeamInboxDetails;
+  const { mutateAsync: alldata } = useAllChatData();
+  const { mutateAsync: newMessageStatus } = useNewMessageStatus();
 
 
-  const getContactData = async () => {
-    await contatcData().then((e) => {
-      setContactDetails(e?.data?.contactList);
-      chatData({
-        chatId: e?.data?.contactList[0]?._id,
-      }).then((res) => { setInitialChat(res?.data?.chats); setName(res?.data?.name) }).catch((err) => console.log(err))
-    }).catch((err) => console.log(err))
+  console.log('chat all data', chatDataAll)
+
+  const getNewMessageStatus = async (ele) => {
+    (selectedMobileNumber === undefined) ?
+      (
+        await newMessageStatus({
+          fullContactNumber: allChatData[0]?.mobileNumber,
+          previousContactNumber: previouseSelectedNumber,
+          chatId: allChatData[0]?.chatDetail?._id,
+        })
+          .then((res) => console.log(res?.data, "resssss"))
+          .catch((err) => console.log(err, "error"))) :
+      (
+        await newMessageStatus({
+          fullContactNumber: selectedMobileNumber,
+          previousContactNumber: previouseSelectedNumber,
+          chatId: ele?.chatDetail?._id,
+        })
+          .then((res) => console.log(res?.data, "resssss"))
+          .catch((err) => console.log(err, "error")))
   }
 
+  const getAllData = async () => {
+    await alldata({ agentId: currentUserId, role: role })
+      .then((res) => {
+        console.log("fzghnbvzggggggvigvivgigvvvutitgggutgutiiutifrfrugbkjnjbgvryuvgmuh", res?.data)
+        setAllChatData(res?.data?.contactList);
+        setAllChat({ chatDataAll: res?.data?.contactList });
+        setSelectedMobileNumber(res?.data?.contactList[0]?.mobileNumber)
+        setIsChatPromiseFullfilled(true);
+        newMessageStatus({
+          fullContactNumber: res?.data?.contactList[0]?.mobileNumber,
+          previousContactNumber: previouseSelectedNumber,
+          chatId: res?.data?.contactList[0]?.chatDetail?._id,
+        })
+        // .then((res) => console.log(res?.data, "resssss"))
+        // .catch((err) => console.log(err, "error"))
+      })
+      .catch((err) => console.log(err));
+  };
+
 
   useEffect(() => {
-    getContactData()
-    agentList().then((res) => setAgentLists(res?.data?.data?.agentList, "rsponse")).catch((err) => console.log(err))
-  }, [])
+    contatcData()
+      .then((res) => setContactDetails(res?.data?.contactList))
+      .catch((err) => console.log(err));
+  }, []);
 
 
   useEffect(() => {
-    refetch().then((res) => setTemplateDate(res?.data.data)).catch((error) => console.log(error))
-    contactNumber().then((res) => setContactName(res?.data?.data?.contactarray, "contact Numbers")).catch((err) => console.log(err))
-  }, [])
+
+    agentList()
+      .then((res) => setAgentLists(res?.data?.data?.agentList, "rsponse"))
+      .catch((err) => console.log(err));
+
+    getAllData();
+
+    refetch()
+      .then((res) => setTemplateDate(res?.data.data))
+      .catch((error) => console.log(error));
+
+    contactNumber()
+      .then((res) =>
+        setContactName(res?.data?.data?.contactarray, "contact Numbers")
+      )
+      .catch((err) => console.log(err));
+  }, []);
 
 
-  const contactNameNumber = []
+
+  const contactNameNumber = [];
   contactName?.map((e) => {
     const optionContactNumber = {
       label: `${e.name} (${e.mobileNumber})`,
-      value: `${e.name} (${e.mobileNumber})`
-    }
-    contactNameNumber.push(optionContactNumber)
-    // console.log(optionContactNumber, "-+++++++++++++++++++++")
-  })
-
+      value: `${e.name} (${e.mobileNumber})`,
+    };
+    contactNameNumber.push(optionContactNumber);
+  });
 
   const data = {
     mobileNumber: whatsappNumber,
@@ -96,78 +168,92 @@ export const TeamInbox = () => {
       name: name,
     },
     customValues: customVariable,
-  }
+  };
 
   const handleCustomVariable = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     if (customVariable.length === 0) {
-      setCustomVaraible([...customVariable, {
-        [name]: value
-      }])
+      setCustomVaraible([
+        ...customVariable,
+        {
+          [name]: value,
+        },
+      ]);
     } else {
-      const data = [...customVariable]
-      const doesExist = data.find(e => Object.keys(e).includes(name))
-      const index = data.findIndex(e => Object.keys(e).includes(name))
+      const data = [...customVariable];
+      const doesExist = data.find((e) => Object.keys(e).includes(name));
+      const index = data.findIndex((e) => Object.keys(e).includes(name));
 
       if (doesExist === undefined) {
         data.push({
-          [name]: value
-        })
+          [name]: value,
+        });
       } else {
-        data[index][name] = value
+        data[index][name] = value;
       }
-      setCustomVaraible(data)
+      setCustomVaraible(data);
     }
-  }
+  };
 
   const handleSend = () => {
-    console.log('ustom', customVariable)
-    mutateAsync(data).then((res) => {
-      getContactData()
-    }).catch((e) => console.log(e))
+    mutateAsync(data)
+      .then((res) => {
+        console.log(res?.data?.newChat[0], "response daattttaaaaaaaaaaaaaaaa")
+        // setAllChat({ chatDataAll: res?.data })
+        getAllData();
+      })
+      .catch((e) => console.log(e));
     setNewMessage(false);
     setSearch(false);
     setShowContactList(false);
-  }
+  };
 
+  const handleSingleChatData = (ele, index) => {
+    setSelectedContactIndex(index);
+    setCreateTeamInboxDetails({
+      ...createTeamInboxDetails,
+      contactDetailData: ele,
+    });
 
-  const handleSingleChatData = (ele) => {
-    setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: ele })
-    setSelectedMobileNumber(ele?.customerId?.mobileNumber)
-    chatData({
-      chatId: ele._id,
-    }).then((res) => { setSingleChat(res.data.chats) }).catch((err) => console.log(err))
-  }
+    setPreviouseSelectedNumber(selectedMobileNumber);
+    setSelectedMobileNumber(ele?.mobileNumber);
+    getNewMessageStatus(ele)
+  };
+
 
   const handleAgent = () => {
-    setOpenSelectAgents(!openSelectAgents)
-  }
+    setOpenSelectAgents(!openSelectAgents);
+  };
 
   const handleAssignAgent = (e, ele) => {
     const agentSelectedDetails = {
-      chatId: contactDetailData?._id,
+      chatId: contactDetailData?.chatDetail?._id,
       agentId: ele?._id,
-      fullName: `${ele.firstName} ${ele.lastName}`
-    }
-    selectedAgentData(agentSelectedDetails).then((res) => console.log(res)).catch((err) => console.log(err))
-    setOpenSelectAgents(false)
-  }
+      fullName: `${ele.firstName} ${ele.lastName}`,
+    };
 
+    selectedAgentData(agentSelectedDetails)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    setOpenSelectAgents(false);
+  };
 
   const handleRemoveAgent = () => {
-    const removeAgentId = { chatId: contactDetailData?._id };
-    removeAgent(removeAgentId).then((res) => console.log(res)).catch((err) => console.log(err))
+    const removeAgentId = { chatId: contactDetailData?.chatDetail?._id };
+    removeAgent(removeAgentId)
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    setOpenSelectAgents(false);
+  };
 
-    setOpenSelectAgents(false)
-  }
-
-
-  const rowData = [{
-    Name: "Abhishek kashyap",
-    dashboard_url: "www.usdjghmkj.com",
-    username: "abhiK",
-    password: "AAAAAA"
-  }]
+  const rowData = [
+    {
+      Name: "Abhishek kashyap",
+      dashboard_url: "www.usdjghmkj.com",
+      username: "abhiK",
+      password: "AAAAAA",
+    },
+  ];
 
   const colourStyles = {
     control: (styles) => {
@@ -202,181 +288,295 @@ export const TeamInbox = () => {
   const time = new Date();
   time.setSeconds(time.getSeconds() + 600);
 
-
-
   return (
     <div>
       <div>
         <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} />
       </div>
       <div className="flex">
-        <div className={`w-[25%] border justify-center h-[90vh]  ${styles.slideUpwardFirst}`}>
-          <div className="flex w-full justify-center items-center py-3">
-            <PrimaryButton text={`New Message`} className="w-[60%] m-5 " onClick={() => { setNewMessage(!newMessage); setSearch(false); setShowContactList(false) }} />
-            <div className="bg-slate-200 p-2 h-full rounded-md" onClick={() => { setSearch(!search); setNewMessage(false); setShowContactList(false) }}>
+        <div
+          className={`w-[25%] border justify-center h-[90vh]  ${styles.slideUpwardFirst}`}
+        >
+          <div className="flex w-[85%] justify-center items-center py-3">
+            <PrimaryButton
+              text={`New Message`}
+              className="w-[80%] m-6 "
+              onClick={() => {
+                setNewMessage(!newMessage);
+                setSearch(false);
+                setShowContactList(false);
+              }}
+            />
+            <div
+              className="bg-slate-200 p-2 h-full rounded-md"
+              onClick={() => {
+                setSearch(!search);
+                setNewMessage(false);
+                setShowContactList(false);
+              }}
+            >
               <AiOutlineSearch size={"1.5rem"} />
             </div>
           </div>
-          {
-            search && !newMessage && !showContactList && (
-              <>
-                <div className="p-2">
-                  <SerachSection />
-                </div>
-              </>
-            )
-          }
-          {
-            newMessage && !search && !showContactList && (
-              <div className="px-2">
-                <NewMessage setNewMessage={setNewMessage} setShowContactList={setShowContactList} contactNameNumber={contactNameNumber} />
+          {search && !newMessage && !showContactList && (
+            <>
+              <div className="p-2">
+                <SerachSection />
               </div>
-
-            )
-          }
+            </>
+          )}
+          {newMessage && !search && !showContactList && (
+            <div className="px-2">
+              <NewMessage
+                setNewMessage={setNewMessage}
+                setShowContactList={setShowContactList}
+                contactNameNumber={contactNameNumber}
+              />
+            </div>
+          )}
           {!newMessage && !search && !showContactList && (
             <div className="border-t-[1px] h-[72vh] overflow-y-auto">
-              {contactDetails && contactDetails?.map((ele, index) => {
-                return (
-                  // <div className="border-b-[1px]" onClick={() => setCreateTeamInboxDetails({ ...createTeamInboxDetails, contactDetailData: e })}>
-                  <div className="border-b-[1px]" onClick={() => handleSingleChatData(ele)}>
-                    <div className="flex p-2 rounded-md items-center">
-                      <div className="flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center">
-                        <div className="font-extrabold">{ele?.customerId?.customField?.name?.split("")[0]?.toUpperCase()}</div>
-                      </div>
-                      <div className="px-7 w-full">
-                        <div className="flex justify-between">
-                          <div className="font-semibold">{ele.customerId?.mobileNumber}</div>
-                          {/* <div className="bg-red-500 p-1 rounded-full  px-3">1</div> */}
+              {allChatData &&
+                allChatData?.sort((obj1, obj2) => (new Date(obj2.chat[obj2.chat.length - 1].updatedAt)).getTime() - (new Date(obj1.chat[obj1.chat.length - 1].updatedAt).getTime()))?.map((ele, index) => {
+                  return (
+                    <div
+                      className="border-b-[1px] w-full"
+                      onClick={() => handleSingleChatData(ele, index)}
+                    >
+                      {/* {selectedMobileNumber === undefined ? (
+                        <div
+                          className={`flex p-2 rounded-md items-center ${index === 0
+                            ? "bg-[#5536db]"
+                            : "bg-white"
+                            }`}
+                        >
+                          <div
+                            className={`flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center`}
+                          >
+                            <div className="font-extrabold">
+                              {ele?.customField?.name
+                                ?.split("")[0]
+                                ?.toUpperCase()}
+                            </div>
+                          </div>
+                          <div className="px-7 w-[80%]">
+                            <div className="flex justify-between">
+                              <div className="font-semibold">
+                                {ele?.mobileNumber}
+                              </div>
+                            </div>
+                            <div className="text-slate-300 text-sm">
+                              {moment(ele?.chatDetail?.updatedAt).format(
+                                "DD/MM/YYYY  HH:mm"
+                              )}
+                            </div>
+                            <div className="py-2 text-slate-300 text-sm truncate overflow-clip w-full">
+                              {typeof ele?.chat[ele?.chat?.length - 1]
+                                ?.message === "string"
+                                ? ele?.chat[ele?.chat?.length - 1]?.message
+                                : ele?.chat[ele?.chat?.length - 1]?.message?.name}
+                            </div>
+                          </div>
                         </div>
-                        <div className="text-slate-300 text-sm">{moment(ele.createdAt).format("DD/MM/YYYY  HH:mm")} PM</div>
-                        <div className="py-2 text-slate-300 text-sm">Hi....</div>
+                      ) : ( */}
+
+                      <div
+                        className={`flex p-2 rounded-md items-center ${ele.mobileNumber == selectedMobileNumber
+                          ? "bg-[#5536db]"
+                          : "bg-white"
+                          }`}
+                      >
+                        <div
+                          className={`flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center`}
+                        >
+                          <div className="font-extrabold">
+                            {ele?.customField?.name
+                              ?.split("")[0]
+                              ?.toUpperCase()}
+                          </div>
+                        </div>
+                        <div className="px-7 w-[80%]">
+                          <div className="flex justify-between">
+                            <div className="font-semibold">
+                              {ele?.mobileNumber}
+                            </div>
+                          </div>
+                          <div className="text-slate-300 text-sm">
+                            {moment(ele?.chat[ele?.chat?.length - 1]?.updatedAt).format(
+                              "DD/MM/YYYY  HH:mm"
+                            )}
+                          </div>
+                          <div className="py-2 text-slate-300 text-sm truncate overflow-clip w-full">
+                            {typeof ele?.chat[ele?.chat?.length - 1]
+                              ?.message === "string"
+                              ? ele?.chat[ele?.chat?.length - 1]?.message
+                              : ele?.chat[ele?.chat?.length - 1]?.message?.name}
+                          </div>
+                        </div>
                       </div>
+                      {/* )}sss */}
+                    </div>
+                  );
+                })}
+            </div>
+          )}
+          {!newMessage && !search && showContactList && (
+            <div className="bg-white p-2 flex w-full ">
+              <div className="bg-slate-200 rounded-lg w-full ">
+                <div className=" rounded p-3">
+                  <div className="w-full py-2">
+                    <div className=" flex items-center px-3 py-1 w-full">
+                      <Base2 className="poppins text-base font-extrabold text-[#000000] items-center">
+                        Choose template
+                      </Base2>
+                    </div>
+                    <div className="p-2 w-full">
+                      <InputFieldWithoutCounter
+                        placeholder={"Search template"}
+                        className="bg-white w-full"
+                      />
                     </div>
                   </div>
-                )
-
-              })}
-
-            </div>)
-          }
-          {
-            !newMessage && !search && showContactList && (
-              <div className="bg-white p-2 flex w-full ">
-                <div className="bg-slate-200 rounded-lg w-full ">
-                  <div className=" rounded p-3">
-                    <div className="w-full py-2">
-                      <div className=" flex items-center px-3 py-1 w-full">
-                        <Base2 className="poppins text-base font-extrabold text-[#000000] items-center">Choose template</Base2>
-                      </div>
-                      <div className="p-2 w-full">
-                        <InputFieldWithoutCounter placeholder={"Search template"} className="bg-white w-full" />
-                      </div>
-                    </div>
-                    <div className=" p-2 w-full h-[66vh] overflow-y-scroll">
-                      {
-                        templateData?.map((e, index) => {
-                          return (
-                            <div className="bg-white rounded-lg px-3 my-2 h-[screen] flex flex-col" >
-                              <div className="py-2">
-                                <Base2 className="poppins text-sm font-extrabold text-[#000000] items-center" > {e.template_name}</Base2>
-                              </div>
-                              <div className="poppins text-sm my-2">{e.Body}</div>
-                              <div className="py-2">
-                                <SecondaryButton text={"tell me more"} className="h-11 px-7 " onClick={() => { setTellMeButton(!tellMeButton); setTellMeButtonID(index); setSelectedTemplate(e.template_name) }} />
-                              </div>
-                              {
-                                tellMeButton && tellMeButtonID == index && (
-                                  <>
-                                    {
-                                      e?.customFields?.map((e, index) => {
-                                        return (<div>
-                                          <div className="poppins mx-1 mt-2 font-semibold">Custom Fields : {index + 1}</div>
-                                          <div className="my-1 font-semibold">
-                                            <InputFieldWithoutCounter placeholder={"Custom Fields"} name={`customField${index}`} className="w-full bg-slate-200" onChange={(e) => handleCustomVariable(e)} />
-                                            {/* <InputFieldWithoutCounter placeholder={"Custom Fields"} name={`customField${index}`} className="w-full bg-slate-200" onChange={(e) => { console.log(e.target.name, 'name'); setCustomVaraible([...customVariable, { [e.target.name]: e.target.value }]); }} /> */}
-                                          </div>
-                                        </div>)
-                                      })
-                                    }
-                                    {/* <div className="poppins mx-1 mt-2 font-semibold">Name</div>
+                  <div className=" p-2 w-full h-[66vh] overflow-y-scroll">
+                    {templateData?.map((e, index) => {
+                      return (
+                        <div className="bg-white rounded-lg px-3 my-2 h-[screen] flex flex-col">
+                          <div className="py-2">
+                            <Base2 className="poppins text-sm font-extrabold text-[#000000] items-center">
+                              {" "}
+                              {e.template_name}
+                            </Base2>
+                          </div>
+                          <div className="poppins text-sm my-2">{e.Body}</div>
+                          <div className="py-2">
+                            <SecondaryButton
+                              text={"tell me more"}
+                              className="h-11 px-7 "
+                              onClick={() => {
+                                setTellMeButton(!tellMeButton);
+                                setTellMeButtonID(index);
+                                setSelectedTemplate(e.template_name);
+                              }}
+                            />
+                          </div>
+                          {tellMeButton && tellMeButtonID == index && (
+                            <>
+                              {e?.customFields?.map((e, index) => {
+                                return (
+                                  <div>
+                                    <div className="poppins mx-1 mt-2 font-semibold">
+                                      Custom Fields : {index + 1}
+                                    </div>
+                                    <div className="my-1 font-semibold">
+                                      <InputFieldWithoutCounter
+                                        placeholder={"Custom Fields"}
+                                        name={`customField${index}`}
+                                        className="w-full bg-slate-200"
+                                        onChange={(e) =>
+                                          handleCustomVariable(e)
+                                        }
+                                      />
+                                      {/* <InputFieldWithoutCounter placeholder={"Custom Fields"} name={`customField${index}`} className="w-full bg-slate-200" onChange={(e) => { console.log(e.target.name, 'name'); setCustomVaraible([...customVariable, { [e.target.name]: e.target.value }]); }} /> */}
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                              {/* <div className="poppins mx-1 mt-2 font-semibold">Name</div>
                                     <div className="my-1 font-semibold">
                                       <InputFieldWithoutCounter placeholder={"name"} className="w-full bg-slate-200" onChange={(e) => setName(e.target.value)} />
                                     </div> */}
-                                    <div className="flex justify-end my-2">
-                                      <div>
-                                        <SecondaryButton text={"Back"} onClick={() => {
-                                          setTellMeButton(false)
-                                          console.log(index, tellMeButton, tellMeButtonID, 'on click')
-                                        }} />
-                                      </div>
-                                      <div className="mx-2">
-                                        <PrimaryButton text={"Send"} onClick={handleSend} />
-                                      </div>
-                                    </div>
-                                  </>
-                                )
-                              }
-                            </div>
-                          )
-                        })
-                      }
-                    </div>
+                              <div className="flex justify-end my-2">
+                                <div>
+                                  <SecondaryButton
+                                    text={"Back"}
+                                    onClick={() => {
+                                      setTellMeButton(false);
+                                    }}
+                                  />
+                                </div>
+                                <div className="mx-2">
+                                  <PrimaryButton
+                                    text={"Send"}
+                                    onClick={handleSend}
+                                  />
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
-            )
-          }
-
+            </div>
+          )}
         </div>
-        <div className={`w-[50%] border bg-slate-100 overflow-x-hidden ${styles.slideUpwardMiddle}`}>
+        <div
+          className={`w-[50%] border bg-slate-100 overflow-x-hidden ${styles.slideUpwardMiddle}`}
+        >
           <div className="h-[10vh] m-1 rounded border bg-white ">
             <div className="flex items-center h-full w-full  px-4 cursor-pointer justify-between">
-              {
-                role === "admin" ? (<div>
+              {role === "admin" ? (
+                <div>
                   <SlOptionsVertical size={"1.1rem"} onClick={handleAgent} />
-                </div>) : (null)
-              }
-              {/* <div className="bg-red-400 p-[0.40rem] rounded-2xl border-[2px] float-right">
-                <CountDownTimer time={86400} />
-              </div> */}
+                </div>
+              ) : null}
             </div>
-            <ChatContainer singleChat={singleChat} initialChat={initailChat} selectedMobileNumber={selectedMobileNumber} />
+            <ChatContainer
+              singleChat={singleChat}
+              selectedMobileNumber={selectedMobileNumber}
+              allChatData={allChatData}
+              contactDetailData={contactDetailData}
+              isChatPromiseFullfilled={isChatPromiseFullfilled}
+            />
           </div>
-          {
-            openSelectAgents && role === "admin" && (
-              <div className="z-555 flex flex-col bg-white w-fit p-4 py-4 rounded-2xl h-auto relative">
-                {
-                  // agentLists?.map((e) => console.log(e.firstName + e.lastName, "element"))
-                  agentLists?.map((ele) => {
-                    return (
-                      <div className=" flex mx-2 my-3 cursor-pointer border-b-2 pb-2 items-center justify-between" >
-                        <div className="w-13 ">
-                          {ele.firstName + ele.lastName}
-                        </div>
-                        <div className="flex items-center mx-3">
-                          <div className="mx-2 bg-[#5536db] p-1 rounded-full" onClick={(e) => handleAssignAgent(e, ele)}><TiTick size={"1.4rem"} color={"white"} /></div>
-                          <div className="mx-2 bg-[#5536db] p-1 rounded-full" onClick={(e, ele) => handleRemoveAgent(e, ele)}><RxCross2 size={"1.4rem"} color={"white"} /></div>
-                        </div>
+          {openSelectAgents && role === "admin" && (
+            <div className="z-555 flex flex-col bg-white w-fit p-4 py-4 rounded-2xl h-auto relative">
+              {agentLists?.map((ele) => {
+                return (
+                  <div className=" flex mx-2 my-3 cursor-pointer border-b-2 pb-2 items-center justify-between">
+                    <div className="w-13 ">{ele.firstName + ele.lastName}</div>
+                    <div className="flex items-center mx-3">
+                      <div
+                        className="mx-2 bg-[#5536db] p-1 rounded-full"
+                        onClick={(e) => handleAssignAgent(e, ele)}
+                      >
+                        <TiTick size={"1.4rem"} color={"white"} />
                       </div>
-                    )
-                  })
-                }
-              </div>
-            )
-          }
+                      <div
+                        className="mx-2 bg-[#5536db] p-1 rounded-full"
+                        onClick={(e, ele) => handleRemoveAgent(e, ele)}
+                      >
+                        <RxCross2 size={"1.4rem"} color={"white"} />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
         <div className={`w-[25%] p-2 items-center ${styles.slideUpwardRight}`}>
           <div>
             <div className="flex py-5 px-1 border-b-[1px] items-center">
               <div className="flex h-11 px-4 py-[0.70rem] ml-2 bg-slate-200 rounded-3xl items-center justify-center">
-                <div className="font-extrabold">{contactDetailData?.customerId
-                  ?.customField
-                  ?.name.split("")[0]?.toUpperCase() || name.split("")[0]?.toUpperCase()}</div>
+
+                <div className="font-extrabold">
+                  {contactDetailData?.customField?.name
+                    .split("")[0]
+                    ?.toUpperCase() ||
+                    allChatData[0]?.customField?.name
+                      .split("")[0]
+                      ?.toUpperCase()}
+                </div>
               </div>
               <div className="flex px-2 w-full justify-between items-center">
                 <div>
-                  <div className="font-semibold">{contactDetailData?.customerId?.mobileNumber || initailChat[0]?.fullContactNumber}</div>
+                  <div className="font-semibold">
+                    {contactDetailData?.mobileNumber ||
+                      selectedMobileNumber}
+                  </div>
                   <div className="text-sm poppins">Available</div>
                 </div>
                 <div className="flex ">
@@ -392,42 +592,51 @@ export const TeamInbox = () => {
             <div className="py-4 px-1 border-b-[1px] items-center">
               <div className="poppins font-bold">Basic information</div>
               <div className="flex py-2">
-                <div className="poppins text-sm font-semibold">Phone Number : </div>
-                <div className="poppins text-sm">{contactDetailData?.customerId?.mobileNumber || initailChat[0]?.fullContactNumber}</div>
+                <div className="poppins text-sm font-semibold">
+                  Phone Number :{" "}
+                </div>
+                <div className="poppins text-sm">
+                  {contactDetailData?.mobileNumber ||
+                    selectedMobileNumber}
+                </div>
               </div>
             </div>
             <div className="flex flex-col border-b-[1px]">
               <div className="flex justify-between py-4 px-1  items-center">
-                <div className="poppins font-bold text-[0.95rem]">Contact custom parameters</div>
+                <div className="poppins font-bold text-[0.95rem]">
+                  Contact custom parameters
+                </div>
                 <div className="relative w-fit">
                   <PrimaryButton className="h-[35px]" />
                   <FaPen color="white" className="absolute top-2 left-3" />
                 </div>
               </div>
               <div>
-
                 <div className="flex flex-col justify-center pt-4">
                   <div className="flex justify-center px-2">
-                    <div className="flex pl-2 py-1 border rounded-l-md w-40">Name</div>
-                    <div className="border rounded-r-md w-full py-1 flex justify-center">{contactDetailData?.customerId
-                      ?.customField
-                      ?.name || name}</div>
+                    <div className="flex pl-2 py-1 border rounded-l-md w-40">
+                      Name
+                    </div>
+                    <div className="border rounded-r-md w-full py-1 flex justify-center">
+                      {contactDetails?.customField?.name ||
+                        allChatData[0]?.customField?.name}
+                    </div>
                   </div>
-
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {
-        openProfile && (
-          <Drawers isOpen={openProfile} toggleDrawer={!openProfile} direction="right" >
-            <Profile setOpenProfile={setOpenProfile} />
-          </Drawers>
-        )
-      }
+      {openProfile && (
+        <Drawers
+          isOpen={openProfile}
+          toggleDrawer={!openProfile}
+          direction="right"
+        >
+          <Profile setOpenProfile={setOpenProfile} />
+        </Drawers>
+      )}
     </div>
   );
-
 };

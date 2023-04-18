@@ -32,6 +32,8 @@ import { useTemplateData } from "../../hooks/useQueryApi";
 import { CreateTemplatePopup } from "../../components/CreateTemplatePopup";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 import moment from "moment";
+import { Drawers } from "../../components/Drawer/Drawer";
+import { Profile } from "../TeamInbox/Profile";
 
 export const TemplateMessage = () => {
   const { isLoading, refetch } = useTemplateData();
@@ -41,6 +43,7 @@ export const TemplateMessage = () => {
   const [createTemplate, setCreateNewTemplate] = useState(false);
   const [viewTemplate, setViewTemplate] = useState(false);
   const [tableData, setTableData] = useState([]);
+  const [openProfile, setOpenProfile] = useState(false);
 
   useEffect(() => {
     refetch().then((res) => {
@@ -49,7 +52,7 @@ export const TemplateMessage = () => {
     });
   }, []);
 
-  console.log(templateData, "template data");
+  // console.log(templateData, "template data");
 
   const handleNewTemplate = () => {
     setOpen(!open);
@@ -236,7 +239,7 @@ export const TemplateMessage = () => {
   return (
     <>
       <div className="">
-        <Navbar />
+        <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} />
         <div className=" xl:flex ">
           {/* <div className=""> */}
           <BroadcastOptions />
@@ -589,6 +592,17 @@ export const TemplateMessage = () => {
             className={`${styles.customModal}`}
           />
         )}
+        {
+          openProfile && (
+            <Drawers
+              isOpen={openProfile}
+              toggleDrawer={!openProfile}
+              direction="right"
+            >
+              <Profile setOpenProfile={setOpenProfile} />
+            </Drawers>
+          )
+        }
       </div>
     </>
   );

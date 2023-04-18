@@ -1,17 +1,11 @@
 import zIndex from '@mui/material/styles/zIndex'
 import React, { Children } from 'react'
-
 // import component 👇
 import Drawer from 'react-modern-drawer'
-
 //import styles 👇
 import 'react-modern-drawer/dist/index.css'
 
 export const Drawers = ({ children, isOpen, toggleDrawer, direction }) => {
-    // const [isOpen, setIsOpen] = React.useState(false)
-    // const toggleDrawer = () => {
-    //     setIsOpen((prevState) => !prevState)
-    // }
 
     return (
         <>

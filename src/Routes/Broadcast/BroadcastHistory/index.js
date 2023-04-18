@@ -22,16 +22,19 @@ import { useBroadcastDataHistoryOveraAllStatus, useBroadcastHistoryTabelData } f
 import { BsBarChart } from "react-icons/bs"
 import { useEffect } from "react";
 import moment from "moment/moment";
+import { Drawers } from "../../../components/Drawer/Drawer";
+import { Profile } from "../../TeamInbox/Profile";
 
 
 
 export const BroadcastHistory = () => {
   const [rows, setrows] = useState([])
+  const [openProfile, setOpenProfile] = useState(false);
   const [boradcastHistoryTabelData, setBroadcastHistoryTabelData] = useState()
   const [boradcastHistoryStatusData, setBroadcastHistoryStatusData] = useState()
   const [newBroadcastPopup1, setNewBroadcastPopup1] = useState(false);
   const { refetch } = useBroadcastHistoryTabelData();
-  const { refetch: getAllStatus } = useBroadcastDataHistoryOveraAllStatus()
+  const { refetch: getAllStatus, isFetching } = useBroadcastDataHistoryOveraAllStatus()
 
 
   const colourStyles = {
@@ -97,10 +100,9 @@ export const BroadcastHistory = () => {
   useEffect(() => {
     refetch().then((res) => setBroadcastHistoryTabelData(res?.data?.data)).catch((err) => console.log(err))
     getAllStatus().then((res) => setBroadcastHistoryStatusData(res?.data?.data, "dchg")).catch((err) => console.log(err, "err"))
-  }, [boradcastHistoryTabelData])
+  }, [])
 
   // boradcastHistoryStatusData?.filter(e => { if (e.name === "READ") { console.log(e.count) } })
-  console.log(boradcastHistoryStatusData, "data")
 
 
   const columns = [
@@ -253,7 +255,6 @@ export const BroadcastHistory = () => {
   ];
 
 
-
   useEffect(() => {
     if (boradcastHistoryTabelData) {
       let data = boradcastHistoryTabelData?.map((e) => ({
@@ -275,7 +276,7 @@ export const BroadcastHistory = () => {
 
   return (
     <div>
-      <Navbar />
+      <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} setNewBroadcastPopup1={setNewBroadcastPopup1} />
       <div className="flex">
         <BroadcastOptions />
         <div className="flex flex-col w-[80%]">
@@ -375,7 +376,17 @@ export const BroadcastHistory = () => {
           isOpen={newBroadcastPopup1}
           onClose={() => setNewBroadcastPopup1(!newBroadcastPopup1)}
           className={`${styles.customModal}`}
+          setBroadcastHistoryTabelData={setBroadcastHistoryTabelData}
         />
+      )}
+      {openProfile && (
+        <Drawers
+          isOpen={openProfile}
+          toggleDrawer={!openProfile}
+          direction="right"
+        >
+          <Profile setOpenProfile={setOpenProfile} />
+        </Drawers>
       )}
 
     </div>

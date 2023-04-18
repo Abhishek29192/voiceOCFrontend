@@ -33,6 +33,7 @@ export const ChatBoxReciver = ({ message, messageType, messageTime }) => {
                         {/* <div className="flex flex-col bg-white w-fit py-4 poppins rounded-l-2xl rounded-b-2xl m-2 max-w-[50%] justify-center items-center"> */}
                         <div className='p-5 flex flex-col justify-center items-center'>
                             <div><BsFillFilePdfFill size={"3rem"} color={"red"} /></div>
+                            {/* <div style={{ flexFlow: "column" }} className='my-2 break-words max-w[45%] '>{message.name}</div> */}
                             <div style={{ flexFlow: "column" }} className='my-2 break-words max-w[45%] '>{message.name}</div>
                         </div>
                         {/* </div> */}

@@ -15,7 +15,7 @@ export const SelectOptionButton = ({
   //   setCurrentlySelectedOption(value.value);
   // };
   return (
-    <>
+    <div className="w-full">
       <Select
         options={options}
         styles={className}
@@ -24,6 +24,6 @@ export const SelectOptionButton = ({
         placeholder={placeholder}
         onChange={onChange}
       />
-    </>
+    </div>
   );
 };

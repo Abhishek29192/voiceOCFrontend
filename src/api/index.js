@@ -20,6 +20,8 @@ import {
   selectedAgentUrl,
   removeAgentUrl,
   logoutUrl,
+  allChatDataUrl,
+  newMessageUrl,
 } from "../Urls";
 import cookie from "react-cookies";
 import { useAppCommonDataProvider } from "../components/AppCommonDataProvider/AppCommonDataProvider";
@@ -61,6 +63,18 @@ export const PostAssignAgent = async (data) => {
 export const PostRemoveAssignAgent = async (data) => {
   return await axios.post(removeAgentUrl, data, { headers });
 };
+
+//newMessageUrl
+export const NewMessageApi = async (data) => {
+  return await axios.post(newMessageUrl, data, { headers });
+};
+
+
+//allChatDataUrl
+export const AllChatData = async (data) => {
+  return await axios.post(allChatDataUrl, data, { headers });
+};
+
 
 // logoutUrl
 export const PostLogout = async (data) => {

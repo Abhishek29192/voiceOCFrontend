@@ -5,18 +5,23 @@ import { useEffect } from 'react';
 import { IoSearchOutline } from 'react-icons/io5';
 import BroadcastOptions from '../../../components/BroadcastOptions'
 import { PrimaryButton } from '../../../components/Button';
+import { Drawers } from '../../../components/Drawer/Drawer';
 import { InputFieldWithoutCounter } from '../../../components/InputField';
 import Navbar from '../../../components/Navbar'
 import ContactTable from '../../../components/Table/contactTable';
 import { Base2 } from '../../../components/Typography';
 import { useSchedulBroadcastData } from '../../../hooks/useQueryApi';
+import { Profile } from '../../TeamInbox/Profile';
 import styles from "./BroadcastHistory.module.css";
+import { NewBroadCast } from './NewBroadCast';
 
 export const ScheduledBroadcast = () => {
     let rowss = [];
     const { refetch } = useSchedulBroadcastData();
     const [scheduleBroadcastdata, setScheduleBroadcastData] = useState([])
     const [tableRows, setTableRows] = useState([]);
+    const [openProfile, setOpenProfile] = useState(false);
+    const [newBroadcastPopup1, setNewBroadcastPopup1] = useState(false);
 
 
     const columns = [
@@ -81,7 +86,7 @@ export const ScheduledBroadcast = () => {
 
     return (
         <div>
-            <Navbar />
+            <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} />
             <div className="flex">
                 <BroadcastOptions />
                 <div className={styles.Brodcast_section}>
@@ -102,7 +107,8 @@ export const ScheduledBroadcast = () => {
                                 size={"1.6rem"}
                             />
                         </div>
-                        <PrimaryButton text={"New Broadcast"} />
+                        <PrimaryButton text={"New Broadcast"} onClick={() => setNewBroadcastPopup1(true)} />
+
                     </div>
                     <div className='mt-12 bg-white'>
                         <ContactTable
@@ -116,6 +122,25 @@ export const ScheduledBroadcast = () => {
                     </div>
                 </div>
             </div>
+            {newBroadcastPopup1 && (
+                <NewBroadCast
+                    isOpen={newBroadcastPopup1}
+                    onClose={() => setNewBroadcastPopup1(!newBroadcastPopup1)}
+                    className={`${styles.customModal}`}
+                // setBroadcastHistoryTabelData={setBroadcastHistoryTabelData}
+                />
+            )}
+            {
+                openProfile && (
+                    <Drawers
+                        isOpen={openProfile}
+                        toggleDrawer={!openProfile}
+                        direction="right"
+                    >
+                        <Profile setOpenProfile={setOpenProfile} />
+                    </Drawers>
+                )
+            }
 
         </div>
     )

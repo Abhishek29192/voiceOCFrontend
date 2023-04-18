@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "react-query";
 import {
+  AllChatData,
   fetchAgentLists,
   fetchBroadcastHistoryData,
   fetchBroadcastHistoryStatus,
@@ -15,6 +16,7 @@ import {
   fetchTeamInboxDetails,
   fetchTeamInboxLists,
   fetchTempalteMessageData,
+  NewMessageApi,
   PostAssignAgent,
   PostLogout,
   PostRemoveAssignAgent,
@@ -91,7 +93,6 @@ export const useLogout = () => {
   return useMutation({
     mutationKey: ["log-out"],
     mutationFn: async (data) => {
-      // console.log(data, "datatatatataa")
       return PostLogout(data);
     },
     onError: (e) => e,
@@ -106,17 +107,6 @@ export const useDPostExcelToDownload = () => {
     onError: (e) => e,
   });
 };
-
-
-// export const useDPostExcelToDownload = (id) => {
-//   return useQuery({
-//     queryKey: ["download-excel"],
-//     queryFn: fetchExcelFile(id),
-//     enabled: !!id,
-//     onError: (e) => e,
-//   });
-// };
-
 
 
 
@@ -144,6 +134,28 @@ export const usePostBroadcastDataWithDateTime = () => {
     mutationKey: ["post-brodcast-data-with-date-time"],
     mutationFn: async (data) => {
       return sendBrodcastDataWithDateTime(data);
+    },
+    onError: (e) => e,
+  });
+}
+
+//NewMessageApi
+export const useNewMessageStatus = () => {
+  return useMutation({
+    mutationKey: ["new-message-update"],
+    mutationFn: async (data) => {
+      return NewMessageApi(data);
+    },
+    onError: (e) => e,
+  });
+}
+
+//AllChatData
+export const useAllChatData = () => {
+  return useMutation({
+    mutationKey: ["all-chat-data"],
+    mutationFn: async (data) => {
+      return AllChatData(data);
     },
     onError: (e) => e,
   });

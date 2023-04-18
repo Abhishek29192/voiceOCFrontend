@@ -30,12 +30,15 @@ import BasicTable from "../../components/Table";
 import XLSX from "sheetjs-style";
 import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 import { ExcelPopUp } from "./ExcelPopUp";
+import { Profile } from "../TeamInbox/Profile";
+import { Drawers } from "../../components/Drawer/Drawer";
 
 export const Contacts = () => {
   const [selectedContactListqueryId, setSelectedContactListQueryId] = useState(null);
   const [selectedContactExcel, setSelectedContactExcel] = useState([])
   const [handleContactListModal, sethandleContactListModal] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [openProfile, setOpenProfile] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [tableData, setTableData] = useState([]);
   const [contactDataFromServer, setContactDataFromServer] = useState([])
@@ -52,6 +55,7 @@ export const Contacts = () => {
   // }, [selectedContactExcel])
 
   const handleSubmitFile = () => {
+    console.log("download")
     const formData = new FormData();
     formData.append("name", selectedFile);
     formData.append("UserId", "one");
@@ -66,10 +70,11 @@ export const Contacts = () => {
     }
 
     setSelectedContactListQueryId(entry.ContactList._id);
-    postExcelData(data).then((res) => {
 
-      const workSheet = XLSX.utils.json_to_sheet(res?.data?.contacts);
-      const workBook = XLSX.utils.book_new();
+    postExcelData(data).then((res) => {
+      console.log(res, "downloadghnbjhnb")
+      const workSheet = XLSX?.utils?.json_to_sheet(res?.data?.contactList);
+      const workBook = XLSX?.utils?.book_new();
 
       XLSX.utils.book_append_sheet(workBook, workSheet, "contacts");
 
@@ -77,14 +82,11 @@ export const Contacts = () => {
 
       XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
 
-      XLSX.writeFile(workBook, "./" + res?.data?.fileName);
-      console.log(workBook, "workbook")
+      XLSX.writeFile(workBook, "./" + res?.data?.filename);
     }
     ).catch((err) => console.log(err))
 
   }
-
-  console.log(viewContacts, "view contacts")
 
   const handleViewExcel = (entry) => {
     console.log(entry, "entryyyyyyyyy")
@@ -96,7 +98,6 @@ export const Contacts = () => {
     setSelectedContactListQueryId(entry.ContactList._id);
     postExcelData(data).then((res) => setSelectedContactExcel(res?.data)).catch((err) => console.log(err))
   }
-  console.log(selectedContactExcel, "rgdgfcgvb")
 
   useEffect(() => {
     if (isSuccess) {
@@ -277,7 +278,7 @@ export const Contacts = () => {
   return (
     <>
       <div>
-        <Navbar />
+        <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} />
         <div className="p-5 ">
           <div className="flex justify-between">
             <div className="w-1/2">
@@ -398,6 +399,15 @@ export const Contacts = () => {
         />
       )
       }
+      {openProfile && (
+        <Drawers
+          isOpen={openProfile}
+          toggleDrawer={!openProfile}
+          direction="right"
+        >
+          <Profile setOpenProfile={setOpenProfile} />
+        </Drawers>
+      )}
     </>
   );
 };

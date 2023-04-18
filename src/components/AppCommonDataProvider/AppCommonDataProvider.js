@@ -38,6 +38,10 @@ export const AppCommonDataContext = createContext({
     mediaUpload: "",
   },
 
+  allChat: {
+    chatDataAll: []
+  },
+  setAllChat: null,
   setCreateTeamInboxDetails: null,
   setCreateSampleData: null,
   setCreateContactDetails: null,
@@ -80,6 +84,9 @@ export const AppCommonDataProvider = ({ children }) => {
     headerText: "",
     mediaUpload: [],
   })
+  const [allChat, setAllChat] = useState({
+    chatDataAll: [],
+  })
   const [createTeamInboxDetails, setCreateTeamInboxDetails] = useState({
     whatsappNumber: "",
     contactDetailData: [],
@@ -105,6 +112,8 @@ export const AppCommonDataProvider = ({ children }) => {
         setSelectedContactRowData,
         createSampleData,
         setCreateSampleData,
+        allChat,
+        setAllChat,
         // createNewBroadcast,
         // setCreateNewBroadcast,
       }}>

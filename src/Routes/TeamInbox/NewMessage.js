@@ -21,16 +21,17 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
             return {
                 ...styles,
                 backgroundColor: "white",
-                width: "14.9rem",
-                height: "2.7rem",
+                width: "100%",
+                height: "48px",
                 boxShadow: "none",
                 fontSize: "12px",
                 fontFamily: "poppins",
                 marginTop: "2px",
-                border: "1px solid #5536db",
-                // "&:hover": {
-                //   border: "1px solid #5536db",
-                // },
+                border: "none",
+                "&:hover": {
+                    border: "none",
+                    cursor: "pointer",
+                },
             };
         },
         option: (styles, { data, isDisabled }) => {
@@ -38,7 +39,7 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
                 ...styles,
                 backgroundColor: isDisabled ? "red" : "white",
                 color: "#000",
-                width: "7rem",
+                width: "100%",
                 fontSize: "12px",
                 fontFamily: "poppins",
                 cursor: isDisabled ? "not-allowed" : "pointer",
@@ -75,18 +76,12 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
                             <IoMdCall size={"2rem"} className="absolute left-[1px] top-3" />
                             <CiGlobe size={"2.5rem"} color={"grey"} />
                         </div>
-                        {/* code added country code picker--------- */}
-                        {/* <CountryCode /> */}
                         <div className='w-fit'>
                             <PhoneInput
                                 country={"in"}
-                                // containerStyle={{ margin: '10px' }}
-                                // buttonStyle={{}}
-                                // dropdownStyle={{ height: '50px' }}
                                 enableSearch={true}
                                 value={number}
                                 inputClass={styles.pInputClass}
-                                // onChange={(number) => {setNumber(number)}}
                                 onChange={(number) => handleNumber(number)}
                                 // setCreateTeamInboxDetails({...createTeamInboxDetails, whatsappNumber: e.target.value }
                                 buttonClass={styles.btn}
@@ -97,10 +92,12 @@ export const NewMessage = ({ setNewMessage, setShowContactList, contactNameNumbe
                     <div className="flex justify-center pt-2">
                         <Base2>Or</Base2>
                     </div>
-                    <div className="flex justify-center pt-3">
+                    <div className="flex w-full ">
                         <SelectOptionButton
                             options={contactNameNumber}
+                            // className={`${colourStyles}`}
                             className={colourStyles}
+
                         // selectedValue={CallActionSubButton1.filter(
                         //   (elem) => elem.value === details.typeOfAction
                         // )}
