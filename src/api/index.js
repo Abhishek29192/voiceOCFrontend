@@ -26,7 +26,6 @@ import {
 } from "../Urls";
 
 const headers = {
-  Authorization: `Bearer ${cookie.load("accessToken")}`,
   Accept: "application/json",
 };
 
