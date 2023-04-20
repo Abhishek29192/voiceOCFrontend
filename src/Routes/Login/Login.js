@@ -15,10 +15,13 @@ import {useNavigate} from "react-router-dom";
 import {ToastContainer, toast} from "react-toastify";
 import cookie from "react-cookies";
 import "react-toastify/dist/ReactToastify.css";
+import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 
 export const Login = () => {
   const {mutateAsync, data} = useLogin();
   const navigate = useNavigate();
+  const {setUserDetails} = useAppCommonDataProvider();
+
   const [checkbox, setCheckbox] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
 
@@ -41,9 +44,6 @@ export const Login = () => {
         position: "top-right",
       });
     }
-    //  else if (status = "400") {
-    //   toast.error("User not Found !!!", { autoClose: 1500, closeOnClick: true, position: "top-right" })
-    // }
   };
 
   const handleShowPassword = () => {
@@ -70,14 +70,15 @@ export const Login = () => {
   const handleSubmitLogin = (values) => {
     mutateAsync(values).then((res) => {
       localStorage.setItem("userDetails", JSON.stringify(res.userDetail));
-      if (res.status) {
+      setUserDetails?.(res.userDetail);
+
+      if (res.status === true) {
         cookie.save("accessToken", res?.authToken, {});
         showToast(res);
         setTimeout(() => {
           navigate(`${AppRoute.teamInbox}`);
         }, 1000);
       } else {
-        console.log("eghhbn");
         showToast(res);
       }
     });
@@ -90,7 +91,6 @@ export const Login = () => {
         initialValues={{email: "", password: "", rememberMe: true}}
         onSubmit={(values) => {
           handleSubmitLogin(values);
-          // console.log(JSON.stringify(values, "vallllll"));
         }}
       >
         {({values, errors, touched, handleChange, handleSubmit}) => (
@@ -170,7 +170,6 @@ export const Login = () => {
                         text={"Login"}
                         type={"submit"}
                         className={"w-96"}
-                        onClick={handleSubmitLogin}
                       />
                       <ToastContainer theme="light" />
                     </div>

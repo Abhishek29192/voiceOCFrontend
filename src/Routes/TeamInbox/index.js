@@ -60,16 +60,20 @@ export const TeamInbox = () => {
   const {
     createTeamInboxDetails,
     setCreateTeamInboxDetails,
-    allChat,
     setAllChat,
+    userDetails: userData,
   } = useAppCommonDataProvider();
-  const {chatDataAll} = allChat;
   const {refetch} = useTemplateData();
   const {mutateAsync} = usePostTeamInboxData();
-  // const { mutateAsync: chatData } = useSingleChatData();
-  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  const role = JSON.parse(localStorage.getItem("userDetails")).role;
-  const currentUserId = JSON.parse(localStorage.getItem("userDetails"))._id;
+
+  const userDetails =
+    userData ?? JSON.parse(localStorage.getItem("userDetails"));
+
+  const role =
+    userData?.role ?? JSON.parse(localStorage.getItem("userDetails")).role;
+  const currentUserId =
+    userData?._id ?? JSON.parse(localStorage.getItem("userDetails"))._id;
+
   const {mutateAsync: contatcData} = useTeamInboxContactList(userDetails);
   const {mutateAsync: selectedAgentData} = usePostAssignAgentData();
   const {mutateAsync: removeAgent} = usePostRemoveAssignAgent();
@@ -97,9 +101,8 @@ export const TeamInbox = () => {
           .catch((err) => console.log(err, "error"));
   };
 
-  // console.log(selectedMobileNumber, "selected mobile")
-
   const getAllData = async () => {
+    console.log("role", role);
     return await alldata({agentId: currentUserId, role: role})
       .then((res) => {
         setAllChatData(res?.data?.contactList);
@@ -112,8 +115,6 @@ export const TeamInbox = () => {
           chatId: res?.data?.contactList[0]?.chatDetail?._id,
         });
         return res.data.contactList;
-        // .then((res) => console.log(res?.data, "resssss"))
-        // .catch((err) => console.log(err, "error"))
       })
       .catch((err) => console.log(err));
   };

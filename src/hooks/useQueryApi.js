@@ -25,9 +25,8 @@ import {
   sendTeamInboxDetails,
   sendVideoData,
 } from "../api";
-import {fetchScheduleBroadcast, fetchSingleChatdata} from "../Urls";
 
-export const useLogin = (creds) => {
+export const useLogin = () => {
   return useMutation({
     mutationKey: ["login-creds"],
     mutationFn: async (data) => await fetchLoginToken(data),

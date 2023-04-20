@@ -1,4 +1,5 @@
 import axios from "axios";
+import cookie from "react-cookies";
 import {
   fetcemplateData,
   fetchContacts,
@@ -8,7 +9,6 @@ import {
   sendBroadcastDetailsWithDateTime,
   fetchScheduleBroadcast,
   sendTeamInboxData,
-  fetchSingleChatdata,
   fetchSingleChatdataUrl,
   fetchBroadcastHistoryDataUrl,
   fetchBroadcastHistoryStatusUrl,
@@ -22,86 +22,93 @@ import {
   logoutUrl,
   allChatDataUrl,
   newMessageUrl,
+  BaseUrl,
 } from "../Urls";
-import cookie from "react-cookies";
-import {useAppCommonDataProvider} from "../components/AppCommonDataProvider/AppCommonDataProvider";
 
-let headers = {
+const headers = {
   Authorization: `Bearer ${cookie.load("accessToken")}`,
   Accept: "application/json",
 };
 
+const instance = axios.create({
+  baseURL: BaseUrl,
+});
+
+instance.interceptors.request.use((config) => {
+  config.headers["Authorization"] = `Bearer ${cookie.load("accessToken")}`;
+  return config;
+});
+
 export const fetchLoginToken = async (data) => {
-  const {data: response} = await axios.post(fetctokenUrl, data, {
+  const {data: response} = await instance.post(fetctokenUrl, data, {
     headers: {Accept: "application/json"},
   });
   return response;
 };
 
 export const fetchSignUpCreds = async (data) => {
-  return await axios.post(signUpUrl, data);
+  return await instance.post(signUpUrl, data);
 };
 
 export const fetchTempalteMessageData = async () => {
-  return await axios.get(fetcemplateData, {headers});
+  return await instance.get(fetcemplateData, {headers});
 };
 
 export const fetchContactDetailsToClient = async () => {
-  return await axios.get(`${fetchContacts}?UserId=one`, {headers});
+  return await instance.get(`${fetchContacts}?UserId=one`, {headers});
 };
 
 export const fetchContactDetailsToServer = async (data) => {
-  return await axios.post(fetchContacts, data, {headers});
+  return await instance.post(fetchContacts, data, {headers});
 };
 
 // selectedAgentUrl
 export const PostAssignAgent = async (data) => {
-  return await axios.post(selectedAgentUrl, data, {headers});
+  return await instance.post(selectedAgentUrl, data, {headers});
 };
 
 // removeAgentUrl
 export const PostRemoveAssignAgent = async (data) => {
-  return await axios.post(removeAgentUrl, data, {headers});
+  return await instance.post(removeAgentUrl, data, {headers});
 };
 
 //newMessageUrl
 export const NewMessageApi = async (data) => {
-  return await axios.post(newMessageUrl, data, {headers});
+  return await instance.post(newMessageUrl, data, {headers});
 };
 
 //allChatDataUrl
 export const AllChatData = async (data) => {
-  return await axios.post(allChatDataUrl, data, {headers});
+  return await instance.post(allChatDataUrl, data);
 };
 
 // logoutUrl
 export const PostLogout = async (data) => {
-  return await axios.post(logoutUrl, data, {headers});
+  return await instance.post(logoutUrl, data, {headers});
 };
 
 export const fetchExcelFile = async (data) => {
-  return await axios.post(`${exportExcel}`, data, {headers});
+  return await instance.post(`${exportExcel}`, data, {headers});
 };
 
 export const sendBrodcastData = async (data) => {
-  return await axios.post(sendBroadcastDetails, data, {headers});
+  return await instance.post(sendBroadcastDetails, data, {headers});
 };
 
 export const sendVideoData = async (data) => {
-  return await axios.post(sendVideoUrl, data, {headers});
+  return await instance.post(sendVideoUrl, data, {headers});
 };
 
 export const sendBrodcastDataWithDateTime = async (data) => {
-  return await axios.post(sendBroadcastDetailsWithDateTime, data, {headers});
+  return await instance.post(sendBroadcastDetailsWithDateTime, data, {headers});
 };
 
 export const sendTeamInboxDetails = async (data) => {
-  return await axios.post(sendTeamInboxData, data, {headers});
+  return await instance.post(sendTeamInboxData, data, {headers});
 };
 
 export const fetchTeamInboxLists = async (userDetails) => {
-  // console.log(userDetails, "axios api")
-  return await axios.post(
+  return await instance.post(
     getContactList,
     {
       role: userDetails.role,
@@ -114,25 +121,25 @@ export const fetchTeamInboxLists = async (userDetails) => {
 };
 
 export const fetchScheduleBroadcastData = async () => {
-  return await axios.get(`${fetchScheduleBroadcast}`, {headers});
+  return await instance.get(`${fetchScheduleBroadcast}`, {headers});
 };
 
 export const fetchAgentLists = async () => {
-  return await axios.get(`${agentListUrl}`, {headers});
+  return await instance.get(`${agentListUrl}`, {headers});
 };
 
 export const fetchSingleChatData = async (data) => {
-  return await axios.post(`${fetchSingleChatdataUrl}`, data, {headers});
+  return await instance.post(`${fetchSingleChatdataUrl}`, data, {headers});
 };
 
 export const fetchBroadcastHistoryStatus = async () => {
-  return await axios.get(`${fetchBroadcastHistoryStatusUrl}`, {headers});
+  return await instance.get(`${fetchBroadcastHistoryStatusUrl}`, {headers});
 };
 
 export const fetchBroadcastHistoryTabelData = async () => {
-  return await axios.get(`${fetchBroadcastHistoryDataUrl}`, {headers});
+  return await instance.get(`${fetchBroadcastHistoryDataUrl}`, {headers});
 };
 
 export const fetchContactListOptions = async () => {
-  return await axios.get(`${contactOptionsUrl}`, {headers});
+  return await instance.get(`${contactOptionsUrl}`, {headers});
 };

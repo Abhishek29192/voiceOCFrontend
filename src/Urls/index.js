@@ -1,4 +1,4 @@
-const BaseUrl = "http://3.6.197.151:3057/api/v1/";
+export const BaseUrl = "http://3.6.197.151:3057/api/v1/";
 // const BaseUrl = "http://127.0.0.1:8000/api/v1/";
 export const fetcemplateData = `${BaseUrl}template/all`;
 export const fetchContacts = `${BaseUrl}contact/`;

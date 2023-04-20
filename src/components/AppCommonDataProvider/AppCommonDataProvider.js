@@ -1,6 +1,9 @@
 import React, {createContext, useContext, useState} from "react";
 
 export const AppCommonDataContext = createContext({
+  userDetails: null,
+  setUserDetails: null,
+
   createTemplateValues: {
     templateName: "",
     category: "",
@@ -95,6 +98,8 @@ export const AppCommonDataProvider = ({children}) => {
 
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedContactRowData, setSelectedContactRowData] = useState(null);
+  const [userDetails, setUserDetails] = useState(null);
+
   return (
     <AppCommonDataContext.Provider
       value={{
@@ -112,8 +117,8 @@ export const AppCommonDataProvider = ({children}) => {
         setCreateSampleData,
         allChat,
         setAllChat,
-        // createNewBroadcast,
-        // setCreateNewBroadcast,
+        userDetails,
+        setUserDetails,
       }}
     >
       {children}
