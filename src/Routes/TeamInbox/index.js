@@ -63,7 +63,7 @@ export const TeamInbox = () => {
     allChat,
     setAllChat,
   } = useAppCommonDataProvider();
-  const { chatDataAll } = allChat
+  const { chatDataAll } = allChat;
   const { refetch } = useTemplateData();
   const { mutateAsync } = usePostTeamInboxData();
   // const { mutateAsync: chatData } = useSingleChatData();
@@ -79,28 +79,23 @@ export const TeamInbox = () => {
   const { mutateAsync: alldata } = useAllChatData();
   const { mutateAsync: newMessageStatus } = useNewMessageStatus();
 
-
-
   const getNewMessageStatus = async (ele) => {
-    (selectedMobileNumber === undefined) ?
-      (
-        await newMessageStatus({
+    selectedMobileNumber === undefined
+      ? await newMessageStatus({
           fullContactNumber: allChatData[0]?.mobileNumber,
           previousContactNumber: previouseSelectedNumber,
           chatId: allChatData[0]?.chatDetail?._id,
         })
           .then((res) => console.log(res?.data, "resssss"))
-          .catch((err) => console.log(err, "error")))
-      :
-      (
-        await newMessageStatus({
+          .catch((err) => console.log(err, "error"))
+      : await newMessageStatus({
           fullContactNumber: selectedMobileNumber,
           previousContactNumber: previouseSelectedNumber,
           chatId: ele?.chatDetail?._id,
         })
           .then((res) => console.log(res?.data, "resssss"))
-          .catch((err) => console.log(err, "error")))
-  }
+          .catch((err) => console.log(err, "error"));
+  };
 
   // console.log(selectedMobileNumber, "selected mobile")
 
@@ -109,14 +104,14 @@ export const TeamInbox = () => {
       .then((res) => {
         setAllChatData(res?.data?.contactList);
         setAllChat({ chatDataAll: res?.data?.contactList });
-        setSelectedMobileNumber(res?.data?.contactList[0]?.mobileNumber)
+        setSelectedMobileNumber(res?.data?.contactList[0]?.mobileNumber);
         setIsChatPromiseFullfilled(true);
         newMessageStatus({
           fullContactNumber: res?.data?.contactList[0]?.mobileNumber,
           previousContactNumber: previouseSelectedNumber,
           chatId: res?.data?.contactList[0]?.chatDetail?._id,
-        })
-        return res.data.contactList
+        });
+        return res.data.contactList;
         // .then((res) => console.log(res?.data, "resssss"))
         // .catch((err) => console.log(err, "error"))
       })
@@ -130,7 +125,6 @@ export const TeamInbox = () => {
   }, []);
 
   useEffect(() => {
-
     agentList()
       .then((res) => setAgentLists(res?.data?.data?.agentList, "rsponse"))
       .catch((err) => console.log(err));
@@ -147,8 +141,6 @@ export const TeamInbox = () => {
       )
       .catch((err) => console.log(err));
   }, []);
-
-
 
   const contactNameNumber = [];
   contactName?.map((e) => {
@@ -195,21 +187,19 @@ export const TeamInbox = () => {
     }
   };
 
-
   const handleSend = () => {
     mutateAsync(data)
       .then((res) => {
-
-        setSelectedContactIndex(0)
+        setSelectedContactIndex(0);
         setCreateTeamInboxDetails({
           ...createTeamInboxDetails,
           contactDetailData: res?.data?.newChat[0],
-        })
+        });
         setPreviouseSelectedNumber(selectedMobileNumber);
         setSelectedMobileNumber(res?.data?.newChat[0].mobileNumber);
         getAllData().then((data) => {
-          console.log("data", data)
-        })
+          console.log("data", data);
+        });
       })
       .catch((e) => console.log(e));
     setNewMessage(false);
@@ -226,9 +216,8 @@ export const TeamInbox = () => {
 
     setPreviouseSelectedNumber(selectedMobileNumber);
     setSelectedMobileNumber(ele?.mobileNumber);
-    getNewMessageStatus(ele)
+    getNewMessageStatus(ele);
   };
-
 
   const handleAgent = () => {
     setOpenSelectAgents(!openSelectAgents);
@@ -297,7 +286,6 @@ export const TeamInbox = () => {
   const time = new Date();
   time.setSeconds(time.getSeconds() + 600);
 
-  console.log(contactDetailData, "contact data details  chatssssssssssssssssss")
   return (
     <div>
       <div>
@@ -347,49 +335,61 @@ export const TeamInbox = () => {
           {!newMessage && !search && !showContactList && (
             <div className="border-t-[1px] h-[72vh] overflow-y-auto">
               {allChatData &&
-                allChatData?.sort((obj1, obj2) => (new Date(obj2.chat[obj2.chat.length - 1].createdAt)).getTime() - (new Date(obj1.chat[obj1.chat.length - 1].createdAt).getTime()))?.map((ele, index) => {
-                  return (
-                    <div
-                      className="border-b-[1px] w-full"
-                      onClick={() => handleSingleChatData(ele, index)}
-                    >
+                allChatData
+                  ?.sort(
+                    (obj1, obj2) =>
+                      new Date(
+                        obj2.chat[obj2.chat.length - 1].createdAt
+                      ).getTime() -
+                      new Date(
+                        obj1.chat[obj1.chat.length - 1].createdAt
+                      ).getTime()
+                  )
+                  ?.map((ele, index) => {
+                    return (
                       <div
-                        className={`flex p-2 rounded-md items-center ${ele.mobileNumber == selectedMobileNumber
-                          ? "bg-[#5536db]"
-                          : "bg-white"
-                          }`}
+                        className="border-b-[1px] w-full"
+                        onClick={() => handleSingleChatData(ele, index)}
                       >
                         <div
-                          className={`flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center`}
+                          className={`flex p-2 rounded-md items-center ${
+                            ele.mobileNumber == selectedMobileNumber
+                              ? "bg-[#5536db]"
+                              : "bg-white"
+                          }`}
                         >
-                          <div className="font-extrabold">
-                            {ele?.customField?.name
-                              ?.split("")[0]
-                              ?.toUpperCase()}
-                          </div>
-                        </div>
-                        <div className="px-7 w-[80%]">
-                          <div className="flex justify-between">
-                            <div className="font-bold">
-                              {ele?.name || ele?.mobileNumber}
+                          <div
+                            className={`flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center`}
+                          >
+                            <div className="font-extrabold">
+                              {ele?.customField?.name
+                                ?.split("")[0]
+                                ?.toUpperCase()}
                             </div>
                           </div>
-                          <div className="text-slate-300 text-sm">
-                            {moment(ele?.chat[ele?.chat?.length - 1]?.createdAt).format(
-                              "DD/MM/YYYY  HH:mm"
-                            )}
-                          </div>
-                          <div className="py-2 text-slate-300 text-sm truncate overflow-clip w-full">
-                            {typeof ele?.chat[ele?.chat?.length - 1]
-                              ?.message === "string"
-                              ? ele?.chat[ele?.chat?.length - 1]?.message
-                              : ele?.chat[ele?.chat?.length - 1]?.message?.name}
+                          <div className="px-7 w-[80%]">
+                            <div className="flex justify-between">
+                              <div className="font-bold">
+                                {ele?.name || ele?.mobileNumber}
+                              </div>
+                            </div>
+                            <div className="text-slate-300 text-sm">
+                              {moment(
+                                ele?.chat[ele?.chat?.length - 1]?.createdAt
+                              ).format("DD/MM/YYYY  HH:mm")}
+                            </div>
+                            <div className="py-2 text-slate-300 text-sm truncate overflow-clip w-full">
+                              {typeof ele?.chat[ele?.chat?.length - 1]
+                                ?.message === "string"
+                                ? ele?.chat[ele?.chat?.length - 1]?.message
+                                : ele?.chat[ele?.chat?.length - 1]?.message
+                                    ?.name}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
             </div>
           )}
           {!newMessage && !search && showContactList && (
@@ -528,7 +528,6 @@ export const TeamInbox = () => {
           <div>
             <div className="flex py-5 px-1 border-b-[1px] items-center">
               <div className="flex h-11 px-4 py-[0.70rem] ml-2 bg-slate-200 rounded-3xl items-center justify-center">
-
                 <div className="font-extrabold">
                   {contactDetailData?.customField?.name
                     .split("")[0]
@@ -541,8 +540,7 @@ export const TeamInbox = () => {
               <div className="flex px-2 w-full justify-between items-center">
                 <div>
                   <div className="font-semibold">
-                    {contactDetailData?.mobileNumber ||
-                      selectedMobileNumber}
+                    {contactDetailData?.mobileNumber || selectedMobileNumber}
                   </div>
                   <div className="text-sm poppins">Available</div>
                 </div>
@@ -563,8 +561,7 @@ export const TeamInbox = () => {
                   Phone Number :{" "}
                 </div>
                 <div className="poppins text-sm">
-                  {contactDetailData?.mobileNumber ||
-                    selectedMobileNumber}
+                  {contactDetailData?.mobileNumber || selectedMobileNumber}
                 </div>
               </div>
             </div>
@@ -585,8 +582,7 @@ export const TeamInbox = () => {
                       Name
                     </div>
                     <div className="border rounded-r-md w-full py-1 flex justify-center">
-                      {contactDetailData?.name ||
-                        allChatData[0]?.name}
+                      {contactDetailData?.name || allChatData[0]?.name}
                     </div>
                   </div>
                   {/* <div className="flex justify-center px-2">
