@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import moment from "moment";
 import Modal from "react-responsive-modal";
 import {
@@ -6,7 +6,7 @@ import {
   PrimaryButton,
   SecondaryButton,
 } from "../../../components/Button";
-import { Base1Strong, Paragraph3 } from "../../../components/Typography";
+import {Base1Strong, Paragraph3} from "../../../components/Typography";
 import {
   useBroadcastHistoryTabelData,
   useContactDataToClient,
@@ -14,30 +14,33 @@ import {
   usePostBroadcastDataWithDateTime,
 } from "../../../hooks/useQueryApi";
 import ContactTable from "../../../components/Table/contactTable";
-import { useAppCommonDataProvider } from "../../../components/AppCommonDataProvider/AppCommonDataProvider";
-import { DatePickers } from "../../../components/datePicker";
-import { TimePickers } from "../../../components/TimePicker/TimePicker";
+import {useAppCommonDataProvider} from "../../../components/AppCommonDataProvider/AppCommonDataProvider";
+import {DatePickers} from "../../../components/datePicker";
+import {TimePickers} from "../../../components/TimePicker/TimePicker";
 
 export const OpenBroadcastTabelView = ({
   isOpen,
   onClose,
   className,
   classes,
-  setBroadcastHistoryTabelData
+  setBroadcastHistoryTabelData,
 }) => {
   const [selectedTabelRow, setSelectedTabelRow] = useState("");
   const [tableData, setTableData] = useState([]);
-  const { refetch } = useContactDataToClient();
+  const {refetch} = useContactDataToClient();
   const [data, setData] = useState([]);
-  const [openDateTimeField, setOpenDateTimeField] = useState(false)
-  const [timePicked, setTimePicked] = useState(moment.utc().format("HH:mm"))
-  const [datePicked, setDatePicked] = useState(moment.utc().format("DD-MM-YYYY"))
+  const [openDateTimeField, setOpenDateTimeField] = useState(false);
+  const [timePicked, setTimePicked] = useState(moment.utc().format("HH:mm"));
+  const [datePicked, setDatePicked] = useState(
+    moment.utc().format("DD-MM-YYYY")
+  );
 
-  const { setCreateContactDetails, createContactDetails } =
+  const {setCreateContactDetails, createContactDetails} =
     useAppCommonDataProvider();
-  const { refetch: getBroadcastStatus } = useBroadcastHistoryTabelData();
+  const {refetch: getBroadcastStatus} = useBroadcastHistoryTabelData();
 
-  const { brodcastSelectedRowData, broadcastName, fileName, excelSelected } = createContactDetails;
+  const {brodcastSelectedRowData, broadcastName, fileName, excelSelected} =
+    createContactDetails;
 
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -50,14 +53,10 @@ export const OpenBroadcastTabelView = ({
     date: datePicked,
     UserId: "one",
     timezone: timezone,
-  }
+  };
 
-
-  const { mutateAsync } = usePostBordcastData();
-  const { mutateAsync: scheduleBroadcast } = usePostBroadcastDataWithDateTime();
-
-
-
+  const {mutateAsync} = usePostBordcastData();
+  const {mutateAsync: scheduleBroadcast} = usePostBroadcastDataWithDateTime();
 
   useEffect(() => {
     refetch().then((res) => {
@@ -126,18 +125,22 @@ export const OpenBroadcastTabelView = ({
 
   const handleSubmitModal = async (e) => {
     if (!openDateTimeField) {
-      await mutateAsync(newBroadcastDetails)
-      getBroadcastStatus().then((res) => { setBroadcastHistoryTabelData(res?.data?.data); console.log(res?.data?.data, "dataaa") }).catch((err) => console.log(err))
+      await mutateAsync(newBroadcastDetails);
+      getBroadcastStatus()
+        .then((res) => {
+          setBroadcastHistoryTabelData(res?.data?.data);
+          console.log(res?.data?.data, "dataaa");
+        })
+        .catch((err) => console.log(err));
     } else {
-      scheduleBroadcast(newBroadcastDetails)
+      scheduleBroadcast(newBroadcastDetails);
     }
-    onClose()
+    onClose();
   };
 
   const handleBackButton = (e) => {
-    onClose(true)
-  }
-
+    onClose(true);
+  };
 
   const bg = {
     overlay: {
@@ -145,8 +148,8 @@ export const OpenBroadcastTabelView = ({
     },
     modal: {
       height: "770px",
-    }
-  }
+    },
+  };
 
   return (
     <Modal
@@ -155,7 +158,8 @@ export const OpenBroadcastTabelView = ({
       showCloseIcon
       center
       styles={bg}
-      classNames={{ modal: `${className} ${classes}` }}>
+      classNames={{modal: `${className} ${classes}`}}
+    >
       <div>
         <div className="items-center h-full pb-3 ">
           <Base1Strong className="items-center">New BroadCast</Base1Strong>
@@ -172,35 +176,49 @@ export const OpenBroadcastTabelView = ({
           />
         </div>
         <div className="mt-4">
-          <Paragraph3 className="items-center font-extrabold poppins">When to call</Paragraph3>
+          <Paragraph3 className="items-center font-extrabold poppins">
+            When to call
+          </Paragraph3>
           <div className="flex m-3">
-            <input type="radio" name="radioOption" onClick={() => setOpenDateTimeField(false)} />
-            <Paragraph3 className="items-center font-normal poppins pl-4">Send it now</Paragraph3>
+            <input
+              type="radio"
+              name="radioOption"
+              onClick={() => setOpenDateTimeField(false)}
+            />
+            <Paragraph3 className="items-center font-normal poppins pl-4">
+              Send it now
+            </Paragraph3>
           </div>
           <div className="flex m-3">
-            <input type="radio" name="radioOption" onClick={() => setOpenDateTimeField(true)} />
-            <Paragraph3 className="items-center font-normal poppins pl-4">Schedule for a specific time</Paragraph3>
+            <input
+              type="radio"
+              name="radioOption"
+              onClick={() => setOpenDateTimeField(true)}
+            />
+            <Paragraph3 className="items-center font-normal poppins pl-4">
+              Schedule for a specific time
+            </Paragraph3>
           </div>
-          {
-            openDateTimeField && (
-
-              <div className="flex">
-                <div className="flex flex-col w-1/3">
-                  <Paragraph3 className="items-center font-normal poppins pl-4">Date</Paragraph3>
-                  <div className="  m-2 ">
-                    <DatePickers date={setDatePicked} />
-                  </div>
-                </div>
-                <div className="flex flex-col w-1/3">
-                  <Paragraph3 className="items-center font-normal poppins pl-4">Time</Paragraph3>
-                  <div className="m-2 ">
-                    <TimePickers time={setTimePicked} />
-                  </div>
+          {openDateTimeField && (
+            <div className="flex">
+              <div className="flex flex-col w-1/3">
+                <Paragraph3 className="items-center font-normal poppins pl-4">
+                  Date
+                </Paragraph3>
+                <div className="  m-2 ">
+                  <DatePickers date={setDatePicked} />
                 </div>
               </div>
-            )
-          }
-
+              <div className="flex flex-col w-1/3">
+                <Paragraph3 className="items-center font-normal poppins pl-4">
+                  Time
+                </Paragraph3>
+                <div className="m-2 ">
+                  <TimePickers time={setTimePicked} />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
         <div className="float-right flex m-2 mt-[1rem] mb-4">
           <div className="mr-2 w-32">

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, {createContext, useContext, useState} from "react";
 
 export const AppCommonDataContext = createContext({
   createTemplateValues: {
@@ -39,7 +39,7 @@ export const AppCommonDataContext = createContext({
   },
 
   allChat: {
-    chatDataAll: []
+    chatDataAll: [],
   },
 
   setAllChat: null,
@@ -53,8 +53,7 @@ export const AppCommonDataContext = createContext({
   setSelectedContactRowData: null,
 });
 
-
-export const AppCommonDataProvider = ({ children }) => {
+export const AppCommonDataProvider = ({children}) => {
   const [createTemplateValues, setCreateTemplateValues] = useState({
     templateName: "",
     category: "",
@@ -84,17 +83,15 @@ export const AppCommonDataProvider = ({ children }) => {
     contentTwo: "",
     headerText: "",
     mediaUpload: [],
-  })
+  });
   const [allChat, setAllChat] = useState({
     chatDataAll: [],
-  })
+  });
   const [createTeamInboxDetails, setCreateTeamInboxDetails] = useState({
     whatsappNumber: "",
     contactDetailData: [],
     contactDetailDataName: "",
-  })
-
-
+  });
 
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [selectedContactRowData, setSelectedContactRowData] = useState(null);
@@ -117,7 +114,8 @@ export const AppCommonDataProvider = ({ children }) => {
         setAllChat,
         // createNewBroadcast,
         // setCreateNewBroadcast,
-      }}>
+      }}
+    >
       {children}
     </AppCommonDataContext.Provider>
   );

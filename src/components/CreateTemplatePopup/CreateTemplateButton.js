@@ -6,10 +6,10 @@ import {
   OptionButton,
   VisitWebsiteAction,
 } from "../../constants/DropDownContent";
-import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
-import { InputField } from "../InputField";
-import { SelectOptionButton } from "../SelectOptions";
-import { Caption1, Paragraph3 } from "../Typography";
+import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import {InputField} from "../InputField";
+import {SelectOptionButton} from "../SelectOptions";
+import {Caption1, Paragraph3} from "../Typography";
 
 const colourStyles = {
   control: (styles) => {
@@ -28,7 +28,7 @@ const colourStyles = {
       // },
     };
   },
-  option: (styles, { data, isDisabled }) => {
+  option: (styles, {data, isDisabled}) => {
     return {
       ...styles,
       backgroundColor: isDisabled ? "red" : "white",
@@ -42,13 +42,13 @@ const colourStyles = {
 };
 
 export const CreateTemplateButton = () => {
-  const { setCreateTemplateValues, createTemplateValues, selectedRowData } =
+  const {setCreateTemplateValues, createTemplateValues, selectedRowData} =
     useAppCommonDataProvider();
   // console.log(selectedRowData, "selected row Data");
-  const { optionalButtonValue, ctaButtons } = createTemplateValues;
+  const {optionalButtonValue, ctaButtons} = createTemplateValues;
 
-  const CallPhone = ({ details }) => {
-    const { phoneNumber, buttonText, typeOfAction } = details;
+  const CallPhone = ({details}) => {
+    const {phoneNumber, buttonText, typeOfAction} = details;
 
     const handleChange = (e) => {
       if (e.value === typeOfAction) return;
@@ -119,8 +119,8 @@ export const CreateTemplateButton = () => {
     );
   };
 
-  const VisitWebsite = ({ details }) => {
-    const { typeOfAction, buttonText, urlType } = details;
+  const VisitWebsite = ({details}) => {
+    const {typeOfAction, buttonText, urlType} = details;
 
     const handleChange = (e) => {
       if (e.value === typeOfAction) return;
@@ -160,7 +160,7 @@ export const CreateTemplateButton = () => {
         (x) => x._id === details._id
       );
       details.urlType = e.value;
-      const newDetails = { ...details };
+      const newDetails = {...details};
       newData[indexOfCurrentItem] = newDetails;
       setCreateTemplateValues?.({
         ...createTemplateValues,
@@ -223,7 +223,7 @@ export const CreateTemplateButton = () => {
         {ctaButtons !== undefined &&
           ctaButtons.length > 0 &&
           ctaButtons.map((button, index) => {
-            const { typeOfAction } = button;
+            const {typeOfAction} = button;
             if (typeOfAction === CallPhoneAction)
               return <CallPhone details={button} key={index.toString()} />;
 

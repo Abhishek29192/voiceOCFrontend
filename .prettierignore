@@ -1,0 +1,8 @@
+package.json
+package-lock.json
+yarn.lock
+tailwind.config.js
+node_modules/
+public/
+build/
+dist/

@@ -10,6 +10,6 @@
   outline: none !important;
   box-shadow: none !important;
 }
-.pInputClass:focus{
-    border:1px solid #5536db !important;
+.pInputClass:focus {
+  border: 1px solid #5536db !important;
 }

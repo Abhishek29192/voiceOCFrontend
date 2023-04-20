@@ -1,7 +1,7 @@
 import React from "react";
 
 function createTypographyComponent(baseClassNames, defaultTag) {
-  return function Typography({ as, className = "", ...props }) {
+  return function Typography({as, className = "", ...props}) {
     const Component = as || defaultTag;
     return (
       <Component className={`${baseClassNames} ${className}`} {...props} />

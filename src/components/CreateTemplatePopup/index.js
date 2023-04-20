@@ -1,21 +1,22 @@
 import React from "react";
 import Modal from "react-responsive-modal";
-import { Base1Strong } from "../Typography";
-import { CreateTemplateBasicDetails } from "./CreateTemplateBasicDetails";
-import { CreateTemplateButton } from "./CreateTemplateButton";
-import { CreateTemplateHeader } from "./CreateTemplateHeader";
-import { PreviewSection } from "./PreviewSection";
-import { SampleContent } from "./SampleContent";
-import { TemplateFooter } from "./TemplateFooter";
-import { TemplateMessageBody } from "./TemplateMessageBody";
+import {Base1Strong} from "../Typography";
+import {CreateTemplateBasicDetails} from "./CreateTemplateBasicDetails";
+import {CreateTemplateButton} from "./CreateTemplateButton";
+import {CreateTemplateHeader} from "./CreateTemplateHeader";
+import {PreviewSection} from "./PreviewSection";
+import {SampleContent} from "./SampleContent";
+import {TemplateFooter} from "./TemplateFooter";
+import {TemplateMessageBody} from "./TemplateMessageBody";
 
-export const CreateTemplatePopup = ({ isOpen, onClose, className }) => {
+export const CreateTemplatePopup = ({isOpen, onClose, className}) => {
   return (
     <Modal
       open={isOpen}
       onClose={onClose}
       showCloseIcon
-      classNames={{ modal: className }}>
+      classNames={{modal: className}}
+    >
       <div>
         <div className="items-center h-full w-full pb-3 ">
           <Base1Strong className="items-center">

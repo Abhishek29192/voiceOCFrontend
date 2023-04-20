@@ -28,14 +28,14 @@
   }
 }
 
-.slideUpwardFirst {  
+.slideUpwardFirst {
   animation: 0.5s ease-out 0s 1 slideInFromBottomLeft;
 }
 
-.slideUpwardMiddle {  
+.slideUpwardMiddle {
   animation: 0.75s ease-out 0s 1 slideInFromBottomMiddle;
 }
 
-.slideUpwardRight {  
+.slideUpwardRight {
   animation: 0.9s ease-out 0s 1 slideInFromBottomRight;
 }

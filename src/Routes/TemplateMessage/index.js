@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Base1Strong,
   Base2,
   Paragraph1,
   Paragraph3,
 } from "../../components/Typography";
-import { optionSort } from "../../constants/DropDownContent";
-import { ApprovedButton, PrimaryButton } from "../../components/Button";
-import { IoSearchOutline } from "react-icons/io5";
-import { InputFieldWithoutCounter } from "../../components/InputField";
-import { SelectOptionButton } from "../../components/SelectOptions";
-import { FaFilter } from "react-icons/fa";
-import { TfiImport, TfiExport } from "react-icons/tfi";
-import { RxCopy } from "react-icons/rx";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { HiOutlineEye } from "react-icons/hi";
+import {optionSort} from "../../constants/DropDownContent";
+import {ApprovedButton, PrimaryButton} from "../../components/Button";
+import {IoSearchOutline} from "react-icons/io5";
+import {InputFieldWithoutCounter} from "../../components/InputField";
+import {SelectOptionButton} from "../../components/SelectOptions";
+import {FaFilter} from "react-icons/fa";
+import {TfiImport, TfiExport} from "react-icons/tfi";
+import {RxCopy} from "react-icons/rx";
+import {RiDeleteBin5Line} from "react-icons/ri";
+import {HiOutlineEye} from "react-icons/hi";
 import Navbar from "../../components/Navbar";
 import BroadcastOptions from "../../components/BroadcastOptions";
 import BasicTable from "../../components/Table";
@@ -27,18 +27,19 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
-import { visuallyHidden } from "@mui/utils";
-import { useTemplateData } from "../../hooks/useQueryApi";
-import { CreateTemplatePopup } from "../../components/CreateTemplatePopup";
-import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import {visuallyHidden} from "@mui/utils";
+import {useTemplateData} from "../../hooks/useQueryApi";
+import {CreateTemplatePopup} from "../../components/CreateTemplatePopup";
+import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 import moment from "moment";
-import { Drawers } from "../../components/Drawer/Drawer";
-import { Profile } from "../TeamInbox/Profile";
+import {Drawers} from "../../components/Drawer/Drawer";
+import {Profile} from "../TeamInbox/Profile";
 
 export const TemplateMessage = () => {
-  const { isLoading, refetch } = useTemplateData();
+  const {isLoading, refetch} = useTemplateData();
   const [templateData, setTemplateData] = useState(null);
-  const { setCreateTemplateValues, setSelectedRowData } = useAppCommonDataProvider();
+  const {setCreateTemplateValues, setSelectedRowData} =
+    useAppCommonDataProvider();
   const [open, setOpen] = useState(false);
   const [createTemplate, setCreateNewTemplate] = useState(false);
   const [viewTemplate, setViewTemplate] = useState(false);
@@ -70,8 +71,16 @@ export const TemplateMessage = () => {
         templateName: entry?.template_name,
         category: entry?.Category,
         status: entry?.status ? (
-          <ApprovedButton text={entry.status} className="text-sm font-semibold" />
-        ) : (<ApprovedButton text={entry.status} className="text-sm font-semibold" />),
+          <ApprovedButton
+            text={entry.status}
+            className="text-sm font-semibold"
+          />
+        ) : (
+          <ApprovedButton
+            text={entry.status}
+            className="text-sm font-semibold"
+          />
+        ),
         language: entry?.Langauge,
         lastUpdated: moment(`${entry.updatedAt}`).utc().format("YYYY-MM-DD"),
         action: (
@@ -96,7 +105,8 @@ export const TemplateMessage = () => {
                   footer: entry?.Footer,
                 });
                 setSelectedRowData?.(entry);
-              }}>
+              }}
+            >
               <RxCopy size={"1.2rem"} />
             </div>
             <div className={`ml-4  ${styles.template_btn}`}>
@@ -183,12 +193,14 @@ export const TemplateMessage = () => {
               key={headCell.id}
               align={headCell.numeric ? "center" : "left"}
               padding={headCell.disablePadding ? "none" : "normal"}
-              sortDirection={orderBy === headCell.id ? order : false}>
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
               <TableSortLabel
                 active={orderBy === headCell.id}
                 // sx={{ border: "1px solid red", alignItems: "left" }}
                 direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}>
+                onClick={createSortHandler(headCell.id)}
+              >
                 <b>{headCell.label}</b>
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
@@ -222,7 +234,7 @@ export const TemplateMessage = () => {
         // },
       };
     },
-    option: (styles, { data, isDisabled }) => {
+    option: (styles, {data, isDisabled}) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
@@ -255,7 +267,7 @@ export const TemplateMessage = () => {
                 </div>
                 <div className={styles.input__container}>
                   <InputFieldWithoutCounter
-                    type={'text'}
+                    type={"text"}
                     placeholder="Search ..."
                     className={"h-11"}
                   />
@@ -306,7 +318,8 @@ export const TemplateMessage = () => {
           <CustomModal
             open={open}
             onClose={() => setOpen(false)}
-            showCloseIcon={true}>
+            showCloseIcon={true}
+          >
             <div>
               <div>
                 <Base1Strong className="mr-96">Create New Template</Base1Strong>
@@ -314,7 +327,7 @@ export const TemplateMessage = () => {
               <div className="flex">
                 <div
                   className={styles.template_section1}
-                // onClick={handleCreateNewTemplate}
+                  // onClick={handleCreateNewTemplate}
                 >
                   <img
                     src={newTemplateBlue}
@@ -591,17 +604,15 @@ export const TemplateMessage = () => {
             className={`${styles.customModal}`}
           />
         )}
-        {
-          openProfile && (
-            <Drawers
-              isOpen={openProfile}
-              toggleDrawer={!openProfile}
-              direction="right"
-            >
-              <Profile setOpenProfile={setOpenProfile} />
-            </Drawers>
-          )
-        }
+        {openProfile && (
+          <Drawers
+            isOpen={openProfile}
+            toggleDrawer={!openProfile}
+            direction="right"
+          >
+            <Profile setOpenProfile={setOpenProfile} />
+          </Drawers>
+        )}
       </div>
     </>
   );

@@ -9,7 +9,7 @@
 
 .customModal {
   max-width: 58vw;
-  height:90vh;
+  height: 90vh;
   /* max-height: 98vh; */
   width: 100%;
   border-radius: 15px;
@@ -25,7 +25,6 @@
   background-color: rgb(245, 246, 250);
   margin-top: 10px;
 }
-
 
 .sort__text {
   font-weight: 600;

@@ -1,8 +1,8 @@
 import React from "react";
 import Styles from "./BroadcastHistoryoverview.module.css";
-import { RiCheckDoubleLine } from "react-icons/ri";
+import {RiCheckDoubleLine} from "react-icons/ri";
 
-export const BrodcastHistoryOverview = ({ component, statusText, count }) => {
+export const BrodcastHistoryOverview = ({component, statusText, count}) => {
   return (
     <div>
       <div className={Styles.box}>
@@ -11,9 +11,7 @@ export const BrodcastHistoryOverview = ({ component, statusText, count }) => {
           <div className="pt-5 font-semibold">{statusText}</div>
         </div>
         <div className="bg-white h-fit rounded-full ">
-          <div className="p-2">
-            {component}
-          </div>
+          <div className="p-2">{component}</div>
         </div>
       </div>
     </div>

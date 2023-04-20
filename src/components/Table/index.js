@@ -9,8 +9,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
-import { Checkbox } from "@mui/material";
-import { red } from "@mui/material/colors";
+import {Checkbox} from "@mui/material";
+import {red} from "@mui/material/colors";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -231,13 +231,14 @@ export default function BasicTable({
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+    <Box sx={{width: "100%"}}>
+      <Paper sx={{width: "100%", mb: 2}}>
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{minWidth: 750}}
             aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}>
+            size={dense ? "small" : "medium"}
+          >
             <EnhancedTableHead
               numSelected={selected.length}
               order={order}
@@ -263,7 +264,8 @@ export default function BasicTable({
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           key={row.name}
-                          selected={isItemSelected}>
+                          selected={isItemSelected}
+                        >
                           {/* <TableCell padding="checkbox">
                         <Checkbox
                           color="primary"
@@ -276,8 +278,8 @@ export default function BasicTable({
                           <TableCell component="th" id={labelId} scope="row">
                             {row.templateName}
                           </TableCell>
-                          <TableCell align="center" >{row.category}</TableCell>
-                          <TableCell align="center" >{row.status}</TableCell>
+                          <TableCell align="center">{row.category}</TableCell>
+                          <TableCell align="center">{row.status}</TableCell>
                           <TableCell align="center">{row.language}</TableCell>
                           <TableCell align="center">
                             {row.lastUpdated}
@@ -293,7 +295,8 @@ export default function BasicTable({
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           key={row.name}
-                          selected={isItemSelected}>
+                          selected={isItemSelected}
+                        >
                           {/* <TableCell padding="checkbox">
                             <Checkbox
                               color="primary"
@@ -312,15 +315,16 @@ export default function BasicTable({
                               display: "flex",
                               flexWrap: "wrap",
                               width: "auto",
-                              justifyContent: "center"
-                            }}>
+                              justifyContent: "center",
+                            }}
+                          >
                             {row.customAttributes}
                           </TableCell>
                           <TableCell width="200px" align="center">
                             {row.createdDate}
                           </TableCell>
-                          <TableCell align="center" >{row.broadcast}</TableCell>
-                          <TableCell align="center" >{row.action}</TableCell>
+                          <TableCell align="center">{row.broadcast}</TableCell>
+                          <TableCell align="center">{row.action}</TableCell>
                         </TableRow>
                       )}
                       {tableContent === "broadcastData" && (
@@ -331,7 +335,8 @@ export default function BasicTable({
                           aria-checked={isItemSelected}
                           tabIndex={-1}
                           key={row.name}
-                          selected={isItemSelected}>
+                          selected={isItemSelected}
+                        >
                           <TableCell padding="checkbox">
                             <Checkbox
                               color="primary"
@@ -350,7 +355,8 @@ export default function BasicTable({
                               display: "flex",
                               flexWrap: "wrap",
                               width: "auto",
-                            }}>
+                            }}
+                          >
                             {row.customAttributes}
                           </TableCell>
                           <TableCell width="400px" align="center">
@@ -365,7 +371,8 @@ export default function BasicTable({
                 <TableRow
                   style={{
                     height: (dense ? 33 : 53) * emptyRows,
-                  }}>
+                  }}
+                >
                   <TableCell colSpan={6} />
                 </TableRow>
               )}

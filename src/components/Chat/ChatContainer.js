@@ -1,19 +1,19 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import socketIOClient from "socket.io-client";
-import { useChatScroll } from "../../hooks/UseChatScroll";
-import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
-import { ChatBoxReciver, ChatBoxSender } from "./ChatBox";
-import { InputChatField } from "./InputChatField";
+import {useChatScroll} from "../../hooks/UseChatScroll";
+import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import {ChatBoxReciver, ChatBoxSender} from "./ChatBox";
+import {InputChatField} from "./InputChatField";
 
 export const ChatContainer = ({
   selectedMobileNumber,
   isChatPromiseFullfilled,
 }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
-  const { createTeamInboxDetails, allChat, setAllChat } =
+  const {createTeamInboxDetails, allChat, setAllChat} =
     useAppCommonDataProvider();
-  const { contactDetailData } = createTeamInboxDetails;
-  const { chatDataAll } = allChat;
+  const {contactDetailData} = createTeamInboxDetails;
+  const {chatDataAll} = allChat;
   const [chats, setChats] = useState([]);
   // const [contactNumbers, setContactNumbers] = useState([]);
   const [image, setImage] = useState("");
@@ -46,7 +46,7 @@ export const ChatContainer = ({
               return false;
             });
             data[index].chat = unique;
-            setAllChat({ chatDataAll: data });
+            setAllChat({chatDataAll: data});
           } else {
             const currentChat = chatDataAll.find(
               (e) => e.mobileNumber === selectedMobileNumber
@@ -62,7 +62,7 @@ export const ChatContainer = ({
               return false;
             });
             data[index].chat = unique;
-            setAllChat({ chatDataAll: data });
+            setAllChat({chatDataAll: data});
           }
         });
         // }
@@ -116,7 +116,7 @@ export const ChatContainer = ({
     }
   }
 
-  function SenderChat({ chat, messageTime, chatType }) {
+  function SenderChat({chat, messageTime, chatType}) {
     return (
       <ChatBoxSender
         message={chat}
@@ -126,7 +126,7 @@ export const ChatContainer = ({
     );
   }
 
-  function RecieverChat({ chat, messageTime, chatType }) {
+  function RecieverChat({chat, messageTime, chatType}) {
     return (
       <ChatBoxReciver
         message={chat}

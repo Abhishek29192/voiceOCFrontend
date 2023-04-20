@@ -1,11 +1,11 @@
 import React from "react";
-import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
-import { InputField } from "../InputField";
-import { Caption1, Paragraph3 } from "../Typography";
+import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import {InputField} from "../InputField";
+import {Caption1, Paragraph3} from "../Typography";
 
 export const TemplateFooter = () => {
-  const { createTemplateValues } = useAppCommonDataProvider();
-  const { footer } = createTemplateValues;
+  const {createTemplateValues} = useAppCommonDataProvider();
+  const {footer} = createTemplateValues;
   return (
     <div className="p-3">
       <Paragraph3 className="p-2 pt-4">Footer (Optional)</Paragraph3>

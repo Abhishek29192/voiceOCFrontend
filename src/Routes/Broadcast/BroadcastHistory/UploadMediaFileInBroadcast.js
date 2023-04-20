@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Modal from "react-responsive-modal";
-import { useAppCommonDataProvider } from "../../../components/AppCommonDataProvider/AppCommonDataProvider";
-import { PrimaryButton, SecondaryButton } from "../../../components/Button";
-import { FileUploadbutton } from "../../../components/InputField";
-import { Base1Strong, Paragraph3 } from "../../../components/Typography";
-import { OpenBroadcastTabelView } from "./OpenBroadcastTabelView";
+import {useAppCommonDataProvider} from "../../../components/AppCommonDataProvider/AppCommonDataProvider";
+import {PrimaryButton, SecondaryButton} from "../../../components/Button";
+import {FileUploadbutton} from "../../../components/InputField";
+import {Base1Strong, Paragraph3} from "../../../components/Typography";
+import {OpenBroadcastTabelView} from "./OpenBroadcastTabelView";
 import styles from "./BroadcastHistory.module.css";
-
 
 export const UploadMediaFileInBroadcast = ({
   isOpen,
@@ -14,10 +13,8 @@ export const UploadMediaFileInBroadcast = ({
   className,
   classes,
 }) => {
-  const {
-    setCreateContactDetails,
-    createContactDetails,
-  } = useAppCommonDataProvider();
+  const {setCreateContactDetails, createContactDetails} =
+    useAppCommonDataProvider();
   const [fileName, setFileName] = useState(null);
   const [openBroadcastTabelView, setOpenBroadcastTabelView] = useState(false);
   // const { selectedContactRowData } = useAppCommonDataProvider();
@@ -39,13 +36,10 @@ export const UploadMediaFileInBroadcast = ({
     // modal: {
     //   width: "58vw"
     // }
-  }
+  };
 
-
-
-  const { excelSelected } = createContactDetails;
-  console.log(excelSelected, "-----------------------")
-
+  const {excelSelected} = createContactDetails;
+  console.log(excelSelected, "-----------------------");
 
   return (
     <Modal
@@ -54,7 +48,8 @@ export const UploadMediaFileInBroadcast = ({
       showCloseIcon
       center
       styles={bg}
-      classNames={{ modal: `${className} ${classes}` }}>
+      classNames={{modal: `${className} ${classes}`}}
+    >
       <div>
         <div className="items-center h-full pb-3 ">
           <Base1Strong className="items-center mr-48">
@@ -96,7 +91,10 @@ export const UploadMediaFileInBroadcast = ({
       {openBroadcastTabelView && (
         <OpenBroadcastTabelView
           isOpen={openBroadcastTabelView}
-          onClose={() => { setOpenBroadcastTabelView(false); onClose() }}
+          onClose={() => {
+            setOpenBroadcastTabelView(false);
+            onClose();
+          }}
           className={`${styles.customModal}`}
           classes={"max-height: 138vh"}
         />

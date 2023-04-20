@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import {useMutation, useQuery} from "react-query";
 import {
   AllChatData,
   fetchAgentLists,
@@ -25,23 +25,23 @@ import {
   sendTeamInboxDetails,
   sendVideoData,
 } from "../api";
-import { fetchScheduleBroadcast, fetchSingleChatdata } from "../Urls";
+import {fetchScheduleBroadcast, fetchSingleChatdata} from "../Urls";
 
 export const useLogin = (creds) => {
   return useMutation({
     mutationKey: ["login-creds"],
     mutationFn: async (data) => await fetchLoginToken(data),
     onError: (e) => e,
-  })
-}
+  });
+};
 
 export const useSignUp = (creds) => {
   return useMutation({
     mutationKey: ["signup-creds"],
     mutationFn: async (data) => await fetchSignUpCreds(data),
     onError: (e) => e,
-  })
-}
+  });
+};
 
 export const useTemplateData = () => {
   return useQuery({
@@ -108,8 +108,6 @@ export const useDPostExcelToDownload = () => {
   });
 };
 
-
-
 export const useContactDataToClient = () => {
   return useQuery({
     queryKey: ["contact-data-to-client"],
@@ -137,7 +135,7 @@ export const usePostBroadcastDataWithDateTime = () => {
     },
     onError: (e) => e,
   });
-}
+};
 
 //NewMessageApi
 export const useNewMessageStatus = () => {
@@ -148,7 +146,7 @@ export const useNewMessageStatus = () => {
     },
     onError: (e) => e,
   });
-}
+};
 
 //AllChatData
 export const useAllChatData = () => {
@@ -159,7 +157,7 @@ export const useAllChatData = () => {
     },
     onError: (e) => e,
   });
-}
+};
 
 export const usePostTeamInboxData = () => {
   return useMutation({
@@ -169,7 +167,7 @@ export const usePostTeamInboxData = () => {
     },
     onError: (e) => e,
   });
-}
+};
 
 export const useTeamInboxContactList = (userDetails) => {
   // console.log(userDetails, "----------------")
@@ -192,7 +190,6 @@ export const useTeamInboxContactList = (userDetails) => {
 //   });
 // };
 
-
 export const useSchedulBroadcastData = () => {
   return useQuery({
     queryKey: ["Schedule-broadcast"],
@@ -202,8 +199,6 @@ export const useSchedulBroadcastData = () => {
   });
 };
 
-
-
 export const useSingleChatData = () => {
   return useMutation({
     mutationKey: ["single-data"],
@@ -212,7 +207,7 @@ export const useSingleChatData = () => {
     },
     onError: (e) => e,
   });
-}
+};
 
 export const useUploadVideo = () => {
   return useMutation({
@@ -222,8 +217,7 @@ export const useUploadVideo = () => {
     },
     onError: (e) => e,
   });
-}
-
+};
 
 export const useBroadcastDataHistoryOveraAllStatus = () => {
   return useQuery({
@@ -242,8 +236,6 @@ export const useBroadcastHistoryTabelData = () => {
     onError: (e) => e,
   });
 };
-
-
 
 export const useContactListOptions = () => {
   return useQuery({

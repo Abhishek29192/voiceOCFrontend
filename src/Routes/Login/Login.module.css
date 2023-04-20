@@ -1,57 +1,57 @@
 .body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 70%;
-    background: rgb(245, 246, 250);
-    font-family: Poppins, Montserrat;
-    border-radius: 5px;
-    padding: 3rem 0px;
-    text-align: start;
-    height: 80%vh;
-    position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 70%;
+  background: rgb(245, 246, 250);
+  font-family: Poppins, Montserrat;
+  border-radius: 5px;
+  padding: 3rem 0px;
+  text-align: start;
+  height: 80%vh;
+  position: relative;
 }
 
-.LoginText{
-    display: block;
-    font-size: 2.2rem;
-    font-weight: 600;
-    color: #5536DB;
-    margin-bottom: 2rem;
+.LoginText {
+  display: block;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #5536db;
+  margin-bottom: 2rem;
 }
 
-.optionText{
-    display: block;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: rgb(102, 102, 102);
-    margin-bottom: 0.5rem;
+.optionText {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: rgb(102, 102, 102);
+  margin-bottom: 0.5rem;
 }
 
-.CheckBox__style{
-    width: 30px;
-    height: 30px;
-    display: inline-flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    border: 1px solid rgb(232, 234, 242);
-    border-radius: 5px;
-    color: rgb(245, 246, 250);
-    font-size: 1.5rem;
-    background: white;
-    cursor: pointer;
-    flex: 0 0 auto;
+.CheckBox__style {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  border: 1px solid rgb(232, 234, 242);
+  border-radius: 5px;
+  color: rgb(245, 246, 250);
+  font-size: 1.5rem;
+  background: white;
+  cursor: pointer;
+  flex: 0 0 auto;
 }
-.registerText{
-    font-size: 0.85rem;
-    color: #5536DB;
-    padding-left: 10px;
-    cursor: pointer;
+.registerText {
+  font-size: 0.85rem;
+  color: #5536db;
+  padding-left: 10px;
+  cursor: pointer;
 }
 
-.errorMsg{
-    color: red;
-    font-size: smaller;
+.errorMsg {
+  color: red;
+  font-size: smaller;
 }

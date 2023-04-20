@@ -1,12 +1,9 @@
 import React from "react";
-import {
-  optionCategoary,
-  optionLanguage,
-} from "../../constants/DropDownContent";
-import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
-import { InputField, InputFieldWithoutCounter } from "../InputField";
-import { SelectOptionButton } from "../SelectOptions";
-import { Paragraph3 } from "../Typography";
+import {optionCategoary, optionLanguage} from "../../constants/DropDownContent";
+import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import {InputField, InputFieldWithoutCounter} from "../InputField";
+import {SelectOptionButton} from "../SelectOptions";
+import {Paragraph3} from "../Typography";
 
 const colourStyles1 = {
   control: (styles) => {
@@ -24,7 +21,7 @@ const colourStyles1 = {
       // },
     };
   },
-  option: (styles, { data, isDisabled }) => {
+  option: (styles, {data, isDisabled}) => {
     return {
       ...styles,
       backgroundColor: isDisabled ? "red" : "white",
@@ -38,12 +35,12 @@ const colourStyles1 = {
 };
 
 export const CreateTemplateBasicDetails = () => {
-  const { setCreateTemplateValues, createTemplateValues, selectedRowData } =
+  const {setCreateTemplateValues, createTemplateValues, selectedRowData} =
     useAppCommonDataProvider();
 
   // console.log(selectedRowData, "selected Row data")
 
-  const { templateName, category, language } = createTemplateValues;
+  const {templateName, category, language} = createTemplateValues;
   return (
     <>
       <div className="w-full flex p-3">

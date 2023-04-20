@@ -1,19 +1,20 @@
 import React from "react";
 import styles from "./Button.module.css";
 
-export const PrimaryButton = ({ text, onClick, className, disabled, type }) => {
+export const PrimaryButton = ({text, onClick, className, disabled, type}) => {
   return (
     <button
       className={`${styles.btn__primary} ${className}`}
       onClick={onClick}
       disabled={disabled}
-      type={type}>
+      type={type}
+    >
       {text}
     </button>
   );
 };
 
-export const SecondaryButton = ({ text, onClick, className }) => {
+export const SecondaryButton = ({text, onClick, className}) => {
   return (
     <button
       className={`${styles.btn__secondary} ${className}`}
@@ -24,7 +25,7 @@ export const SecondaryButton = ({ text, onClick, className }) => {
   );
 };
 
-export const ApprovedButton = ({ text, className }) => {
+export const ApprovedButton = ({text, className}) => {
   return (
     <button className={`${styles.Approved_btn} ${className}`}>{text}</button>
   );

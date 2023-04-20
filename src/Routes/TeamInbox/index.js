@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import Navbar from "../../components/Navbar";
 import {
   useAgentLists,
@@ -13,24 +13,24 @@ import {
   useTeamInboxDetails,
   useTemplateData,
 } from "../../hooks/useQueryApi";
-import { PrimaryButton, SecondaryButton } from "../../components/Button";
-import { AiOutlineSearch } from "react-icons/ai";
-import { SerachSection } from "./SerachSection";
-import { NewMessage } from "./NewMessage";
-import { FaWhatsapp } from "react-icons/fa";
-import { TiMessages, TiTick } from "react-icons/ti";
-import { FaPen } from "react-icons/fa";
-import { SlOptionsVertical } from "react-icons/sl";
-import { Base2 } from "../../components/Typography";
-import { InputFieldWithoutCounter } from "../../components/InputField";
-import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
-import { ChatContainer } from "../../components/Chat/ChatContainer";
+import {PrimaryButton, SecondaryButton} from "../../components/Button";
+import {AiOutlineSearch} from "react-icons/ai";
+import {SerachSection} from "./SerachSection";
+import {NewMessage} from "./NewMessage";
+import {FaWhatsapp} from "react-icons/fa";
+import {TiMessages, TiTick} from "react-icons/ti";
+import {FaPen} from "react-icons/fa";
+import {SlOptionsVertical} from "react-icons/sl";
+import {Base2} from "../../components/Typography";
+import {InputFieldWithoutCounter} from "../../components/InputField";
+import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import {ChatContainer} from "../../components/Chat/ChatContainer";
 import styles from "./TeamInbox.module.css";
 import moment from "moment/moment";
-import { CountDownTimer, MyTimer } from "../../components/Timer";
-import { RxCross2 } from "react-icons/rx";
-import { Drawer, Drawers } from "../../components/Drawer/Drawer";
-import { Profile } from "./Profile";
+import {CountDownTimer, MyTimer} from "../../components/Timer";
+import {RxCross2} from "react-icons/rx";
+import {Drawer, Drawers} from "../../components/Drawer/Drawer";
+import {Profile} from "./Profile";
 
 export const TeamInbox = () => {
   const [search, setSearch] = useState(false);
@@ -63,21 +63,21 @@ export const TeamInbox = () => {
     allChat,
     setAllChat,
   } = useAppCommonDataProvider();
-  const { chatDataAll } = allChat;
-  const { refetch } = useTemplateData();
-  const { mutateAsync } = usePostTeamInboxData();
+  const {chatDataAll} = allChat;
+  const {refetch} = useTemplateData();
+  const {mutateAsync} = usePostTeamInboxData();
   // const { mutateAsync: chatData } = useSingleChatData();
   const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   const role = JSON.parse(localStorage.getItem("userDetails")).role;
   const currentUserId = JSON.parse(localStorage.getItem("userDetails"))._id;
-  const { mutateAsync: contatcData } = useTeamInboxContactList(userDetails);
-  const { mutateAsync: selectedAgentData } = usePostAssignAgentData();
-  const { mutateAsync: removeAgent } = usePostRemoveAssignAgent();
-  const { refetch: contactNumber } = useContactListOptions();
-  const { refetch: agentList } = useAgentLists();
-  const { contactDetailData, whatsappNumber } = createTeamInboxDetails;
-  const { mutateAsync: alldata } = useAllChatData();
-  const { mutateAsync: newMessageStatus } = useNewMessageStatus();
+  const {mutateAsync: contatcData} = useTeamInboxContactList(userDetails);
+  const {mutateAsync: selectedAgentData} = usePostAssignAgentData();
+  const {mutateAsync: removeAgent} = usePostRemoveAssignAgent();
+  const {refetch: contactNumber} = useContactListOptions();
+  const {refetch: agentList} = useAgentLists();
+  const {contactDetailData, whatsappNumber} = createTeamInboxDetails;
+  const {mutateAsync: alldata} = useAllChatData();
+  const {mutateAsync: newMessageStatus} = useNewMessageStatus();
 
   const getNewMessageStatus = async (ele) => {
     selectedMobileNumber === undefined
@@ -100,10 +100,10 @@ export const TeamInbox = () => {
   // console.log(selectedMobileNumber, "selected mobile")
 
   const getAllData = async () => {
-    return await alldata({ agentId: currentUserId, role: role })
+    return await alldata({agentId: currentUserId, role: role})
       .then((res) => {
         setAllChatData(res?.data?.contactList);
-        setAllChat({ chatDataAll: res?.data?.contactList });
+        setAllChat({chatDataAll: res?.data?.contactList});
         setSelectedMobileNumber(res?.data?.contactList[0]?.mobileNumber);
         setIsChatPromiseFullfilled(true);
         newMessageStatus({
@@ -163,7 +163,7 @@ export const TeamInbox = () => {
   };
 
   const handleCustomVariable = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     if (customVariable.length === 0) {
       setCustomVaraible([
         ...customVariable,
@@ -237,7 +237,7 @@ export const TeamInbox = () => {
   };
 
   const handleRemoveAgent = () => {
-    const removeAgentId = { chatId: contactDetailData?.chatDetail?._id };
+    const removeAgentId = {chatId: contactDetailData?.chatDetail?._id};
     removeAgent(removeAgentId)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
@@ -270,7 +270,7 @@ export const TeamInbox = () => {
         // },
       };
     },
-    option: (styles, { data, isDisabled }) => {
+    option: (styles, {data, isDisabled}) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",

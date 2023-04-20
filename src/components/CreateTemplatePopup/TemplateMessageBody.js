@@ -1,13 +1,13 @@
 import React from "react";
-import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
-import { SecondaryButton } from "../Button";
-import { InputTextArea } from "../InputField";
-import { Caption1, Paragraph3 } from "../Typography";
+import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import {SecondaryButton} from "../Button";
+import {InputTextArea} from "../InputField";
+import {Caption1, Paragraph3} from "../Typography";
 
 export const TemplateMessageBody = () => {
-  const { createTemplateValues, setCreateTemplateValues } =
+  const {createTemplateValues, setCreateTemplateValues} =
     useAppCommonDataProvider();
-  const { body } = createTemplateValues;
+  const {body} = createTemplateValues;
 
   return (
     <div className="p-3">

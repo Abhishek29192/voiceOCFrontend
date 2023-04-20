@@ -1,19 +1,23 @@
 import React from "react";
-import { TbInbox } from "react-icons/tb";
-import { RiContactsBook2Line } from "react-icons/ri";
-import { VscListSelection } from "react-icons/vsc";
-import { RxDividerVertical } from "react-icons/rx";
-import { BiBell } from "react-icons/bi";
-import { MdOutlineCampaign } from "react-icons/md"
-import { BsExclamationCircle } from "react-icons/bs";
-import { HiOutlineUserCircle } from "react-icons/hi";
-import { BsBroadcast } from "react-icons/bs";
-import { useNavigate } from "react-router-dom";
-import { Routes as AppRoute } from "../../constants/RoutesNames";
+import {TbInbox} from "react-icons/tb";
+import {RiContactsBook2Line} from "react-icons/ri";
+import {VscListSelection} from "react-icons/vsc";
+import {RxDividerVertical} from "react-icons/rx";
+import {BiBell} from "react-icons/bi";
+import {MdOutlineCampaign} from "react-icons/md";
+import {BsExclamationCircle} from "react-icons/bs";
+import {HiOutlineUserCircle} from "react-icons/hi";
+import {BsBroadcast} from "react-icons/bs";
+import {useNavigate} from "react-router-dom";
+import {Routes as AppRoute} from "../../constants/RoutesNames";
 import ResponsiveNavbar from "../ResponsiveNavbar";
 import styles from "./Navbar.module.css";
 
-export const Navbar = ({ setOpenProfile, openProfile, setNewBroadcastPopup1 }) => {
+export const Navbar = ({
+  setOpenProfile,
+  openProfile,
+  setNewBroadcastPopup1,
+}) => {
   const role = JSON.parse(localStorage.getItem("userDetails")).role;
 
   const navigate = useNavigate();
@@ -31,53 +35,50 @@ export const Navbar = ({ setOpenProfile, openProfile, setNewBroadcastPopup1 }) =
 
   const handleCampaign = () => {
     navigate(`${AppRoute.campaign}`);
-  }
-
+  };
 
   return (
     <div className={styles.nav__container}>
       {/* <div className="flex xl:hidden h-full p-3 w-[18rem] ">
         <ResponsiveNavbar />
       </div> */}
-      {
-        role === "admin" ? (
-          <div className=" flex w-[60%]">
-            <div className={styles.icon__container}>
-              <TbInbox className={styles.icon__style} />
-              <p className="text-base" onClick={handleInbox}>
-                Team Inbox
-              </p>
-            </div>
-            <div className={styles.icon__container}>
-              <RiContactsBook2Line className={styles.icon__style} />
-              <p className="text-base" onClick={handleContacts}>
-                Contacts
-              </p>
-            </div>
-            <div className={styles.icon__container}>
-              <BsBroadcast className={styles.icon__style} />
-              <p className="text-base" onClick={handlebroadcast}>
-                Broadcast
-              </p>
-            </div>
-            <div className={styles.icon__container}>
-              <MdOutlineCampaign size={"1.5rem"} className={styles.icon__style} />
-              <p className="text-base" onClick={handleCampaign}>
-                Campaign
-              </p>
-            </div>
+      {role === "admin" ? (
+        <div className=" flex w-[60%]">
+          <div className={styles.icon__container}>
+            <TbInbox className={styles.icon__style} />
+            <p className="text-base" onClick={handleInbox}>
+              Team Inbox
+            </p>
           </div>
-        ) : (
-          <div className=" xl:flex hidden w-[60%]">
-            <div className={styles.icon__container}>
-              <TbInbox className={styles.icon__style} />
-              <p className="text-base" onClick={handleInbox}>
-                Team Inbox
-              </p>
-            </div>
+          <div className={styles.icon__container}>
+            <RiContactsBook2Line className={styles.icon__style} />
+            <p className="text-base" onClick={handleContacts}>
+              Contacts
+            </p>
           </div>
-        )
-      }
+          <div className={styles.icon__container}>
+            <BsBroadcast className={styles.icon__style} />
+            <p className="text-base" onClick={handlebroadcast}>
+              Broadcast
+            </p>
+          </div>
+          <div className={styles.icon__container}>
+            <MdOutlineCampaign size={"1.5rem"} className={styles.icon__style} />
+            <p className="text-base" onClick={handleCampaign}>
+              Campaign
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className=" xl:flex hidden w-[60%]">
+          <div className={styles.icon__container}>
+            <TbInbox className={styles.icon__style} />
+            <p className="text-base" onClick={handleInbox}>
+              Team Inbox
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* <div className=" xl:flex hidden w-[60%]">
         <div className={styles.icon__container}>
@@ -121,12 +122,14 @@ export const Navbar = ({ setOpenProfile, openProfile, setNewBroadcastPopup1 }) =
             <p className={styles.number__style}>+14798024855</p>
           </div>
           <div>
-            <HiOutlineUserCircle size={"2.4rem"} onClick={() => setOpenProfile(!openProfile)} />
+            <HiOutlineUserCircle
+              size={"2.4rem"}
+              onClick={() => setOpenProfile(!openProfile)}
+            />
           </div>
         </div>
       </div>
     </div>
-
   );
 };
 

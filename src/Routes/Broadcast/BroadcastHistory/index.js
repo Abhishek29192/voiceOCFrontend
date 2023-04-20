@@ -1,41 +1,43 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import BroadcastOptions from "../../../components/BroadcastOptions";
-import { PrimaryButton } from "../../../components/Button";
+import {PrimaryButton} from "../../../components/Button";
 import Navbar from "../../../components/Navbar";
-import { Base2 } from "../../../components/Typography";
+import {Base2} from "../../../components/Typography";
 import styles from "./BroadcastHistory.module.css";
-import { NewBroadCast } from "./NewBroadCast";
-import { DatePickers } from "../../../components/datePicker/index";
-import { SelectOptionButton } from "../../../components/SelectOptions";
-import { optionSort } from "../../../constants/DropDownContent";
-import { BrodcastHistoryOverview } from "../../../components/BroadcastHistoryOverview/BrodcastHistoryOverview";
-import { IoSearchOutline } from "react-icons/io5";
-import { InputFieldWithoutCounter } from "../../../components/InputField";
+import {NewBroadCast} from "./NewBroadCast";
+import {DatePickers} from "../../../components/datePicker/index";
+import {SelectOptionButton} from "../../../components/SelectOptions";
+import {optionSort} from "../../../constants/DropDownContent";
+import {BrodcastHistoryOverview} from "../../../components/BroadcastHistoryOverview/BrodcastHistoryOverview";
+import {IoSearchOutline} from "react-icons/io5";
+import {InputFieldWithoutCounter} from "../../../components/InputField";
 import ContactTable from "../../../components/Table/contactTable";
-import { RiCheckDoubleLine } from "react-icons/ri";
-import { BiCheck } from "react-icons/bi"
-import { AiOutlineEye, AiOutlineSend } from "react-icons/ai"
-import { TbCornerUpLeftDouble } from "react-icons/tb"
-import { MdOutlineSmsFailed } from "react-icons/md"
-import { HiOutlineArrowPath, HiOutlineQueueList } from "react-icons/hi2"
-import { useBroadcastDataHistoryOveraAllStatus, useBroadcastHistoryTabelData } from "../../../hooks/useQueryApi";
-import { BsBarChart } from "react-icons/bs"
-import { useEffect } from "react";
+import {RiCheckDoubleLine} from "react-icons/ri";
+import {BiCheck} from "react-icons/bi";
+import {AiOutlineEye, AiOutlineSend} from "react-icons/ai";
+import {TbCornerUpLeftDouble} from "react-icons/tb";
+import {MdOutlineSmsFailed} from "react-icons/md";
+import {HiOutlineArrowPath, HiOutlineQueueList} from "react-icons/hi2";
+import {
+  useBroadcastDataHistoryOveraAllStatus,
+  useBroadcastHistoryTabelData,
+} from "../../../hooks/useQueryApi";
+import {BsBarChart} from "react-icons/bs";
+import {useEffect} from "react";
 import moment from "moment/moment";
-import { Drawers } from "../../../components/Drawer/Drawer";
-import { Profile } from "../../TeamInbox/Profile";
-
-
+import {Drawers} from "../../../components/Drawer/Drawer";
+import {Profile} from "../../TeamInbox/Profile";
 
 export const BroadcastHistory = () => {
-  const [rows, setrows] = useState([])
+  const [rows, setrows] = useState([]);
   const [openProfile, setOpenProfile] = useState(false);
-  const [boradcastHistoryTabelData, setBroadcastHistoryTabelData] = useState()
-  const [boradcastHistoryStatusData, setBroadcastHistoryStatusData] = useState()
+  const [boradcastHistoryTabelData, setBroadcastHistoryTabelData] = useState();
+  const [boradcastHistoryStatusData, setBroadcastHistoryStatusData] =
+    useState();
   const [newBroadcastPopup1, setNewBroadcastPopup1] = useState(false);
-  const { refetch } = useBroadcastHistoryTabelData();
-  const { refetch: getAllStatus, isFetching } = useBroadcastDataHistoryOveraAllStatus()
-
+  const {refetch} = useBroadcastHistoryTabelData();
+  const {refetch: getAllStatus, isFetching} =
+    useBroadcastDataHistoryOveraAllStatus();
 
   const colourStyles = {
     control: (styles) => {
@@ -54,7 +56,7 @@ export const BroadcastHistory = () => {
         // },
       };
     },
-    option: (styles, { data, isDisabled }) => {
+    option: (styles, {data, isDisabled}) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
@@ -84,7 +86,7 @@ export const BroadcastHistory = () => {
         // },
       };
     },
-    option: (styles, { data, isDisabled }) => {
+    option: (styles, {data, isDisabled}) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
@@ -98,29 +100,29 @@ export const BroadcastHistory = () => {
   };
 
   useEffect(() => {
-    refetch().then((res) => setBroadcastHistoryTabelData(res?.data?.data)).catch((err) => console.log(err))
-    getAllStatus().then((res) => setBroadcastHistoryStatusData(res?.data?.data, "dchg")).catch((err) => console.log(err, "err"))
-  }, [])
+    refetch()
+      .then((res) => setBroadcastHistoryTabelData(res?.data?.data))
+      .catch((err) => console.log(err));
+    getAllStatus()
+      .then((res) => setBroadcastHistoryStatusData(res?.data?.data, "dchg"))
+      .catch((err) => console.log(err, "err"));
+  }, []);
 
   // boradcastHistoryStatusData?.filter(e => { if (e.name === "READ") { console.log(e.count) } })
 
-
   const columns = [
     {
-      field: 'dateTime',
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Date</p>
-      ),
+      field: "dateTime",
+      renderHeader: (params) => <p className="text-lg font-bold ml-5">Date</p>,
       width: 120,
       editable: true,
       align: "center",
       headerAlign: "center",
     },
     {
-      field: 'broadcastName',
+      field: "broadcastName",
       renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Broadcast name
-          Scheduled</p>
+        <p className="text-lg font-bold ml-5">Broadcast name Scheduled</p>
       ),
       width: 180,
       editable: true,
@@ -128,9 +130,9 @@ export const BroadcastHistory = () => {
       headerAlign: "center",
     },
     {
-      field: 'successful',
+      field: "successful",
       renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Successful</p>
+        <p className="text-lg font-bold ml-5">Successful</p>
       ),
       renderCell: (params) => {
         if (params.row.successful > 0) {
@@ -157,10 +159,8 @@ export const BroadcastHistory = () => {
       headerAlign: "center",
     },
     {
-      field: 'read',
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Read</p>
-      ),
+      field: "read",
+      renderHeader: (params) => <p className="text-lg font-bold ml-5">Read</p>,
       renderCell: (params) => {
         if (params.row.read > 0) {
           return (
@@ -172,7 +172,6 @@ export const BroadcastHistory = () => {
           );
         } else {
           return (
-
             <div className="rounded-full h-20 w-20 bg-slate-300 flex items-center justify-center">
               <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
                 0%
@@ -187,9 +186,9 @@ export const BroadcastHistory = () => {
       headerAlign: "center",
     },
     {
-      field: 'replied',
+      field: "replied",
       renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Replied</p>
+        <p className="text-lg font-bold ml-5">Replied</p>
       ),
       renderCell: (params) => {
         if (params.row.replied === 1) {
@@ -202,7 +201,6 @@ export const BroadcastHistory = () => {
           );
         } else {
           return (
-
             <div className="rounded-full h-20 w-20 bg-slate-300 flex items-center justify-center">
               <div className=" rounded-full h-16 w-16 bg-white flex items-center justify-center">
                 0%
@@ -217,15 +215,13 @@ export const BroadcastHistory = () => {
       headerAlign: "center",
     },
     {
-      field: 'status',
-      renderHeader: (params) => (
-        <p className='text-lg font-bold ' >Status</p>
-      ),
+      field: "status",
+      renderHeader: (params) => <p className="text-lg font-bold ">Status</p>,
       renderCell: (params) => {
         if (params.row.Status) {
-          return <p className="font-semibold">{params.row.Status}</p>
+          return <p className="font-semibold">{params.row.Status}</p>;
         } else {
-          return <p className="font-semibold">{params.row.Status}</p>
+          return <p className="font-semibold">{params.row.Status}</p>;
         }
       },
       width: 150,
@@ -234,9 +230,9 @@ export const BroadcastHistory = () => {
       headerAlign: "center",
     },
     {
-      field: 'Failed',
+      field: "Failed",
       renderHeader: (params) => (
-        <p className='text-lg font-bold ml-5' >Actions</p>
+        <p className="text-lg font-bold ml-5">Actions</p>
       ),
       align: "center",
       width: 120,
@@ -245,15 +241,18 @@ export const BroadcastHistory = () => {
       renderCell: (params) => {
         return (
           <div className="flex">
-            <div className="border-[1px] p-1 rounded mx-3"> <BsBarChart size={"1.4rem"} /></div>
-            <div className="border-[1px] p-1 rounded "><AiOutlineEye size={"1.5rem"} /></div>
+            <div className="border-[1px] p-1 rounded mx-3">
+              {" "}
+              <BsBarChart size={"1.4rem"} />
+            </div>
+            <div className="border-[1px] p-1 rounded ">
+              <AiOutlineEye size={"1.5rem"} />
+            </div>
           </div>
-        )
+        );
       },
     },
-
   ];
-
 
   useEffect(() => {
     if (boradcastHistoryTabelData) {
@@ -264,19 +263,22 @@ export const BroadcastHistory = () => {
         sent: e.Sent,
         broadcastName: e.broadCastName,
         Status: e.Status,
-        dateTime: moment(e.createdAt).format("YYYY-MM-DD")
-      }))
-      setrows(data)
+        dateTime: moment(e.createdAt).format("YYYY-MM-DD"),
+      }));
+      setrows(data);
       // console.log(data, "data")
     }
-  }, [boradcastHistoryTabelData])
+  }, [boradcastHistoryTabelData]);
 
   // console.log(boradcastHistoryTabelData, 'tabel data')
 
-
   return (
     <div>
-      <Navbar openProfile={openProfile} setOpenProfile={setOpenProfile} setNewBroadcastPopup1={setNewBroadcastPopup1} />
+      <Navbar
+        openProfile={openProfile}
+        setOpenProfile={setOpenProfile}
+        setNewBroadcastPopup1={setNewBroadcastPopup1}
+      />
       <div className="flex">
         <BroadcastOptions />
         <div className="flex flex-col w-[80%]">
@@ -308,29 +310,72 @@ export const BroadcastHistory = () => {
             <Base2 className="poppins p-3">Overview</Base2>
             <div className="flex flex-wrap pr-3 pl-3">
               <div className="p-2">
-                <BrodcastHistoryOverview component={<BiCheck size={"1.3rem"} color={"#5536db"} />} statusText={"Sent"} count={boradcastHistoryStatusData?.Sent} />
+                <BrodcastHistoryOverview
+                  component={<BiCheck size={"1.3rem"} color={"#5536db"} />}
+                  statusText={"Sent"}
+                  count={boradcastHistoryStatusData?.Sent}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<RiCheckDoubleLine size={"1.3rem"} color={"#5536db"} />} statusText={"Delivered"} count={boradcastHistoryStatusData?.Delivered
-                } />
+                <BrodcastHistoryOverview
+                  component={
+                    <RiCheckDoubleLine size={"1.3rem"} color={"#5536db"} />
+                  }
+                  statusText={"Delivered"}
+                  count={boradcastHistoryStatusData?.Delivered}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<AiOutlineEye size={"1.3rem"} color={"#5536db"} />} statusText={"Read"} count={boradcastHistoryStatusData?.Read} />
+                <BrodcastHistoryOverview
+                  component={<AiOutlineEye size={"1.3rem"} color={"#5536db"} />}
+                  statusText={"Read"}
+                  count={boradcastHistoryStatusData?.Read}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<TbCornerUpLeftDouble size={"1.3rem"} color={"#5536db"} />} statusText={"Replied"} count={0} />
+                <BrodcastHistoryOverview
+                  component={
+                    <TbCornerUpLeftDouble size={"1.3rem"} color={"#5536db"} />
+                  }
+                  statusText={"Replied"}
+                  count={0}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<AiOutlineSend size={"1.3rem"} color={"#5536db"} />} statusText={"Sending"} count={0} />
+                <BrodcastHistoryOverview
+                  component={
+                    <AiOutlineSend size={"1.3rem"} color={"#5536db"} />
+                  }
+                  statusText={"Sending"}
+                  count={0}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<MdOutlineSmsFailed size={"1.3rem"} color={"#5536db"} />} statusText={"Failed"} count={boradcastHistoryStatusData?.Failed} />
+                <BrodcastHistoryOverview
+                  component={
+                    <MdOutlineSmsFailed size={"1.3rem"} color={"#5536db"} />
+                  }
+                  statusText={"Failed"}
+                  count={boradcastHistoryStatusData?.Failed}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<HiOutlineArrowPath size={"1.3rem"} color={"#5536db"} />} statusText={"Processing"} count={boradcastHistoryStatusData?.Pending} />
+                <BrodcastHistoryOverview
+                  component={
+                    <HiOutlineArrowPath size={"1.3rem"} color={"#5536db"} />
+                  }
+                  statusText={"Processing"}
+                  count={boradcastHistoryStatusData?.Pending}
+                />
               </div>
               <div className="p-2">
-                <BrodcastHistoryOverview component={<HiOutlineQueueList size={"1.3rem"} color={"#5536db"} />} statusText={"Queued"} count={0} />
+                <BrodcastHistoryOverview
+                  component={
+                    <HiOutlineQueueList size={"1.3rem"} color={"#5536db"} />
+                  }
+                  statusText={"Queued"}
+                  count={0}
+                />
               </div>
             </div>
             <div className={styles.broadcast__list}>
@@ -348,7 +393,7 @@ export const BroadcastHistory = () => {
               </div>
               <div className={`${styles.input__container} w-[70%] ml-7`}>
                 <InputFieldWithoutCounter
-                  type={'text'}
+                  type={"text"}
                   placeholder="Search ..."
                   className={"h-10"}
                 />
@@ -364,8 +409,8 @@ export const BroadcastHistory = () => {
                 rows={rows}
                 columns={columns}
                 rowHeight={140}
-              // checkboxSelection
-              // onSelectionModelChange={onSelectionModelChange}
+                // checkboxSelection
+                // onSelectionModelChange={onSelectionModelChange}
               />
             </div>
           </div>
@@ -388,7 +433,6 @@ export const BroadcastHistory = () => {
           <Profile setOpenProfile={setOpenProfile} />
         </Drawers>
       )}
-
     </div>
   );
 };

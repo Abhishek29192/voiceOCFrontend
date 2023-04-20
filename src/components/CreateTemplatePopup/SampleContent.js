@@ -1,13 +1,12 @@
 import React from "react";
-import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
-import { PrimaryButton, SecondaryButton } from "../Button";
-import { InputField } from "../InputField";
-import { Paragraph3 } from "../Typography";
+import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import {PrimaryButton, SecondaryButton} from "../Button";
+import {InputField} from "../InputField";
+import {Paragraph3} from "../Typography";
 
 export const SampleContent = () => {
-  const { createSampleData, setCreateSampleData } =
-    useAppCommonDataProvider();
-  const { contentOne, contentTwo } = createSampleData;
+  const {createSampleData, setCreateSampleData} = useAppCommonDataProvider();
+  const {contentOne, contentTwo} = createSampleData;
   return (
     <>
       <div className="p-3">

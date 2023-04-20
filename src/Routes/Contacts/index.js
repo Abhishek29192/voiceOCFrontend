@@ -1,150 +1,174 @@
-import React, { useEffect, useState } from "react";
-import { FaFilter } from "react-icons/fa";
-import { IoSearchOutline } from "react-icons/io5";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { TfiExport, TfiImport } from "react-icons/tfi";
-import { ApprovedButton, PrimaryButton } from "../../components/Button";
-import { InputFieldWithoutCounter } from "../../components/InputField";
+import React, {useEffect, useState} from "react";
+import {FaFilter} from "react-icons/fa";
+import {IoSearchOutline} from "react-icons/io5";
+import {RiDeleteBin5Line} from "react-icons/ri";
+import {TfiExport, TfiImport} from "react-icons/tfi";
+import {ApprovedButton, PrimaryButton} from "../../components/Button";
+import {InputFieldWithoutCounter} from "../../components/InputField";
 import Navbar from "../../components/Navbar/index";
-import { SelectOptionButton } from "../../components/SelectOptions";
-import { optionSort } from "../../constants/DropDownContent";
-import { Base2 } from "../../components/Typography";
+import {SelectOptionButton} from "../../components/SelectOptions";
+import {optionSort} from "../../constants/DropDownContent";
+import {Base2} from "../../components/Typography";
 import styles from "./Contact.module.css";
-import { AddContactList } from "../../components/Contact/AddContact";
+import {AddContactList} from "../../components/Contact/AddContact";
 import moment from "moment";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
-import { visuallyHidden } from "@mui/utils";
+import {visuallyHidden} from "@mui/utils";
 import {
   useContactDataToClient,
   useContactDataToServer,
   useDPostExcelToDownload,
 } from "../../hooks/useQueryApi";
-import { TiTick } from "react-icons/ti";
-import { AiOutlineCloudDownload } from "react-icons/ai";
-import { HiOutlineEye } from "react-icons/hi"
+import {TiTick} from "react-icons/ti";
+import {AiOutlineCloudDownload} from "react-icons/ai";
+import {HiOutlineEye} from "react-icons/hi";
 import BasicTable from "../../components/Table";
 import XLSX from "sheetjs-style";
-import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
-import { ExcelPopUp } from "./ExcelPopUp";
-import { Profile } from "../TeamInbox/Profile";
-import { Drawers } from "../../components/Drawer/Drawer";
+import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import {ExcelPopUp} from "./ExcelPopUp";
+import {Profile} from "../TeamInbox/Profile";
+import {Drawers} from "../../components/Drawer/Drawer";
 
 export const Contacts = () => {
-  const [selectedContactListqueryId, setSelectedContactListQueryId] = useState(null);
-  const [selectedContactExcel, setSelectedContactExcel] = useState([])
+  const [selectedContactListqueryId, setSelectedContactListQueryId] =
+    useState(null);
+  const [selectedContactExcel, setSelectedContactExcel] = useState([]);
   const [handleContactListModal, sethandleContactListModal] = useState(false);
   const [fileName, setFileName] = useState("");
   const [openProfile, setOpenProfile] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [contactDataFromServer, setContactDataFromServer] = useState([])
-  const [viewContacts, setViewContacts] = useState(false)
-  const { mutate: addContact, isSuccess, isLoading: Load } = useContactDataToServer();
-  const { isLoading, refetch } = useContactDataToClient();
-  const { createContactDetails, setCreateContactDetails } =
+  const [contactDataFromServer, setContactDataFromServer] = useState([]);
+  const [viewContacts, setViewContacts] = useState(false);
+  const {
+    mutate: addContact,
+    isSuccess,
+    isLoading: Load,
+  } = useContactDataToServer();
+  const {isLoading, refetch} = useContactDataToClient();
+  const {createContactDetails, setCreateContactDetails} =
     useAppCommonDataProvider();
-  const { mutateAsync: postExcelData, } = useDPostExcelToDownload(selectedContactListqueryId);
-
+  const {mutateAsync: postExcelData} = useDPostExcelToDownload(
+    selectedContactListqueryId
+  );
 
   // useEffect(() => {
   //   postExcelData().then((res) => setSelectedContactExcel(res?.data?.contacts)).catch((err) => console.log(err))
   // }, [selectedContactExcel])
 
   const handleSubmitFile = () => {
-    console.log("download")
+    console.log("download");
     const formData = new FormData();
     formData.append("name", selectedFile);
     formData.append("UserId", "one");
-    addContact(formData)
-    sethandleContactListModal(false)
+    addContact(formData);
+    sethandleContactListModal(false);
   };
 
   const handleDownload = (entry) => {
     const data = {
       UserId: "one",
       ExcelId: entry.ContactList._id,
-    }
+    };
 
     setSelectedContactListQueryId(entry.ContactList._id);
 
-    postExcelData(data).then((res) => {
-      console.log(res, "downloadghnbjhnb")
-      const workSheet = XLSX?.utils?.json_to_sheet(res?.data?.contactList);
-      const workBook = XLSX?.utils?.book_new();
+    postExcelData(data)
+      .then((res) => {
+        console.log(res, "downloadghnbjhnb");
+        const workSheet = XLSX?.utils?.json_to_sheet(res?.data?.contactList);
+        const workBook = XLSX?.utils?.book_new();
 
-      XLSX.utils.book_append_sheet(workBook, workSheet, "contacts");
+        XLSX.utils.book_append_sheet(workBook, workSheet, "contacts");
 
-      XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
+        XLSX.write(workBook, {bookType: "xlsx", type: "buffer"});
 
-      XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
+        XLSX.write(workBook, {bookType: "xlsx", type: "binary"});
 
-      XLSX.writeFile(workBook, "./" + res?.data?.filename);
-    }
-    ).catch((err) => console.log(err))
-
-  }
+        XLSX.writeFile(workBook, "./" + res?.data?.filename);
+      })
+      .catch((err) => console.log(err));
+  };
 
   const handleViewExcel = (entry) => {
-    console.log(entry, "entryyyyyyyyy")
-    setViewContacts(true)
+    console.log(entry, "entryyyyyyyyy");
+    setViewContacts(true);
     const data = {
       UserId: "one",
       ExcelId: entry?.ContactList._id,
-    }
+    };
     setSelectedContactListQueryId(entry.ContactList._id);
-    postExcelData(data).then((res) => setSelectedContactExcel(res?.data)).catch((err) => console.log(err))
-  }
+    postExcelData(data)
+      .then((res) => setSelectedContactExcel(res?.data))
+      .catch((err) => console.log(err));
+  };
 
   useEffect(() => {
     if (isSuccess) {
-      refetch().then((res) => {
-        setContactDataFromServer(res?.data?.data?.contactList)
-        createData(res?.data?.data?.contactList);
-      }).catch((err) => console.log(err));
+      refetch()
+        .then((res) => {
+          setContactDataFromServer(res?.data?.data?.contactList);
+          createData(res?.data?.data?.contactList);
+        })
+        .catch((err) => console.log(err));
     }
-  }, [isSuccess])
-
+  }, [isSuccess]);
 
   useEffect(() => {
-    refetch().then((res) => {
-      setContactDataFromServer(res?.data?.data?.contactList)
-      createData(res?.data?.data?.contactList);
-    }).catch((err) => console.log(err))
+    refetch()
+      .then((res) => {
+        setContactDataFromServer(res?.data?.data?.contactList);
+        createData(res?.data?.data?.contactList);
+      })
+      .catch((err) => console.log(err));
   }, [contactDataFromServer, handleContactListModal]);
 
-
   function createData(data) {
-    const rows = data && data?.map((entry) => ({
-      basicInfo: entry?.ContactList.fileName,
-      customAttributes: entry?.ContactList.customAttributes.map((e) => {
-        return (
-          <ApprovedButton
-            text={`${e}`}
-            className="flex text-xs m-2 font-semibold border"
-          />
-        );
-      }),
-      createdDate: moment(`${entry?.ContactList.createdAt}`)
-        .utc()
-        .format("YYYY-MM-DD"),
-      broadcast: <TiTick size={"1.5rem"} style={{ margin: "auto" }} />,
-      action: <div className="flex  justify-center">
-        <div className="mx-3">
-          <AiOutlineCloudDownload size={"1.5rem"} style={{ margin: "auto" }} onClick={() => handleDownload(entry)} />
-        </div>
-        <div>
-          <HiOutlineEye size={"1.5rem"} style={{ margin: "auto" }} onClick={() => handleViewExcel(entry)} />
-        </div>
-      </div>
-    }));
+    const rows =
+      data &&
+      data?.map((entry) => ({
+        basicInfo: entry?.ContactList.fileName,
+        customAttributes: entry?.ContactList.customAttributes.map((e) => {
+          return (
+            <ApprovedButton
+              text={`${e}`}
+              className="flex text-xs m-2 font-semibold border"
+            />
+          );
+        }),
+        createdDate: moment(`${entry?.ContactList.createdAt}`)
+          .utc()
+          .format("YYYY-MM-DD"),
+        broadcast: <TiTick size={"1.5rem"} style={{margin: "auto"}} />,
+        action: (
+          <div className="flex  justify-center">
+            <div className="mx-3">
+              <AiOutlineCloudDownload
+                size={"1.5rem"}
+                style={{margin: "auto"}}
+                onClick={() => handleDownload(entry)}
+              />
+            </div>
+            <div>
+              <HiOutlineEye
+                size={"1.5rem"}
+                style={{margin: "auto"}}
+                onClick={() => handleViewExcel(entry)}
+              />
+            </div>
+          </div>
+        ),
+      }));
 
     setTableData(rows);
     setCreateContactDetails?.({
-      basicInfo: contactDataFromServer?.map((entry) => entry?.ContactList?.fileName),
+      basicInfo: contactDataFromServer?.map(
+        (entry) => entry?.ContactList?.fileName
+      ),
     });
     return rows;
   }
@@ -155,7 +179,7 @@ export const Contacts = () => {
       numeric: false,
       disablePadding: false,
       label: "Basic Info",
-      headerAlign: "center"
+      headerAlign: "center",
     },
     {
       id: "customAttributes",
@@ -187,13 +211,11 @@ export const Contacts = () => {
       label: "Actions",
       align: "center",
       headerAlign: "center",
-
     },
-
   ];
 
   function EnhancedTableHead(props) {
-    const { order, orderBy, onRequestSort } = props;
+    const {order, orderBy, onRequestSort} = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
@@ -217,12 +239,14 @@ export const Contacts = () => {
               key={headCell.id}
               align={headCell.numeric ? "center" : "left"}
               padding={headCell.disablePadding ? "none" : "normal"}
-              sortDirection={orderBy === headCell.id ? order : false}>
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
               <TableSortLabel
                 active={orderBy === headCell.id}
                 // sx={{ border: "1px solid red", alignItems: "left" }}
                 direction={orderBy === headCell.id ? order : "asc"}
-                onClick={createSortHandler(headCell.id)}>
+                onClick={createSortHandler(headCell.id)}
+              >
                 <b>{headCell.label}</b>
                 {orderBy === headCell.id ? (
                   <Box component="span" sx={visuallyHidden}>
@@ -256,7 +280,7 @@ export const Contacts = () => {
         // },
       };
     },
-    option: (styles, { data, isDisabled }) => {
+    option: (styles, {data, isDisabled}) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
@@ -365,7 +389,9 @@ export const Contacts = () => {
           </div>
           <div>
             {isLoading || Load ? (
-              <h2 className="poppins flex justify-center items-center">Loading...</h2>
+              <h2 className="poppins flex justify-center items-center">
+                Loading...
+              </h2>
             ) : (
               <BasicTable
                 tableContent="ContactData"
@@ -397,8 +423,7 @@ export const Contacts = () => {
           className={`${styles.customModal}`}
           selectedContactExcel={selectedContactExcel}
         />
-      )
-      }
+      )}
       {openProfile && (
         <Drawers
           isOpen={openProfile}
