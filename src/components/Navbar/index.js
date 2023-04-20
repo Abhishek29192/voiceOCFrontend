@@ -13,7 +13,7 @@ import { Routes as AppRoute } from "../../constants/RoutesNames";
 import ResponsiveNavbar from "../ResponsiveNavbar";
 import styles from "./Navbar.module.css";
 
-export const Navbar = ({ setOpenProfile, openProfile }) => {
+export const Navbar = ({ setOpenProfile, openProfile, setNewBroadcastPopup1 }) => {
   const role = JSON.parse(localStorage.getItem("userDetails")).role;
 
   const navigate = useNavigate();
@@ -36,12 +36,12 @@ export const Navbar = ({ setOpenProfile, openProfile }) => {
 
   return (
     <div className={styles.nav__container}>
-      <div className="flex xl:hidden h-full p-3 w-[18rem] ">
+      {/* <div className="flex xl:hidden h-full p-3 w-[18rem] ">
         <ResponsiveNavbar />
-      </div>
+      </div> */}
       {
         role === "admin" ? (
-          <div className=" xl:flex hidden w-[60%]">
+          <div className=" flex w-[60%]">
             <div className={styles.icon__container}>
               <TbInbox className={styles.icon__style} />
               <p className="text-base" onClick={handleInbox}>
@@ -112,11 +112,11 @@ export const Navbar = ({ setOpenProfile, openProfile }) => {
           <RxDividerVertical className="ml-2 h-7 w-12 items-center text-slate-300" />
           <BiBell size={"1.4rem"} />
         </div>
-        <div className=" flex  right-0">
-          <div className="hidden xl:block pl-10">
+        <div className=" flex  right-0 justify-between w-full ml-24 ">
+          <div className="pl-20">
             <div className="flex item-center justify-center">
               <p className={styles.connectedText}>CONNECTED</p>
-              <BsExclamationCircle className="pl-16 text-blue-700" />
+              <BsExclamationCircle className="pl-10 text-blue-700" />
             </div>
             <p className={styles.number__style}>+14798024855</p>
           </div>

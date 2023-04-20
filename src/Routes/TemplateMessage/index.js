@@ -79,7 +79,6 @@ export const TemplateMessage = () => {
             <div
               className={`${styles.template_btn}`}
               onClick={() => {
-                console.log(entry);
                 setTimeout(() => {
                   setViewTemplate(true);
                 }, 200);
@@ -464,7 +463,7 @@ export const TemplateMessage = () => {
                     <SecondaryButton
                       text="Add Variables"
                       onClick={() => {
-                        console.log("hfg");
+                        // console.log("hfg");
                       }}
                     />
                   </div>

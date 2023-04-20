@@ -115,10 +115,8 @@ export const OpenBroadcastTabelView = ({
 
   const onSelectionModelChange = (ids) => {
     const selectedRowData = tableData.filter((row) => {
-      console.log(row, "row-----")
       return row.id == ids[0];
     });
-    console.log(selectedRowData, "selected Row Data")
     setSelectedTabelRow(selectedRowData);
     setCreateContactDetails({
       ...createContactDetails,

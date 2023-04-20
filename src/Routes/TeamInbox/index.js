@@ -80,7 +80,6 @@ export const TeamInbox = () => {
   const { mutateAsync: newMessageStatus } = useNewMessageStatus();
 
 
-  console.log('chat all data', chatDataAll)
 
   const getNewMessageStatus = async (ele) => {
     (selectedMobileNumber === undefined) ?
@@ -91,7 +90,8 @@ export const TeamInbox = () => {
           chatId: allChatData[0]?.chatDetail?._id,
         })
           .then((res) => console.log(res?.data, "resssss"))
-          .catch((err) => console.log(err, "error"))) :
+          .catch((err) => console.log(err, "error")))
+      :
       (
         await newMessageStatus({
           fullContactNumber: selectedMobileNumber,
@@ -102,10 +102,11 @@ export const TeamInbox = () => {
           .catch((err) => console.log(err, "error")))
   }
 
+  // console.log(selectedMobileNumber, "selected mobile")
+
   const getAllData = async () => {
-    await alldata({ agentId: currentUserId, role: role })
+    return await alldata({ agentId: currentUserId, role: role })
       .then((res) => {
-        console.log("fzghnbvzggggggvigvivgigvvvutitgggutgutiiutifrfrugbkjnjbgvryuvgmuh", res?.data)
         setAllChatData(res?.data?.contactList);
         setAllChat({ chatDataAll: res?.data?.contactList });
         setSelectedMobileNumber(res?.data?.contactList[0]?.mobileNumber)
@@ -115,19 +116,18 @@ export const TeamInbox = () => {
           previousContactNumber: previouseSelectedNumber,
           chatId: res?.data?.contactList[0]?.chatDetail?._id,
         })
+        return res.data.contactList
         // .then((res) => console.log(res?.data, "resssss"))
         // .catch((err) => console.log(err, "error"))
       })
       .catch((err) => console.log(err));
   };
 
-
   useEffect(() => {
     contatcData()
       .then((res) => setContactDetails(res?.data?.contactList))
       .catch((err) => console.log(err));
   }, []);
-
 
   useEffect(() => {
 
@@ -195,12 +195,21 @@ export const TeamInbox = () => {
     }
   };
 
+
   const handleSend = () => {
     mutateAsync(data)
       .then((res) => {
-        console.log(res?.data?.newChat[0], "response daattttaaaaaaaaaaaaaaaa")
-        // setAllChat({ chatDataAll: res?.data })
-        getAllData();
+
+        setSelectedContactIndex(0)
+        setCreateTeamInboxDetails({
+          ...createTeamInboxDetails,
+          contactDetailData: res?.data?.newChat[0],
+        })
+        setPreviouseSelectedNumber(selectedMobileNumber);
+        setSelectedMobileNumber(res?.data?.newChat[0].mobileNumber);
+        getAllData().then((data) => {
+          console.log("data", data)
+        })
       })
       .catch((e) => console.log(e));
     setNewMessage(false);
@@ -288,6 +297,7 @@ export const TeamInbox = () => {
   const time = new Date();
   time.setSeconds(time.getSeconds() + 600);
 
+  console.log(contactDetailData, "contact data details  chatssssssssssssssssss")
   return (
     <div>
       <div>
@@ -297,10 +307,10 @@ export const TeamInbox = () => {
         <div
           className={`w-[25%] border justify-center h-[90vh]  ${styles.slideUpwardFirst}`}
         >
-          <div className="flex w-[85%] justify-center items-center py-3">
+          <div className="flex w-[85%] h-[12vh] justify-center items-center pt-2">
             <PrimaryButton
               text={`New Message`}
-              className="w-[80%] m-6 "
+              className="px-6 mx-6"
               onClick={() => {
                 setNewMessage(!newMessage);
                 setSearch(false);
@@ -308,7 +318,7 @@ export const TeamInbox = () => {
               }}
             />
             <div
-              className="bg-slate-200 p-2 h-full rounded-md"
+              className="bg-slate-200 p-2 rounded-md"
               onClick={() => {
                 setSearch(!search);
                 setNewMessage(false);
@@ -337,49 +347,12 @@ export const TeamInbox = () => {
           {!newMessage && !search && !showContactList && (
             <div className="border-t-[1px] h-[72vh] overflow-y-auto">
               {allChatData &&
-                allChatData?.sort((obj1, obj2) => (new Date(obj2.chat[obj2.chat.length - 1].updatedAt)).getTime() - (new Date(obj1.chat[obj1.chat.length - 1].updatedAt).getTime()))?.map((ele, index) => {
+                allChatData?.sort((obj1, obj2) => (new Date(obj2.chat[obj2.chat.length - 1].createdAt)).getTime() - (new Date(obj1.chat[obj1.chat.length - 1].createdAt).getTime()))?.map((ele, index) => {
                   return (
                     <div
                       className="border-b-[1px] w-full"
                       onClick={() => handleSingleChatData(ele, index)}
                     >
-                      {/* {selectedMobileNumber === undefined ? (
-                        <div
-                          className={`flex p-2 rounded-md items-center ${index === 0
-                            ? "bg-[#5536db]"
-                            : "bg-white"
-                            }`}
-                        >
-                          <div
-                            className={`flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center`}
-                          >
-                            <div className="font-extrabold">
-                              {ele?.customField?.name
-                                ?.split("")[0]
-                                ?.toUpperCase()}
-                            </div>
-                          </div>
-                          <div className="px-7 w-[80%]">
-                            <div className="flex justify-between">
-                              <div className="font-semibold">
-                                {ele?.mobileNumber}
-                              </div>
-                            </div>
-                            <div className="text-slate-300 text-sm">
-                              {moment(ele?.chatDetail?.updatedAt).format(
-                                "DD/MM/YYYY  HH:mm"
-                              )}
-                            </div>
-                            <div className="py-2 text-slate-300 text-sm truncate overflow-clip w-full">
-                              {typeof ele?.chat[ele?.chat?.length - 1]
-                                ?.message === "string"
-                                ? ele?.chat[ele?.chat?.length - 1]?.message
-                                : ele?.chat[ele?.chat?.length - 1]?.message?.name}
-                            </div>
-                          </div>
-                        </div>
-                      ) : ( */}
-
                       <div
                         className={`flex p-2 rounded-md items-center ${ele.mobileNumber == selectedMobileNumber
                           ? "bg-[#5536db]"
@@ -397,12 +370,12 @@ export const TeamInbox = () => {
                         </div>
                         <div className="px-7 w-[80%]">
                           <div className="flex justify-between">
-                            <div className="font-semibold">
-                              {ele?.mobileNumber}
+                            <div className="font-bold">
+                              {ele?.name || ele?.mobileNumber}
                             </div>
                           </div>
                           <div className="text-slate-300 text-sm">
-                            {moment(ele?.chat[ele?.chat?.length - 1]?.updatedAt).format(
+                            {moment(ele?.chat[ele?.chat?.length - 1]?.createdAt).format(
                               "DD/MM/YYYY  HH:mm"
                             )}
                           </div>
@@ -414,14 +387,13 @@ export const TeamInbox = () => {
                           </div>
                         </div>
                       </div>
-                      {/* )}sss */}
                     </div>
                   );
                 })}
             </div>
           )}
           {!newMessage && !search && showContactList && (
-            <div className="bg-white p-2 flex w-full ">
+            <div className="bg-white p-2 flex w-full h-[80vh]">
               <div className="bg-slate-200 rounded-lg w-full ">
                 <div className=" rounded p-3">
                   <div className="w-full py-2">
@@ -437,13 +409,12 @@ export const TeamInbox = () => {
                       />
                     </div>
                   </div>
-                  <div className=" p-2 w-full h-[66vh] overflow-y-scroll">
+                  <div className=" p-2 w-full h-[57vh] overflow-y-scroll">
                     {templateData?.map((e, index) => {
                       return (
                         <div className="bg-white rounded-lg px-3 my-2 h-[screen] flex flex-col">
                           <div className="py-2">
                             <Base2 className="poppins text-sm font-extrabold text-[#000000] items-center">
-                              {" "}
                               {e.template_name}
                             </Base2>
                           </div>
@@ -476,15 +447,11 @@ export const TeamInbox = () => {
                                           handleCustomVariable(e)
                                         }
                                       />
-                                      {/* <InputFieldWithoutCounter placeholder={"Custom Fields"} name={`customField${index}`} className="w-full bg-slate-200" onChange={(e) => { console.log(e.target.name, 'name'); setCustomVaraible([...customVariable, { [e.target.name]: e.target.value }]); }} /> */}
                                     </div>
                                   </div>
                                 );
                               })}
-                              {/* <div className="poppins mx-1 mt-2 font-semibold">Name</div>
-                                    <div className="my-1 font-semibold">
-                                      <InputFieldWithoutCounter placeholder={"name"} className="w-full bg-slate-200" onChange={(e) => setName(e.target.value)} />
-                                    </div> */}
+
                               <div className="flex justify-end my-2">
                                 <div>
                                   <SecondaryButton
@@ -513,7 +480,7 @@ export const TeamInbox = () => {
           )}
         </div>
         <div
-          className={`w-[50%] border bg-slate-100 overflow-x-hidden ${styles.slideUpwardMiddle}`}
+          className={`w-[50%] border bg-slate-100 overflow-x-hidden h-[90vh] ${styles.slideUpwardMiddle}`}
         >
           <div className="h-[10vh] m-1 rounded border bg-white ">
             <div className="flex items-center h-full w-full  px-4 cursor-pointer justify-between">
@@ -618,10 +585,19 @@ export const TeamInbox = () => {
                       Name
                     </div>
                     <div className="border rounded-r-md w-full py-1 flex justify-center">
+                      {contactDetailData?.name ||
+                        allChatData[0]?.name}
+                    </div>
+                  </div>
+                  {/* <div className="flex justify-center px-2">
+                    <div className="flex pl-2 py-1 border rounded-l-md w-40">
+                      Name
+                    </div>
+                    <div className="border rounded-r-md w-full py-1 flex justify-center">
                       {contactDetails?.customField?.name ||
                         allChatData[0]?.customField?.name}
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

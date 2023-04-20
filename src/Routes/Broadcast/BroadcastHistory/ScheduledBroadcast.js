@@ -61,7 +61,7 @@ export const ScheduledBroadcast = () => {
 
     useEffect(() => {
         refetch().then((res) => {
-            console.log(res.data.data, "ressssssssss")
+            // console.log(res.data.data, "ressssssssss")
             setScheduleBroadcastData(res?.data.data);
 
         }).catch((error) => console.log(error, "erroeeee"))

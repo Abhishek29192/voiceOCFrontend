@@ -44,7 +44,7 @@ export const CreateTemplateHeader = () => {
 
   const { header, mediaType } = createTemplateValues;
   const { headerText } = createSampleData;
-  console.log(mediaType, "media type")
+  // console.log(mediaType, "media type")
   const handleUploadFile = (e) => {
     setCreateSampleData({
       ...createSampleData,

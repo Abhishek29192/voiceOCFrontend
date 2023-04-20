@@ -267,11 +267,11 @@ export const BroadcastHistory = () => {
         dateTime: moment(e.createdAt).format("YYYY-MM-DD")
       }))
       setrows(data)
-      console.log(data, "data")
+      // console.log(data, "data")
     }
   }, [boradcastHistoryTabelData])
 
-  console.log(boradcastHistoryTabelData, 'tabel data')
+  // console.log(boradcastHistoryTabelData, 'tabel data')
 
 
   return (

@@ -50,7 +50,6 @@ export default function ResponsiveNavbar() {
     switch (element) {
       case "Boadcasts":
         navigate(`${AppRoute.templateMessage}`);
-        console.log(AppRoute.templateMessage);
         break;
 
       default:

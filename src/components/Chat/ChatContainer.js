@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import socketIOClient from "socket.io-client";
-import { useChatScroll, UseChatScroll } from "../../hooks/UseChatScroll";
+import { useChatScroll } from "../../hooks/UseChatScroll";
 import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
 import {
     ChatBoxReciver,
@@ -18,7 +18,7 @@ export const ChatContainer = ({
     const { contactDetailData } = createTeamInboxDetails;
     const { chatDataAll } = allChat
     const [chats, setChats] = useState([]);
-    const [contactNumbers, setContactNumbers] = useState([]);
+    // const [contactNumbers, setContactNumbers] = useState([]);
     const [image, setImage] = useState("");
     const [typeOfMessage, setTypeOfMessage] = useState("text");
     const [messageStatus, setMessageStatus] = useState(false);
@@ -26,30 +26,49 @@ export const ChatContainer = ({
     let socketio = socketIOClient("http://3.6.197.151:3057");
     const ref = useChatScroll(chats);
 
+
+    // console.log(chatDataAll, "outside")
+
+
     useEffect(() => {
         if (isChatPromiseFullfilled === true) {
             socketio.on("chat_client", (senderChats) => {
                 const data = [...chatDataAll]
                 chatDataAll?.forEach((chat, index) => {
                     if (chat.mobileNumber === senderChats?.fullContactNumber) {
-                        const chats = [...chat.chat]
+                        let chats = [...chat.chat]
                         chats.push({
                             ...senderChats
                         })
-                        data[index].chat = chats
+
+                        const uc = []
+                        const unique = chats.filter(e => {
+                            const isduplicate = uc.includes(e._id)
+                            if (!isduplicate) {
+                                uc.push(e._id)
+                                return true
+                            }
+                            return false
+                        })
+                        data[index].chat = unique
                         setAllChat({ chatDataAll: data })
+                    } else {
+                        console.log('flow is here')
                     }
                 })
+                // }
             });
             socketio.on("disconnect_socket", (disconnect) => {
                 console.log(disconnect, "disconnect");
             });
             socketio.on("firstMessage", (firstMessage) => {
                 setMessageStatus(firstMessage);
+                // console.log(firstMessage, "ststus     ---")
             });
         }
     }, [isChatPromiseFullfilled, chatDataAll]);
 
+    console.log(messageStatus, "status of first message")
 
     useEffect(() => {
         setChats(contactDetailData.chat);
@@ -70,7 +89,7 @@ export const ChatContainer = ({
                     mobileNumber:
                         contactDetailData?.mobileNumber ||
                         chatDataAll[0]?.chat[0]?.fullContactNumber,
-                    chatId: contactDetailData?.chatDetail?._id || chatDataAll[0]?.chat?.chatId,
+                    chatId: contactDetailData?.chatDetail?._id || chatDataAll[0]?.chatDetail?._id,
                 },
             ]);
         } else {
@@ -81,7 +100,7 @@ export const ChatContainer = ({
                     mobileNumber:
                         contactDetailData?.mobileNumber ||
                         chatDataAll[0]?.chat[0]?.fullContactNumber,
-                    chatId: contactDetailData?.chatDetail?._id || chatDataAll[0]?.chat?.chatId,
+                    chatId: contactDetailData?.chatDetail?._id || chatDataAll[0]?.chatDetail?._id,
                 },
             ]);
         }

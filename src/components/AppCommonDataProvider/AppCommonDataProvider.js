@@ -41,6 +41,7 @@ export const AppCommonDataContext = createContext({
   allChat: {
     chatDataAll: []
   },
+
   setAllChat: null,
   setCreateTeamInboxDetails: null,
   setCreateSampleData: null,

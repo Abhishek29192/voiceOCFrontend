@@ -19,6 +19,7 @@ export const InputChatField = ({
     messageStatus,
 }) => {
     // console.log("message status", messageStatus)
+
     const [message, setMessage] = useState("");
     const [openEmoji, setOpenEmoji] = useState(false);
     const [openFileUpload, setOpenFileUpload] = useState(false);
@@ -72,6 +73,8 @@ export const InputChatField = ({
             .then((e) => console.log(e))
             .catch((err) => console.log(err));
     };
+
+    // console.log(chatDataAll[0]?.chat?.length, "hgsnhnbjhmnb")
 
     return (
         <form onKeyDown={(e) => handleEnter(e)} className="relative">

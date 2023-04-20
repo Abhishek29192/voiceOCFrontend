@@ -3,7 +3,7 @@ import { InputFieldWithoutCounter } from '../../components/InputField'
 import { SelectOptionButton } from '../../components/SelectOptions'
 
 export const SerachSection = ({ contactNameNumber }) => {
-    console.log(contactNameNumber, "fhgh")
+    // console.log(contactNameNumber, "fhgh")
     const colourStyles = {
         control: (styles) => {
             return {
