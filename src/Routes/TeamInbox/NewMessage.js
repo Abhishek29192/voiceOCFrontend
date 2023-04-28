@@ -1,25 +1,31 @@
-import React, {useEffect, useState} from "react";
-import {PrimaryButton, SecondaryButton} from "../../components/Button";
-import {InputFieldWithoutCounter} from "../../components/InputField";
-import {SelectOptionButton} from "../../components/SelectOptions";
-import {Base2} from "../../components/Typography";
-import {CiGlobe} from "react-icons/ci";
-import {IoMdCall} from "react-icons/io";
-import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import React, { useEffect, useState } from "react";
+import { PrimaryButton, SecondaryButton } from "../../components/Button";
+import { InputFieldWithoutCounter } from "../../components/InputField";
+import { SelectOptionButton } from "../../components/SelectOptions";
+import { Base2 } from "../../components/Typography";
+import { CiGlobe } from "react-icons/ci";
+import { IoMdCall } from "react-icons/io";
+import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/bootstrap.css";
 import styles from "./newMessage.module.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const NewMessage = ({
   setNewMessage,
   setShowContactList,
   contactNameNumber,
+  selectedOptionNumber,
+  setSelectedOptionNumber
 }) => {
-  const {createTeamInboxDetails, setCreateTeamInboxDetails} =
-    useAppCommonDataProvider();
-  const {whatsappNumber} = createTeamInboxDetails;
+
+  const { createTeamInboxDetails, setCreateTeamInboxDetails } = useAppCommonDataProvider();
+  const { contactDetailData, whatsappNumber } = createTeamInboxDetails;
+  console.log(contactDetailData?.chatDetail?.lastMessageTime, "timeeeeeeeeeee")
+
   const [number, setNumber] = useState();
-  // const [phone, setPhone] = useState("");
+  const [numberDropDown, setNumberDropDown] = useState();
 
   const colourStyles = {
     control: (styles) => {
@@ -39,7 +45,7 @@ export const NewMessage = ({
         },
       };
     },
-    option: (styles, {data, isDisabled}) => {
+    option: (styles, { data, isDisabled }) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
@@ -52,21 +58,41 @@ export const NewMessage = ({
     },
   };
 
+  const showToast = () => {
+    toast.error(`Enter Valid Mobile Number`, {
+      autoClose: 1500,
+      closeOnClick: true,
+      position: "top-right",
+    });
+  };
+
   const handleNumber = (num) => {
     setNumber(num);
-    setCreateTeamInboxDetails({...createTeamInboxDetails, whatsappNumber: num});
+    setCreateTeamInboxDetails({ ...createTeamInboxDetails, whatsappNumber: num });
   };
+
+  const handleDropDownNumber = (selectedOptionNumber) => {
+    setNumberDropDown(selectedOptionNumber.value.slice(1, -1))
+    setCreateTeamInboxDetails({ ...createTeamInboxDetails, whatsappNumber: selectedOptionNumber.value.slice(1, -1) });
+    // setSelectedOptionNumber(selectedOptionNumber.value.slice(1, -1));
+  }
 
   const handleDemo = () => {
     // let validation = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
     let validation = /[0-9]{1,2}[0-9]{10}/;
-    if (number.match(validation)) {
+    if (whatsappNumber.match(validation)) {
       setNewMessage(false);
       setShowContactList(true);
     } else {
-      alert("Enter valid number");
+      showToast()
+      // alert("Enter valid number");
     }
   };
+
+
+
+
+
   return (
     <div className="w-full h-[80vh] p-4">
       <div className="flex bg-slate-200 rounded-md py-3 px-6">
@@ -90,7 +116,6 @@ export const NewMessage = ({
                 value={number}
                 inputClass={styles.pInputClass}
                 onChange={(number) => handleNumber(number)}
-                // setCreateTeamInboxDetails({...createTeamInboxDetails, whatsappNumber: e.target.value }
                 buttonClass={styles.btn}
               />
             </div>
@@ -102,13 +127,13 @@ export const NewMessage = ({
           <div className="flex w-full ">
             <SelectOptionButton
               options={contactNameNumber}
-              // className={`${colourStyles}`}
               className={colourStyles}
 
-              // selectedValue={CallActionSubButton1.filter(
+              // selectedValue={contactNameNumber.filter(
               //   (elem) => elem.value === details.typeOfAction
               // )}
-              // onChange={handleChange}
+              onChange={handleDropDownNumber}
+              autofocus={true}
             />
           </div>
           <div className="flex justify-end mt-7">
@@ -122,10 +147,11 @@ export const NewMessage = ({
             <div className="ml-4">
               <PrimaryButton
                 text={"Next"}
-                disabled={!number}
+                // disabled={!number || !selectedOptionNumber}
                 // onClick={() => { setNewMessage(false); setShowContactList(true); }}
                 onClick={() => handleDemo()}
               />
+              <ToastContainer theme="light" />
               {/* <PrimaryButton text={"Next"} disabled={!number} onClick={handleNextButton()} /> */}
             </div>
           </div>

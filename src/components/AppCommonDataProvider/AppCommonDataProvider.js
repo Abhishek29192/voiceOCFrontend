@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState} from "react";
+import React, { createContext, useContext, useState } from "react";
 
 export const AppCommonDataContext = createContext({
   userDetails: null,
@@ -56,7 +56,7 @@ export const AppCommonDataContext = createContext({
   setSelectedContactRowData: null,
 });
 
-export const AppCommonDataProvider = ({children}) => {
+export const AppCommonDataProvider = ({ children }) => {
   const [createTemplateValues, setCreateTemplateValues] = useState({
     templateName: "",
     category: "",

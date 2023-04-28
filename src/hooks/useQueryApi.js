@@ -1,4 +1,4 @@
-import {useMutation, useQuery} from "react-query";
+import { useMutation, useQuery } from "react-query";
 import {
   AllChatData,
   fetchAgentLists,
@@ -10,6 +10,7 @@ import {
   fetchContactListOptions,
   fetchExcelFile,
   fetchLoginToken,
+  fetchNewMessageTemplate,
   fetchScheduleBroadcastData,
   fetchSignUpCreds,
   fetchSingleChatData,
@@ -194,6 +195,17 @@ export const useSchedulBroadcastData = () => {
     queryKey: ["Schedule-broadcast"],
     queryFn: fetchScheduleBroadcastData,
     enabled: false,
+    onError: (e) => e,
+  });
+};
+
+//fetchNewMessageTemplateMessage
+export const useFetchNewMessageTemplate = () => {
+  return useMutation({
+    mutationKey: ["new-template-message"],
+    mutationFn: async (data) => {
+      return await fetchNewMessageTemplate(data);
+    },
     onError: (e) => e,
   });
 };

@@ -23,6 +23,7 @@ import {
   allChatDataUrl,
   newMessageUrl,
   BaseUrl,
+  sendNewMessageTemplate,
 } from "../Urls";
 
 const headers = {
@@ -39,8 +40,8 @@ instance.interceptors.request.use((config) => {
 });
 
 export const fetchLoginToken = async (data) => {
-  const {data: response} = await instance.post(fetctokenUrl, data, {
-    headers: {Accept: "application/json"},
+  const { data: response } = await instance.post(fetctokenUrl, data, {
+    headers: { Accept: "application/json" },
   });
   return response;
 };
@@ -50,30 +51,35 @@ export const fetchSignUpCreds = async (data) => {
 };
 
 export const fetchTempalteMessageData = async () => {
-  return await instance.get(fetcemplateData, {headers});
+  return await instance.get(fetcemplateData, { headers });
 };
 
 export const fetchContactDetailsToClient = async () => {
-  return await instance.get(`${fetchContacts}?UserId=one`, {headers});
+  return await instance.get(`${fetchContacts}?UserId=one`, { headers });
+};
+
+// sendNewMessageTemplate
+export const fetchNewMessageTemplate = async (data) => {
+  return await instance.post(`${sendNewMessageTemplate}`, data, { headers });
 };
 
 export const fetchContactDetailsToServer = async (data) => {
-  return await instance.post(fetchContacts, data, {headers});
+  return await instance.post(fetchContacts, data, { headers });
 };
 
 // selectedAgentUrl
 export const PostAssignAgent = async (data) => {
-  return await instance.post(selectedAgentUrl, data, {headers});
+  return await instance.post(selectedAgentUrl, data, { headers });
 };
 
 // removeAgentUrl
 export const PostRemoveAssignAgent = async (data) => {
-  return await instance.post(removeAgentUrl, data, {headers});
+  return await instance.post(removeAgentUrl, data, { headers });
 };
 
 //newMessageUrl
 export const NewMessageApi = async (data) => {
-  return await instance.post(newMessageUrl, data, {headers});
+  return await instance.post(newMessageUrl, data, { headers });
 };
 
 //allChatDataUrl
@@ -83,27 +89,27 @@ export const AllChatData = async (data) => {
 
 // logoutUrl
 export const PostLogout = async (data) => {
-  return await instance.post(logoutUrl, data, {headers});
+  return await instance.post(logoutUrl, data, { headers });
 };
 
 export const fetchExcelFile = async (data) => {
-  return await instance.post(`${exportExcel}`, data, {headers});
+  return await instance.post(`${exportExcel}`, data, { headers });
 };
 
 export const sendBrodcastData = async (data) => {
-  return await instance.post(sendBroadcastDetails, data, {headers});
+  return await instance.post(sendBroadcastDetails, data, { headers });
 };
 
 export const sendVideoData = async (data) => {
-  return await instance.post(sendVideoUrl, data, {headers});
+  return await instance.post(sendVideoUrl, data, { headers });
 };
 
 export const sendBrodcastDataWithDateTime = async (data) => {
-  return await instance.post(sendBroadcastDetailsWithDateTime, data, {headers});
+  return await instance.post(sendBroadcastDetailsWithDateTime, data, { headers });
 };
 
 export const sendTeamInboxDetails = async (data) => {
-  return await instance.post(sendTeamInboxData, data, {headers});
+  return await instance.post(sendTeamInboxData, data, { headers });
 };
 
 export const fetchTeamInboxLists = async (userDetails) => {
@@ -120,25 +126,25 @@ export const fetchTeamInboxLists = async (userDetails) => {
 };
 
 export const fetchScheduleBroadcastData = async () => {
-  return await instance.get(`${fetchScheduleBroadcast}`, {headers});
+  return await instance.get(`${fetchScheduleBroadcast}`, { headers });
 };
 
 export const fetchAgentLists = async () => {
-  return await instance.get(`${agentListUrl}`, {headers});
+  return await instance.get(`${agentListUrl}`, { headers });
 };
 
 export const fetchSingleChatData = async (data) => {
-  return await instance.post(`${fetchSingleChatdataUrl}`, data, {headers});
+  return await instance.post(`${fetchSingleChatdataUrl}`, data, { headers });
 };
 
 export const fetchBroadcastHistoryStatus = async () => {
-  return await instance.get(`${fetchBroadcastHistoryStatusUrl}`, {headers});
+  return await instance.get(`${fetchBroadcastHistoryStatusUrl}`, { headers });
 };
 
 export const fetchBroadcastHistoryTabelData = async () => {
-  return await instance.get(`${fetchBroadcastHistoryDataUrl}`, {headers});
+  return await instance.get(`${fetchBroadcastHistoryDataUrl}`, { headers });
 };
 
 export const fetchContactListOptions = async () => {
-  return await instance.get(`${contactOptionsUrl}`, {headers});
+  return await instance.get(`${contactOptionsUrl}`, { headers });
 };

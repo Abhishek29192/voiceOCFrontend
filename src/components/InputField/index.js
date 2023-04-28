@@ -39,6 +39,7 @@ export const InputFieldWithoutCounter = ({
   type,
   name,
   id,
+  onClick
 }) => {
   return (
     <>
@@ -90,7 +91,7 @@ export const InputTextArea = ({
   );
 };
 
-export const FileUploadbutton = ({onChange, fileName}) => {
+export const FileUploadbutton = ({ onChange, fileName }) => {
   return (
     <>
       <input
@@ -100,7 +101,7 @@ export const FileUploadbutton = ({onChange, fileName}) => {
         name="file"
         onChange={onChange}
         accept=".xlsx, .xls,image/*,.doc, .docx,.mp4,.pdf"
-        // value={value}
+      // value={value}
       />
       <label for="actual-btn" className={`${styles.label} justify-center mr-4`}>
         Upload file

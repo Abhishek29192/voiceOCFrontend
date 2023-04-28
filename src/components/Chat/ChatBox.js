@@ -1,12 +1,12 @@
 import React from "react";
 import moment from "moment/moment";
-import {BsFillFilePdfFill} from "react-icons/bs";
+import { BsFillFilePdfFill } from "react-icons/bs";
 
-export const ChatBoxReciver = ({message, messageType, messageTime}) => {
+export const ChatBoxReciver = ({ message, messageType, messageTime }) => {
   return messageType === "text" ? (
     <div>
       <div
-        style={{flexFlow: "column"}}
+        style={{ flexFlow: "column" }}
         className="flex flex-wrap bg-white w-fit px-11 py-2 poppins rounded-r-2xl rounded-b-2xl m-3 mt-4 max-w-[50%] break-words "
       >
         {message}
@@ -47,7 +47,7 @@ export const ChatBoxReciver = ({message, messageType, messageTime}) => {
           </div>
           {/* <div style={{ flexFlow: "column" }} className='my-2 break-words max-w[45%] '>{message.name}</div> */}
           <div
-            style={{flexFlow: "column"}}
+            style={{ flexFlow: "column" }}
             className="my-2 break-words max-w[45%] "
           >
             {message.name}
@@ -62,11 +62,11 @@ export const ChatBoxReciver = ({message, messageType, messageTime}) => {
   );
 };
 
-export const ChatBoxSender = ({message, messageTime, messageType}) => {
+export const ChatBoxSender = ({ message, messageTime, messageType }) => {
   return messageType === "text" ? (
     <div className="flex flex-col w-full items-end justify-end py-2">
       <div
-        style={{flexFlow: "column"}}
+        style={{ flexFlow: "column" }}
         className="flex flex-flow-col bg-white w-fit px-11 py-2 poppins rounded-l-2xl rounded-b-2xl m-2 max-w-[50%] break-words "
       >
         {message}
@@ -104,7 +104,7 @@ export const ChatBoxSender = ({message, messageTime, messageType}) => {
           <BsFillFilePdfFill size={"3rem"} color={"red"} />
         </div>
         <div
-          style={{flexFlow: "column"}}
+          style={{ flexFlow: "column" }}
           className="my-2 break-words max-w[45%] "
         >
           {message}

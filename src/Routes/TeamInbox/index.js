@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
 import {
   useAgentLists,
@@ -13,24 +13,27 @@ import {
   useTeamInboxDetails,
   useTemplateData,
 } from "../../hooks/useQueryApi";
-import {PrimaryButton, SecondaryButton} from "../../components/Button";
-import {AiOutlineSearch} from "react-icons/ai";
-import {SerachSection} from "./SerachSection";
-import {NewMessage} from "./NewMessage";
-import {FaWhatsapp} from "react-icons/fa";
-import {TiMessages, TiTick} from "react-icons/ti";
-import {FaPen} from "react-icons/fa";
-import {SlOptionsVertical} from "react-icons/sl";
-import {Base2} from "../../components/Typography";
-import {InputFieldWithoutCounter} from "../../components/InputField";
-import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
-import {ChatContainer} from "../../components/Chat/ChatContainer";
+import { PrimaryButton, SecondaryButton } from "../../components/Button";
+import { AiOutlineSearch } from "react-icons/ai";
+import { SerachSection } from "./SerachSection";
+import { NewMessage } from "./NewMessage";
+import { FaWhatsapp } from "react-icons/fa";
+import { TiMessages, TiTick } from "react-icons/ti";
+import { FaPen } from "react-icons/fa";
+import { SlOptionsVertical } from "react-icons/sl";
+import { Base2 } from "../../components/Typography";
+import { InputFieldWithoutCounter } from "../../components/InputField";
+import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import { ChatContainer } from "../../components/Chat/ChatContainer";
 import styles from "./TeamInbox.module.css";
 import moment from "moment/moment";
-import {CountDownTimer, MyTimer} from "../../components/Timer";
-import {RxCross2} from "react-icons/rx";
-import {Drawer, Drawers} from "../../components/Drawer/Drawer";
-import {Profile} from "./Profile";
+import { CountDownTimer, MyTimer, TimerCounter } from "../../components/Timer";
+import { RxCross2 } from "react-icons/rx";
+import { Drawer, Drawers } from "../../components/Drawer/Drawer";
+import { Profile } from "./Profile";
+import { NewTemplate } from "./NewTemplate";
+import { AllChatData } from "../../api";
+import { BsStopwatchFill } from "react-icons/bs";
 
 export const TeamInbox = () => {
   const [search, setSearch] = useState(false);
@@ -52,8 +55,9 @@ export const TeamInbox = () => {
   const [allChatData, setAllChatData] = useState([]);
   const [isChatPromiseFullfilled, setIsChatPromiseFullfilled] =
     useState(undefined);
+  const [selectedOptionNumber, setSelectedOptionNumber] = useState("");
   const [selectedContactIndex, setSelectedContactIndex] = useState("");
-  const [firstMessageObject, setFirstMessageObject] = useState({});
+  // const [firstMessageObject, setFirstMessageObject] = useState({});
   const [previouseSelectedNumber, setPreviouseSelectedNumber] =
     useState(undefined);
 
@@ -63,8 +67,7 @@ export const TeamInbox = () => {
     setAllChat,
     userDetails: userData,
   } = useAppCommonDataProvider();
-  const {refetch} = useTemplateData();
-  const {mutateAsync} = usePostTeamInboxData();
+
 
   const userDetails =
     userData ?? JSON.parse(localStorage.getItem("userDetails"));
@@ -74,50 +77,55 @@ export const TeamInbox = () => {
   const currentUserId =
     userData?._id ?? JSON.parse(localStorage.getItem("userDetails"))._id;
 
-  const {mutateAsync: contatcData} = useTeamInboxContactList(userDetails);
-  const {mutateAsync: selectedAgentData} = usePostAssignAgentData();
-  const {mutateAsync: removeAgent} = usePostRemoveAssignAgent();
-  const {refetch: contactNumber} = useContactListOptions();
-  const {refetch: agentList} = useAgentLists();
-  const {contactDetailData, whatsappNumber} = createTeamInboxDetails;
-  const {mutateAsync: alldata} = useAllChatData();
-  const {mutateAsync: newMessageStatus} = useNewMessageStatus();
+  const { refetch } = useTemplateData();
+  const { mutateAsync } = usePostTeamInboxData();
+  const { mutateAsync: contatcData } = useTeamInboxContactList(userDetails);
+  const { mutateAsync: selectedAgentData } = usePostAssignAgentData();
+  const { mutateAsync: removeAgent } = usePostRemoveAssignAgent();
+  const { refetch: contactNumber } = useContactListOptions();
+  const { refetch: agentList } = useAgentLists();
+  const { contactDetailData, whatsappNumber, chatDataAll } = createTeamInboxDetails;
+  const { mutateAsync: alldata } = useAllChatData();
+  const { mutateAsync: newMessageStatus } = useNewMessageStatus();
 
   const getNewMessageStatus = async (ele) => {
     selectedMobileNumber === undefined
       ? await newMessageStatus({
-          fullContactNumber: allChatData[0]?.mobileNumber,
-          previousContactNumber: previouseSelectedNumber,
-          chatId: allChatData[0]?.chatDetail?._id,
-        })
-          .then((res) => console.log(res?.data, "resssss"))
-          .catch((err) => console.log(err, "error"))
+        fullContactNumber: allChatData[0]?.mobileNumber,
+        previousContactNumber: previouseSelectedNumber,
+        chatId: allChatData[0]?.chatDetail?._id,
+      })
+        .catch((err) => console.log(err, "error"))
       : await newMessageStatus({
-          fullContactNumber: selectedMobileNumber,
-          previousContactNumber: previouseSelectedNumber,
-          chatId: ele?.chatDetail?._id,
-        })
-          .then((res) => console.log(res?.data, "resssss"))
-          .catch((err) => console.log(err, "error"));
+        fullContactNumber: ele?.mobileNumber,
+        previousContactNumber: previouseSelectedNumber,
+        chatId: ele?.chatDetail?._id,
+      })
+        .catch((err) => console.log(err, "error"));
   };
 
+
+
+
   const getAllData = async () => {
-    console.log("role", role);
-    return await alldata({agentId: currentUserId, role: role})
+    setIsChatPromiseFullfilled(false)
+    return await alldata({ agentId: currentUserId, role: role })
       .then((res) => {
         setAllChatData(res?.data?.contactList);
-        setAllChat({chatDataAll: res?.data?.contactList});
+        setAllChat({ chatDataAll: res?.data?.contactList });
         setSelectedMobileNumber(res?.data?.contactList[0]?.mobileNumber);
-        setIsChatPromiseFullfilled(true);
+
         newMessageStatus({
           fullContactNumber: res?.data?.contactList[0]?.mobileNumber,
           previousContactNumber: previouseSelectedNumber,
           chatId: res?.data?.contactList[0]?.chatDetail?._id,
         });
+        setIsChatPromiseFullfilled(true);
         return res.data.contactList;
       })
       .catch((err) => console.log(err));
   };
+
 
   useEffect(() => {
     contatcData()
@@ -144,10 +152,11 @@ export const TeamInbox = () => {
   }, []);
 
   const contactNameNumber = [];
+
   contactName?.map((e) => {
     const optionContactNumber = {
-      label: `${e.name} (${e.mobileNumber})`,
-      value: `${e.name} (${e.mobileNumber})`,
+      label: `(${e.mobileNumber})`,
+      value: `(${e.mobileNumber})`,
     };
     contactNameNumber.push(optionContactNumber);
   });
@@ -164,7 +173,7 @@ export const TeamInbox = () => {
   };
 
   const handleCustomVariable = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     if (customVariable.length === 0) {
       setCustomVaraible([
         ...customVariable,
@@ -189,24 +198,28 @@ export const TeamInbox = () => {
   };
 
   const handleSend = () => {
+
     mutateAsync(data)
       .then((res) => {
-        setSelectedContactIndex(0);
-        setCreateTeamInboxDetails({
-          ...createTeamInboxDetails,
-          contactDetailData: res?.data?.newChat[0],
-        });
-        setPreviouseSelectedNumber(selectedMobileNumber);
-        setSelectedMobileNumber(res?.data?.newChat[0].mobileNumber);
-        getAllData().then((data) => {
-          console.log("data", data);
-        });
+        if (res?.data?.status) {
+          setSelectedContactIndex(0);
+          setCreateTeamInboxDetails({
+            ...createTeamInboxDetails,
+            contactDetailData: res?.data?.newChat[0],
+          });
+          setPreviouseSelectedNumber(selectedMobileNumber);
+          setSelectedMobileNumber(res?.data?.newChat[0].mobileNumber);
+          getAllData()
+        } else { console.log(res?.data?.status) }
       })
       .catch((e) => console.log(e));
+
     setNewMessage(false);
     setSearch(false);
     setShowContactList(false);
   };
+
+
 
   const handleSingleChatData = (ele, index) => {
     setSelectedContactIndex(index);
@@ -226,33 +239,23 @@ export const TeamInbox = () => {
 
   const handleAssignAgent = (e, ele) => {
     const agentSelectedDetails = {
-      chatId: contactDetailData?.chatDetail?._id,
+      chatId: contactDetailData.length !== 0 ? contactDetailData?.chatDetail?._id : allChatData[0]?.chatDetail?._id,
       agentId: ele?._id,
       fullName: `${ele.firstName} ${ele.lastName}`,
     };
 
     selectedAgentData(agentSelectedDetails)
-      .then((res) => console.log(res))
       .catch((err) => console.log(err));
     setOpenSelectAgents(false);
   };
 
   const handleRemoveAgent = () => {
-    const removeAgentId = {chatId: contactDetailData?.chatDetail?._id};
+    const removeAgentId = { chatId: contactDetailData?.chatDetail?._id };
     removeAgent(removeAgentId)
-      .then((res) => console.log(res))
       .catch((err) => console.log(err));
     setOpenSelectAgents(false);
   };
 
-  const rowData = [
-    {
-      Name: "Abhishek kashyap",
-      dashboard_url: "www.usdjghmkj.com",
-      username: "abhiK",
-      password: "AAAAAA",
-    },
-  ];
 
   const colourStyles = {
     control: (styles) => {
@@ -271,7 +274,7 @@ export const TeamInbox = () => {
         // },
       };
     },
-    option: (styles, {data, isDisabled}) => {
+    option: (styles, { data, isDisabled }) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",
@@ -330,6 +333,8 @@ export const TeamInbox = () => {
                 setNewMessage={setNewMessage}
                 setShowContactList={setShowContactList}
                 contactNameNumber={contactNameNumber}
+                selectedOptionNumber={selectedOptionNumber}
+                setSelectedOptionNumber={setSelectedOptionNumber}
               />
             </div>
           )}
@@ -353,19 +358,18 @@ export const TeamInbox = () => {
                         onClick={() => handleSingleChatData(ele, index)}
                       >
                         <div
-                          className={`flex p-2 rounded-md items-center ${
-                            ele.mobileNumber == selectedMobileNumber
-                              ? "bg-[#5536db]"
-                              : "bg-white"
-                          }`}
+                          className={`flex p-2 rounded-md items-center ${ele.mobileNumber == selectedMobileNumber
+                            ? "bg-[#5536db] text-white"
+                            : "bg-white"
+                            }`}
                         >
                           <div
                             className={`flex h-11 px-4 py-[0.70rem] ml-3  bg-slate-200 rounded-3xl items-center justify-center`}
                           >
                             <div className="font-extrabold">
-                              {ele?.customField?.name
+                              {ele?.name
                                 ?.split("")[0]
-                                ?.toUpperCase()}
+                                ?.toUpperCase() || ele?.mobileNumber.split("")[0]}
                             </div>
                           </div>
                           <div className="px-7 w-[80%]">
@@ -384,7 +388,7 @@ export const TeamInbox = () => {
                                 ?.message === "string"
                                 ? ele?.chat[ele?.chat?.length - 1]?.message
                                 : ele?.chat[ele?.chat?.length - 1]?.message
-                                    ?.name}
+                                  ?.name}
                             </div>
                           </div>
                         </div>
@@ -481,24 +485,33 @@ export const TeamInbox = () => {
           )}
         </div>
         <div
-          className={`w-[50%] border bg-slate-100 overflow-x-hidden h-[90vh] ${styles.slideUpwardMiddle}`}
+          className={`w-[50%] border bg-slate-100 overflow-x-hidden h-[90vh] relative ${styles.slideUpwardMiddle}`}
         >
-          <div className="h-[10vh] m-1 rounded border bg-white ">
-            <div className="flex items-center h-full w-full  px-4 cursor-pointer justify-between">
+          <div className="h-[10vh] m-1 rounded border bg-white">
+            <div className={`flex items-center h-full w-full  px-4 cursor-pointer  ${role === "admin" ? "justify-between" : "justify-end"}`}>
               {role === "admin" ? (
                 <div>
                   <SlOptionsVertical size={"1.1rem"} onClick={handleAgent} />
                 </div>
               ) : null}
+              <div className="bg-[#eb3b3b] text-white p-2 rounded-full flex items-center">
+                <BsStopwatchFill size={"1.4rem"} />
+                <div className="pl-2">
+                  <TimerCounter selectedMobileNumber={selectedMobileNumber} startTimer={contactDetailData?.length !== 0 ? contactDetailData?.chatDetail?.lastMessageTime : allChatData[0]?.chatDetail?.lastMessageTime} />
+                </div>
+              </div>
             </div>
+
             <ChatContainer
               singleChat={singleChat}
               selectedMobileNumber={selectedMobileNumber}
               allChatData={allChatData}
               contactDetailData={contactDetailData}
               isChatPromiseFullfilled={isChatPromiseFullfilled}
+              customVariable={customVariable}
             />
           </div>
+
           {openSelectAgents && role === "admin" && (
             <div className="z-555 flex flex-col bg-white w-fit p-4 py-4 rounded-2xl h-auto relative">
               {agentLists?.map((ele) => {
@@ -530,12 +543,12 @@ export const TeamInbox = () => {
             <div className="flex py-5 px-1 border-b-[1px] items-center">
               <div className="flex h-11 px-4 py-[0.70rem] ml-2 bg-slate-200 rounded-3xl items-center justify-center">
                 <div className="font-extrabold">
-                  {contactDetailData?.customField?.name
-                    .split("")[0]
+                  {contactDetailData?.name
+                    ?.split("")[0]
                     ?.toUpperCase() ||
-                    allChatData[0]?.customField?.name
-                      .split("")[0]
-                      ?.toUpperCase()}
+                    allChatData[0]?.name
+                      ?.split("")[0]
+                      ?.toUpperCase() || contactDetailData?.mobileNumber?.split("")[0]}
                 </div>
               </div>
               <div className="flex px-2 w-full justify-between items-center">
@@ -583,18 +596,10 @@ export const TeamInbox = () => {
                       Name
                     </div>
                     <div className="border rounded-r-md w-full py-1 flex justify-center">
-                      {contactDetailData?.name || allChatData[0]?.name}
+                      {/* {contactDetailData?.name || allChatData[0]?.name} */}
+                      {contactDetailData?.length === 0 ? allChatData[0]?.name : contactDetailData?.name}
                     </div>
                   </div>
-                  {/* <div className="flex justify-center px-2">
-                    <div className="flex pl-2 py-1 border rounded-l-md w-40">
-                      Name
-                    </div>
-                    <div className="border rounded-r-md w-full py-1 flex justify-center">
-                      {contactDetails?.customField?.name ||
-                        allChatData[0]?.customField?.name}
-                    </div>
-                  </div> */}
                 </div>
               </div>
             </div>

@@ -21,3 +21,4 @@ export const removeAgentUrl = `${BaseUrl}chat/removeAssignedAgent`;
 export const logoutUrl = `${BaseUrl}admins/logOut`;
 export const allChatDataUrl = `${BaseUrl}chat/teamInboxChatData`;
 export const newMessageUrl = `${BaseUrl}chat/updateMessageStatus`;
+export const sendNewMessageTemplate = `${BaseUrl}chat/sendTemplate`

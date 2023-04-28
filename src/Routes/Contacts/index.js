@@ -1,42 +1,42 @@
-import React, {useEffect, useState} from "react";
-import {FaFilter} from "react-icons/fa";
-import {IoSearchOutline} from "react-icons/io5";
-import {RiDeleteBin5Line} from "react-icons/ri";
-import {TfiExport, TfiImport} from "react-icons/tfi";
-import {ApprovedButton, PrimaryButton} from "../../components/Button";
-import {InputFieldWithoutCounter} from "../../components/InputField";
+import React, { useEffect, useState } from "react";
+import { FaFilter } from "react-icons/fa";
+import { IoSearchOutline } from "react-icons/io5";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { TfiExport, TfiImport } from "react-icons/tfi";
+import { ApprovedButton, PrimaryButton } from "../../components/Button";
+import { InputFieldWithoutCounter } from "../../components/InputField";
 import Navbar from "../../components/Navbar/index";
-import {SelectOptionButton} from "../../components/SelectOptions";
-import {optionSort} from "../../constants/DropDownContent";
-import {Base2} from "../../components/Typography";
+import { SelectOptionButton } from "../../components/SelectOptions";
+import { optionSort } from "../../constants/DropDownContent";
+import { Base2 } from "../../components/Typography";
 import styles from "./Contact.module.css";
-import {AddContactList} from "../../components/Contact/AddContact";
+import { AddContactList } from "../../components/Contact/AddContact";
 import moment from "moment";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Box from "@mui/material/Box";
-import {visuallyHidden} from "@mui/utils";
+import { visuallyHidden } from "@mui/utils";
 import {
   useContactDataToClient,
   useContactDataToServer,
   useDPostExcelToDownload,
 } from "../../hooks/useQueryApi";
-import {TiTick} from "react-icons/ti";
-import {AiOutlineCloudDownload} from "react-icons/ai";
-import {HiOutlineEye} from "react-icons/hi";
+import { TiTick } from "react-icons/ti";
+import { AiOutlineCloudDownload } from "react-icons/ai";
+import { HiOutlineEye } from "react-icons/hi";
 import BasicTable from "../../components/Table";
 import XLSX from "sheetjs-style";
-import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
-import {ExcelPopUp} from "./ExcelPopUp";
-import {Profile} from "../TeamInbox/Profile";
-import {Drawers} from "../../components/Drawer/Drawer";
+import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import { ExcelPopUp } from "./ExcelPopUp";
+import { Profile } from "../TeamInbox/Profile";
+import { Drawers } from "../../components/Drawer/Drawer";
 
 export const Contacts = () => {
   const [selectedContactListqueryId, setSelectedContactListQueryId] =
     useState(null);
-  const [selectedContactExcel, setSelectedContactExcel] = useState([]);
+  const [selectedContactExcel, setSelectedContactExcel] = useState();
   const [handleContactListModal, sethandleContactListModal] = useState(false);
   const [fileName, setFileName] = useState("");
   const [openProfile, setOpenProfile] = useState(false);
@@ -49,16 +49,18 @@ export const Contacts = () => {
     isSuccess,
     isLoading: Load,
   } = useContactDataToServer();
-  const {isLoading, refetch} = useContactDataToClient();
-  const {createContactDetails, setCreateContactDetails} =
+  const { isLoading, refetch } = useContactDataToClient();
+  const { createContactDetails, setCreateContactDetails } =
     useAppCommonDataProvider();
-  const {mutateAsync: postExcelData} = useDPostExcelToDownload(
+  const { mutateAsync: postExcelData } = useDPostExcelToDownload(
     selectedContactListqueryId
   );
 
   // useEffect(() => {
   //   postExcelData().then((res) => setSelectedContactExcel(res?.data?.contacts)).catch((err) => console.log(err))
+  //   console.log(selectedContactExcel, "htwrfgjkl;")
   // }, [selectedContactExcel])
+
 
   const handleSubmitFile = () => {
     console.log("download");
@@ -85,27 +87,28 @@ export const Contacts = () => {
 
         XLSX.utils.book_append_sheet(workBook, workSheet, "contacts");
 
-        XLSX.write(workBook, {bookType: "xlsx", type: "buffer"});
+        XLSX.write(workBook, { bookType: "xlsx", type: "buffer" });
 
-        XLSX.write(workBook, {bookType: "xlsx", type: "binary"});
+        XLSX.write(workBook, { bookType: "xlsx", type: "binary" });
 
         XLSX.writeFile(workBook, "./" + res?.data?.filename);
       })
       .catch((err) => console.log(err));
   };
 
-  const handleViewExcel = (entry) => {
-    console.log(entry, "entryyyyyyyyy");
-    setViewContacts(true);
+
+  const handleViewExcel = async (entry) => {
     const data = {
       UserId: "one",
       ExcelId: entry?.ContactList._id,
     };
     setSelectedContactListQueryId(entry.ContactList._id);
-    postExcelData(data)
-      .then((res) => setSelectedContactExcel(res?.data))
-      .catch((err) => console.log(err));
+    let result = await postExcelData(data)
+    setSelectedContactExcel(result.data)
+
+    setViewContacts(true);
   };
+
 
   useEffect(() => {
     if (isSuccess) {
@@ -143,20 +146,20 @@ export const Contacts = () => {
         createdDate: moment(`${entry?.ContactList.createdAt}`)
           .utc()
           .format("YYYY-MM-DD"),
-        broadcast: <TiTick size={"1.5rem"} style={{margin: "auto"}} />,
+        broadcast: <TiTick size={"1.5rem"} style={{ margin: "auto" }} />,
         action: (
           <div className="flex  justify-center">
             <div className="mx-3">
               <AiOutlineCloudDownload
                 size={"1.5rem"}
-                style={{margin: "auto"}}
+                style={{ margin: "auto" }}
                 onClick={() => handleDownload(entry)}
               />
             </div>
             <div>
               <HiOutlineEye
                 size={"1.5rem"}
-                style={{margin: "auto"}}
+                style={{ margin: "auto" }}
                 onClick={() => handleViewExcel(entry)}
               />
             </div>
@@ -215,7 +218,7 @@ export const Contacts = () => {
   ];
 
   function EnhancedTableHead(props) {
-    const {order, orderBy, onRequestSort} = props;
+    const { order, orderBy, onRequestSort } = props;
     const createSortHandler = (property) => (event) => {
       onRequestSort(event, property);
     };
@@ -280,7 +283,7 @@ export const Contacts = () => {
         // },
       };
     },
-    option: (styles, {data, isDisabled}) => {
+    option: (styles, { data, isDisabled }) => {
       return {
         ...styles,
         backgroundColor: isDisabled ? "red" : "white",

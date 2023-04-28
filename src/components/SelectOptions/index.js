@@ -9,6 +9,7 @@ export const SelectOptionButton = ({
   value,
   selectedValue,
   onChange,
+  autofocus
 }) => {
   // console.log(selectedValue, "valuee");
   // const handleChange = (value) => {
@@ -23,6 +24,7 @@ export const SelectOptionButton = ({
         autoSize={true}
         placeholder={placeholder}
         onChange={onChange}
+        autoFocus={autofocus}
       />
     </div>
   );

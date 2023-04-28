@@ -1,32 +1,53 @@
-import React, {useEffect, useState} from "react";
-import {PrimaryButton} from "../Button";
-import {InputFieldWithoutCounter} from "../InputField";
-import {GrAttachment} from "react-icons/gr";
-import {BsEmojiSmile} from "react-icons/bs";
+import React, { useEffect, useState } from "react";
+import { PrimaryButton } from "../Button";
+import { InputFieldWithoutCounter } from "../InputField";
+import { GrAttachment } from "react-icons/gr";
+import { BsEmojiSmile } from "react-icons/bs";
 import Picker from "emoji-picker-react";
-import {IoImageOutline} from "react-icons/io5";
-import {BsFileEarmarkPlus} from "react-icons/bs";
-import {TbVideo} from "react-icons/tb";
-import {Base2, Heading3Strong} from "../Typography";
-import {useUploadVideo} from "../../hooks/useQueryApi";
-import {useAppCommonDataProvider} from "../AppCommonDataProvider/AppCommonDataProvider";
+import { IoImageOutline } from "react-icons/io5";
+import { BsFileEarmarkPlus } from "react-icons/bs";
+import { TbVideo } from "react-icons/tb";
+import { Base2, Heading3Strong } from "../Typography";
+import { useFetchNewMessageTemplate, useUploadVideo } from "../../hooks/useQueryApi";
+import { useAppCommonDataProvider } from "../AppCommonDataProvider/AppCommonDataProvider";
+import { autoCompleteData } from "../../constants/DropDownContent";
 
 export const InputChatField = ({
+  // customVariable,
   placeholder,
   sendChatToSocket,
   setImage,
   setTypeOfMessage,
   messageStatus,
+  setNewMessageTemplate,
+  newMessageTemplate,
+  selectedMobileNumber,
+  setSuggestions,
+  suggestions,
+  suggestionIndex,
+  setSuggestionIndex,
+  setValue,
+  setSuggestionsActive,
+  selectedSuggestionText
 }) => {
-  // console.log("message status", messageStatus)
 
   const [message, setMessage] = useState("");
   const [openEmoji, setOpenEmoji] = useState(false);
   const [openFileUpload, setOpenFileUpload] = useState(false);
-  const {createTeamInboxDetails, allChat} = useAppCommonDataProvider();
-  const {contactDetailData} = createTeamInboxDetails;
-  const {chatDataAll} = allChat;
-  const {mutateAsync} = useUploadVideo();
+  const [autoSuggestions, setAutoSuggestions] = useState(false);
+
+
+  const { createTeamInboxDetails, allChat } = useAppCommonDataProvider();
+  const { contactDetailData } = createTeamInboxDetails;
+  const { chatDataAll } = allChat;
+  const { mutateAsync } = useUploadVideo();
+
+
+
+  useEffect(() => {
+    setMessage(selectedSuggestionText)
+  }, [selectedSuggestionText])
+
 
   const onEmojiClick = (event, emojiObject) => {
     setMessage((prevInput) => prevInput + event.emoji);
@@ -61,12 +82,12 @@ export const InputChatField = ({
     data.append("video", e.target.files[0]);
     data.set(
       "mobileNumber",
-      contactDetailData?.customerId?.mobileNumber ||
-        chatDataAll[0]?.mobileNumber
+      contactDetailData?.mobileNumber ||
+      chatDataAll[0]?.mobileNumber
     );
     data.set(
       "chatId",
-      contactDetailData?._id || chatDataAll[0]?.chatDetail?._id
+      contactDetailData?.chatDetail?._id || chatDataAll[0]?.chatDetail?._id
     );
     setOpenFileUpload(false);
     mutateAsync(data)
@@ -74,10 +95,59 @@ export const InputChatField = ({
       .catch((err) => console.log(err));
   };
 
-  // console.log(chatDataAll[0]?.chat?.length, "hgsnhnbjhmnb")
+
+  const handleChange = (e) => {
+    setMessage(e.target.value);
+    setAutoSuggestions(true)
+    const query = e.target.value.toLowerCase();
+    setValue(query);
+    if (query.length > 1) {
+      const filterSuggestions = autoCompleteData.filter(
+        (suggestion) => {
+          return suggestion.toLowerCase().indexOf(query) > -1
+        }
+      );
+      setSuggestions(filterSuggestions);
+      setSuggestionsActive(true);
+    } else {
+      setSuggestionsActive(false);
+    }
+  };
+
+
+
+  const handleKeyDown = (e) => {
+    // UP ARROW
+    if (e.keyCode === 38) {
+      if (suggestionIndex === 0) {
+        return;
+      }
+      setSuggestionIndex(suggestionIndex - 1);
+    }
+    // DOWN ARROW
+    else if (e.keyCode === 40) {
+      if (suggestionIndex - 1 === suggestions.length) {
+        return;
+      }
+      setSuggestionIndex(suggestionIndex + 1);
+    }
+    // ENTER
+    else if (e.keyCode === 13) {
+      console.log("Enter---------")
+      sendChatToSocket(message.trim());
+      setMessage("");
+      setValue(suggestions[suggestionIndex]);
+      setSuggestionIndex(0);
+      setSuggestionsActive(false);
+    }
+  };
+
+
+
+
 
   return (
-    <form onKeyDown={(e) => handleEnter(e)} className="relative">
+    <form onKeyDown={(e) => handleKeyDown(e)} className="relative">
       <div className="flex absolute bottom-0 right-0">
         {openEmoji && (
           <div className="flex">
@@ -133,45 +203,53 @@ export const InputChatField = ({
           </div>
         </div>
       )}
-      {messageStatus ? (
-        <div className="w-full border bg-white p-4  flex items-center rounded relative bottom-[-5px]  justify-between">
-          <div className=" w-fit relative">
-            <InputFieldWithoutCounter
-              placeholder={placeholder}
-              onChange={(e) => setMessage(e.target.value)}
-              value={typeof message !== "string" ? message.name : message}
-              className="bg-slate-200 w-[38vw] h-[45px]"
-            />
-            <div
-              className="absolute top-3 right-11"
-              onClick={() => {
-                setOpenEmoji(!openEmoji);
-                setOpenFileUpload(false);
-              }}
-            >
-              <BsEmojiSmile size={"1.3rem"} />
+
+
+      {(contactDetailData.length == 0 ? chatDataAll[0]?.chatDetail.status : contactDetailData.chatDetail.status) === "active" ? (
+        <div>
+          {/* {suggestionsActive && <Suggestions />} */}
+          <div className="w-full border bg-white p-4  flex items-center rounded relative bottom-[-5px] -z-1  justify-between">
+            <div className=" w-fit relative">
+              <InputFieldWithoutCounter
+                placeholder={placeholder}
+                // onChange={(e) => { setMessage(e.target.value); setAutoSuggestions(true) }}
+                onChange={(e) => { handleChange(e) }}
+                // onKeyDown={(e) => handleKeyDown(e)}
+                value={typeof message !== "string" ? message.name : message}
+                className="bg-slate-200 w-[38vw] h-[45px]"
+              />
+              <div
+                className="absolute top-3 right-11"
+                onClick={() => {
+                  setOpenEmoji(!openEmoji);
+                  setOpenFileUpload(false);
+                }}
+              >
+                <BsEmojiSmile size={"1.3rem"} />
+              </div>
+              <div
+                className="absolute top-3 right-3"
+                onClick={() => {
+                  setOpenFileUpload(!openFileUpload);
+                  setOpenEmoji(false);
+                }}
+              >
+                <GrAttachment size={"1.3rem"} />
+              </div>
             </div>
-            <div
-              className="absolute top-3 right-3"
-              onClick={() => {
-                setOpenFileUpload(!openFileUpload);
-                setOpenEmoji(false);
-              }}
-            >
-              <GrAttachment size={"1.3rem"} />
+            {/* <AutoComplete props={props} /> */}
+            <div>
+              <PrimaryButton
+                text={"Send"}
+                type={"submit"}
+                className="px-7"
+                disabled={!message}
+                onClick={() => {
+                  sendChatToSocket(message);
+                  setMessage("");
+                }}
+              />
             </div>
-          </div>
-          <div className="">
-            <PrimaryButton
-              text={"Send"}
-              type={"submit"}
-              className="px-7"
-              disabled={!message}
-              onClick={() => {
-                sendChatToSocket(message);
-                setMessage("");
-              }}
-            />
           </div>
         </div>
       ) : (
@@ -188,11 +266,12 @@ export const InputChatField = ({
             <PrimaryButton
               text={"New Message"}
               type={"button"}
-              onClick={() => console.log("clicked")}
+              onClick={() => setNewMessageTemplate(!newMessageTemplate)}
             />
           </div>
         </div>
-      )}
-    </form>
+      )
+      }
+    </form >
   );
 };

@@ -1,26 +1,26 @@
-import React, {useState} from "react";
-import {Formik} from "formik";
+import React, { useState } from "react";
+import { Formik } from "formik";
 import * as Yup from "yup";
 import Styles from "./Login.module.css";
 import LoginPage from "../../components/Images/LoginPage.svg";
-import {InputFieldWithoutCounter} from "../../components/InputField";
-import {HiOutlineMail} from "react-icons/hi";
-import {IoKeyOutline} from "react-icons/io5";
-import {TiTick} from "react-icons/ti";
-import {Paragraph1} from "../../components/Typography";
-import {PrimaryButton} from "../../components/Button";
-import {useLogin} from "../../hooks/useQueryApi";
-import {Routes as AppRoute} from "../../constants/RoutesNames";
-import {useNavigate} from "react-router-dom";
-import {ToastContainer, toast} from "react-toastify";
+import { InputFieldWithoutCounter } from "../../components/InputField";
+import { HiOutlineMail } from "react-icons/hi";
+import { IoKeyOutline } from "react-icons/io5";
+import { TiTick } from "react-icons/ti";
+import { Paragraph1 } from "../../components/Typography";
+import { PrimaryButton } from "../../components/Button";
+import { useLogin } from "../../hooks/useQueryApi";
+import { Routes as AppRoute } from "../../constants/RoutesNames";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
 import cookie from "react-cookies";
 import "react-toastify/dist/ReactToastify.css";
-import {useAppCommonDataProvider} from "../../components/AppCommonDataProvider/AppCommonDataProvider";
+import { useAppCommonDataProvider } from "../../components/AppCommonDataProvider/AppCommonDataProvider";
 
 export const Login = () => {
-  const {mutateAsync, data} = useLogin();
+  const { mutateAsync, data } = useLogin();
   const navigate = useNavigate();
-  const {setUserDetails} = useAppCommonDataProvider();
+  const { setUserDetails } = useAppCommonDataProvider();
 
   const [checkbox, setCheckbox] = useState(false);
   const [passwordType, setPasswordType] = useState("password");
@@ -88,12 +88,12 @@ export const Login = () => {
     <>
       <Formik
         validationSchema={schema}
-        initialValues={{email: "", password: "", rememberMe: true}}
+        initialValues={{ email: "", password: "", rememberMe: true }}
         onSubmit={(values) => {
           handleSubmitLogin(values);
         }}
       >
-        {({values, errors, touched, handleChange, handleSubmit}) => (
+        {({ values, errors, touched, handleChange, handleSubmit }) => (
           <div className="justify-center items-center border h-full flex absolute w-full">
             <div className={Styles.body}>
               <form noValidate onSubmit={handleSubmit}>
@@ -107,15 +107,15 @@ export const Login = () => {
                     {/* login------------------------ */}
                     <div className={Styles.LoginText}>Login</div>
                     {/* email------------------------------ */}
-                    <div className="">
+                    <div className=" flex flex-col w-full">
                       <div className={Styles.optionText}>Email</div>
-                      <div className="relative w-fit">
+                      <div className="relative w-[85%]">
                         <InputFieldWithoutCounter
                           type={"Email"}
                           onChange={handleChange}
                           placeholder="Email..."
                           id={"email"}
-                          className={"h-12 mt-1 w-96"}
+                          className={"h-12 mt-1 w-full"}
                         />
                         <HiOutlineMail
                           size={"1.5rem"}
@@ -127,13 +127,13 @@ export const Login = () => {
                       {errors.email && touched.email && errors.email}
                     </p>
                     {/* Password------------------------------- */}
-                    <div className="mt-4">
+                    <div className="mt-4 flex flex-col w-full">
                       <div className={Styles.optionText}>Password</div>
-                      <div className="relative w-fit">
+                      <div className="relative w-[85%] ">
                         <InputFieldWithoutCounter
                           onChange={handleChange}
                           placeholder="Password..."
-                          className={"h-12 mt-1 w-96"}
+                          className={"h-12 mt-1 w-full"}
                           id={"password"}
                           type={passwordType}
                         />
@@ -188,9 +188,9 @@ export const Login = () => {
                 </div>
               </form>
             </div>
-          </div>
+          </div >
         )}
-      </Formik>
+      </Formik >
     </>
   );
 };

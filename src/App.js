@@ -1,19 +1,20 @@
-import {BrowserRouter, Routes, Route} from "react-router-dom";
-import {QueryClient, QueryClientProvider} from "react-query";
-import {ReactQueryDevtools} from "react-query/devtools";
-import {Routes as AppRoute} from "../src/constants/RoutesNames";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { Routes as AppRoute } from "../src/constants/RoutesNames";
 // import { Broadcast } from "./Routes/Broadcast";
-import {Dashboard} from "./Routes/Dashboard";
-import {TemplateMessage} from "./Routes/TemplateMessage";
-import {Contacts} from "./Routes/Contacts";
-import {TeamInbox} from "./Routes/TeamInbox";
-import {BroadcastHistory} from "../src/Routes/Broadcast/BroadcastHistory/index";
+import { Dashboard } from "./Routes/Dashboard";
+import { TemplateMessage } from "./Routes/TemplateMessage";
+import { Contacts } from "./Routes/Contacts";
+import { TeamInbox } from "./Routes/TeamInbox";
+import { BroadcastHistory } from "../src/Routes/Broadcast/BroadcastHistory/index";
 import "./App.css";
-import {AppCommonDataProvider} from "./components/AppCommonDataProvider/AppCommonDataProvider";
-import {Login} from "./Routes/Login/Login";
-import {SignUp} from "./Routes/SignUp/SignUp";
-import {ScheduledBroadcast} from "./Routes/Broadcast/BroadcastHistory/ScheduledBroadcast";
-import {Campaign} from "./Routes/Campaign";
+import { AppCommonDataProvider } from "./components/AppCommonDataProvider/AppCommonDataProvider";
+import { Login } from "./Routes/Login/Login";
+import { SignUp } from "./Routes/SignUp/SignUp";
+import { ScheduledBroadcast } from "./Routes/Broadcast/BroadcastHistory/ScheduledBroadcast";
+import { Campaign } from "./Routes/Campaign";
+
 
 const queryClient = new QueryClient();
 const role = JSON.parse(localStorage.getItem("userDetails"))?.role;
