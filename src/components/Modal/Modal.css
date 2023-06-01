@@ -1,0 +1,83 @@
+/* .modal_title {
+  text-align: center !important;
+  font-family: Poppins;
+}
+.input_field {
+  border: 1px solid #cdcdcd;
+  border-radius: 5px;
+  width: 441px;
+  height: 90px;
+}
+
+.customModal {
+  max-width: 450px;
+  width: 100%;
+  border-radius: 15px;
+}
+.Modal_title {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  font-size: 30px;
+  color: #4b4b4b;
+  padding-bottom: 10px;
+}
+.Modal_subtitle {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  padding-bottom: 10px;
+
+  color: #858585;
+}
+.TextArea_style {
+  outline: none;
+  border: 1px solid #cdcdcd;
+  border-radius: 5px;
+  width: 441px;
+  height: 90px;
+  padding: 10px;
+}
+.TextArea_style::-webkit-input-placeholder {
+  font-family: Poppins;
+  font-weight: 500;
+  font-size: 15px;
+  color: #858585;
+  width: 108px;
+  height: 18px;
+}
+.TextArea_style::-webkit-scrollbar {
+  width: 5px;
+}
+.TextArea_style::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px rgba(94, 92, 92, 0.3);
+}
+.TextArea_style::-webkit-scrollbar-thumb {
+  background-color: #913bde;
+  border-radius: 10px;
+}
+
+.BtnStyle {
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  width: 32%;
+  height: 48px;
+  border: none;
+  font-family: Poppins;
+  background: #913bde;
+  border-radius: 5px;
+  color: white;
+  font-size: 17px;
+  cursor: pointer;
+} */

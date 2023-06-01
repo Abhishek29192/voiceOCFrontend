@@ -1,0 +1,91 @@
+.background__color {
+  background-color: rgb(245, 246, 250);
+}
+
+.Brodcast_section {
+  display: flex;
+  /* justify-content: space-between; */
+  width: 100%;
+  height: 100%;
+  padding: 25px 20px 25px 20px;
+  margin-top: 20px;
+  background-color: rgb(245, 246, 250);
+}
+
+.sort__text {
+  font-weight: 600;
+  font-size: 16px;
+  font-family: Poppins;
+}
+
+.input__container {
+  width: fit-content;
+  height: auto;
+  position: relative;
+  margin-left: 25px;
+}
+
+.filter__icon {
+  display: flex;
+  width: 45px;
+  position: relative;
+  height: 2.5rem;
+  background-color: #5536db;
+  border-radius: 10px;
+  margin-left: 25px;
+  align-items: center;
+  justify-content: center;
+}
+.filter {
+  position: absolute;
+}
+
+.import_export_icon {
+  height: 2.75rem;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  display: flex;
+  padding-left: 16px;
+  background-color: white;
+  border-radius: 20px;
+}
+
+.import_border {
+  border-right: 1px solid rgb(189, 183, 183);
+  padding-right: 0.75rem;
+}
+
+.ationbar__downloadlink {
+  color: rgb(14, 113, 195);
+  font-weight: 500;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-right: 1rem;
+  /* position: relative; */
+}
+
+.delete__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 15px;
+  position: relative;
+  width: 32px;
+  height: 32px;
+  background: rgb(255, 231, 231);
+  border: 1px solid rgb(255, 14, 14);
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 0px;
+}
+
+.customModal {
+  max-width: 58vw;
+  height: 80vh;
+  /* max-height: 98vh; */
+  width: 80%;
+  border-radius: 15px;
+}

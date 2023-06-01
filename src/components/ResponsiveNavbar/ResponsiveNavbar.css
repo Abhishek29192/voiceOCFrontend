@@ -1,0 +1,64 @@
+.menu__container {
+  flex-direction: column;
+  left: 10px;
+  top: 50px;
+  width: 100%;
+}
+
+.menu_nav_top {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 1rem;
+  padding-top: 0.4rem;
+  /* margin-bottom: 20px; */
+  background-color: white;
+}
+
+.connection_status {
+  color: rgb(14, 113, 195);
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  gap: 7px;
+  width: fit-content;
+}
+
+.status_info {
+  width: 14px;
+  height: 14px;
+  background-color: rgb(14, 113, 195);
+  color: rgb(255, 255, 255);
+  border-radius: 50%;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  align-items: center;
+  font-size: 10px;
+}
+
+.connecion_number {
+  color: #5536db;
+  /* font-weight: bold; */
+  font-size: small;
+}
+
+.notification_icon {
+  width: 100%;
+  padding-left: 15%;
+}
+
+.menu_button {
+  background-color: rgb(95, 81, 221);
+  border-radius: 2rem;
+  width: 60%;
+  height: 5vh;
+  text-align: center;
+  margin: 15px 0 15px 0;
+  color: white;
+}

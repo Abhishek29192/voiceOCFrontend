@@ -1,0 +1,49 @@
+.btn__primary {
+  background-color: #5536db;
+  padding: 10px 20px;
+  border-radius: 6px;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-family: poppins;
+  font-weight: 400;
+}
+
+.btn__secondary {
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #5536db;
+  padding: 10px 20px;
+  justify-content: center;
+  align-items: center;
+  font-family: poppins;
+  font-weight: 400;
+  color: #5536db;
+  /* font-size: small; */
+}
+
+.Approved_btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(233, 246, 238);
+  min-width: 134px;
+  /* height: 42px; */
+  /* display: block; */
+  border-radius: 100px;
+  /* font-size: 15px; */
+  padding: 8px;
+  align-items: center;
+  color: #5332eb;
+}
+
+.template_btn {
+  /* display: inline-flex; */
+  width: 32px;
+  height: 32px;
+  background: rgb(171, 185, 241);
+  /* border: 1px solid rgb(231, 231, 231); */
+  border: 1px solid red;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
