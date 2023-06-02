@@ -9,6 +9,11 @@ import { useTemplateData } from "../../../hooks/useQueryApi";
 import { UploadMediaFileInBroadcast } from "./UploadMediaFileInBroadcast";
 import { OpenBroadcastTabelView } from "./OpenBroadcastTabelView";
 import styles from "./BroadcastHistory.module.css";
+import { VideoPlayer } from "../../../components/VideoPlayer";
+import vid from "../../../components/Videos/vid.mp4";
+import documentIMG from "../../../components/Images/docuentIMG.jpeg"
+import sampleIMG from "../../../components/Images/sampleIMG.jpeg"
+
 
 //
 export const NewBroadCast = ({ isOpen, onClose, className, ...props }) => {
@@ -154,7 +159,28 @@ export const NewBroadCast = ({ isOpen, onClose, className, ...props }) => {
               <div className="flex m-2 bold poppins">Preview</div>
               <div className="items-center w-full flex justify-center">
                 <div className="flex flex-col bg-white w-[90%]  rounded-md p-2 pt-4 pb-7 ">
-                  efdchbn
+                  <div className="">
+                    {
+                      selectedContactRowData?.Type === "MEDIA" && (
+                        selectedContactRowData?.MediaType === "image" ? (
+                          <div>
+                            <img src={sampleIMG} />
+                          </div>
+                        ) : (selectedContactRowData?.MediaType === "video" ? (
+                          <VideoPlayer videoUrl={vid} />
+                        ) : (
+                          <div className="">
+                            <object title="document" className="border rounded-lg mb-4 flex justify-center items-center">
+                              {/* <HiOutlineDocumentDuplicate size={"1.8rem"} /> */}
+                              <img src={documentIMG} className="h-[50%]" />
+                            </object>
+                          </div>
+                        )
+
+                        )
+                      )
+                    }
+                  </div>
                   <div className="font-bold">
                     {selectedContactRowData?.Header}
                   </div>
@@ -168,7 +194,7 @@ export const NewBroadCast = ({ isOpen, onClose, className, ...props }) => {
             </div>
           </div>
         </div>
-      </Modal>
+      </Modal >
       {openMediaUpload && (
         <UploadMediaFileInBroadcast
           isOpen={openMediaUpload}
@@ -183,22 +209,25 @@ export const NewBroadCast = ({ isOpen, onClose, className, ...props }) => {
           setOpenMediaUpload={setOpenMediaUpload}
 
         />
-      )}
-      {openBroadcastTable && (
-        <OpenBroadcastTabelView
-          isOpen={openBroadcastTable}
-          onClose={() => {
-            setOpenBroadcastTable(false);
-            onClose();
-          }}
-          // onCloseUploadPopUp={() => setOpenMediaUpload(false)}
-          className={`${styles.customModal}`}
-          classes={"height:'80vh'"}
-          setNewBroadcastPopup1={props.setNewBroadcastPopup1}
-          setOpenMediaUpload={setOpenMediaUpload}
-          {...props}
-        />
-      )}
+      )
+      }
+      {
+        openBroadcastTable && (
+          <OpenBroadcastTabelView
+            isOpen={openBroadcastTable}
+            onClose={() => {
+              setOpenBroadcastTable(false);
+              onClose();
+            }}
+            // onCloseUploadPopUp={() => setOpenMediaUpload(false)}
+            className={`${styles.customModal}`}
+            classes={"height:'80vh'"}
+            setNewBroadcastPopup1={props.setNewBroadcastPopup1}
+            setOpenMediaUpload={setOpenMediaUpload}
+            {...props}
+          />
+        )
+      }
     </>
   );
 };

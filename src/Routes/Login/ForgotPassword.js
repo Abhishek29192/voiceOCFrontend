@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Modal from "react-responsive-modal";
 import { Base1Strong } from "../../components/Typography";
 import { HiOutlineMail } from "react-icons/hi";
+import { MdPassword } from "react-icons/md"
 import { InputFieldWithoutCounter } from "../../components/InputField";
 import { IoKeyOutline } from "react-icons/io5";
 import { PrimaryButton } from "../../components/Button";
@@ -29,26 +30,77 @@ const ForgotPassword = ({
     const [confirmPasswordChanged, setConfirmPasswordChanged] = useState("");
     const [email, setEmail] = useState("");
     const [emailErrorMsg, setEmailErrorMsg] = useState("");
+    const [passwordType, setPasswordType] = useState("password");
+    const [confirmPasswordType, setConfirmPasswordType] = useState("password");
+    const [passwordError, setPasswordError] = useState("");
+    const [confirmPasswordError, setConfirmPasswordError] = useState("");
 
     const { mutateAsync } = usePostForgetOtp();
     const { mutateAsync: PosTForgotPasswordData } = usePostForgotPassword();
 
+    const handleShowPassword = () => {
+        if (passwordType === "password") {
+            setPasswordType("text");
+            return;
+        }
+        setPasswordType("password");
+    };
+
+    const handleShowConfirmPassword = () => {
+        if (confirmPasswordType === "password") {
+            setConfirmPasswordType("text");
+            return;
+        }
+        setConfirmPasswordType("password");
+    }
+
     const handleEmail = (e) => {
-        console.log(e.target.value, "eee")
-        if (e === "") {
+        setEmail(e.target.value);
+        console.log(e.target.value, "ijoh")
+        if (e.target.value === "") {
             setEmailErrorMsg("Please, enter Email!");
         } else {
-            setEmail(e.target.value);
-            if (validator.isEmail(email)) {
+            if (!validator.isEmail(email)) {
                 setEmailErrorMsg("");
             } else {
+
                 setEmailErrorMsg("Please, enter valid Email!");
             }
         }
     };
 
+    const handleConfirmPassword = (e) => {
+        // setPasswordChanged(e)
+        setConfirmPasswordChanged(e)
+        if (e === "") {
+            setConfirmPasswordError("please enter a password!");
+        } else {
+            if (!validator.isAlphanumeric(confirmPasswordChanged)) {
+                setConfirmPasswordError("");
+            } else if (passwordChanged == confirmPasswordChanged) {
+                setConfirmPasswordError("password and confirm password dose not match");
+            }
+        }
+    }
+
+    const handlePassword = (e) => {
+        setPasswordChanged(e)
+        // setConfirmPasswordChanged(e)
+        if (e === "") {
+            setPasswordError("please enter a password!");
+        } else {
+            if (!validator.isAlphanumeric(passwordChanged)) {
+                setPasswordError("");
+            } else if (passwordChanged == confirmPasswordChanged) {
+
+
+                setConfirmPasswordError("password and confirm password dose not match");
+            }
+        }
+    }
+
     const handleGetOtp = () => {
-        if (email.length > 0) {
+        if (email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
             mutateAsync({ email: email })
                 .then((res) => {
                     setOtpStatus(true);
@@ -61,7 +113,7 @@ const ForgotPassword = ({
                 })
                 .catch((err) => console.log(err));
         } else {
-            toast.error(`Please Enter Email!!!`, {
+            toast.error(`Please Enter valid Email!!!`, {
                 autoClose: 1500,
                 closeOnClick: true,
                 position: "top-right",
@@ -69,11 +121,6 @@ const ForgotPassword = ({
         }
     };
 
-    const handleOtpEntered = (e) => {
-        setOtpEntered(e.target.value);
-    };
-
-    console.log(otpEntered, "565565565")
 
     const handleNextBtn = () => {
         const otp = cookie.load("number");
@@ -89,28 +136,47 @@ const ForgotPassword = ({
         }
     };
 
-    const handleChangePassword = (e) => {
-        setPasswordChanged(e.target.value);
-    };
 
-    const handleChangeConfirmPassword = (e) => {
-        setConfirmPasswordChanged(e.target.value);
-    };
+    const validatePassword = (password) => {
+        const pattern1 = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+        const pattern2 = /[a-zA-Z]+/g
+        const pattern3 = /\d/g
+        return password.length >= 8 && pattern1.test(password) && pattern2.test(password) && pattern3.test(password);
+    }
+
+
+
 
     const handleForgotPassword = () => {
-        console.log("975487596785418574");
-
-        PosTForgotPasswordData({
-            password: passwordChanged,
-            email: email,
-        })
-            .then((res) => {
-                console.log(res);
-                onClose();
+        const validPassword = validatePassword(passwordChanged)
+        console.log(validPassword, "dfghmj")
+        if (
+            validPassword && confirmPasswordChanged == passwordChanged
+        ) {
+            PosTForgotPasswordData({
+                password: passwordChanged,
+                email: email,
             })
-            .catch((err) => {
-                console.log(err);
+                .then((res) => {
+                    console.log(res);
+                    onClose();
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        } else if (confirmPasswordChanged !== passwordChanged) {
+            toast.error("Password and Confirm password dosen't match", {
+                autoClose: 1500,
+                closeOnClick: true,
+                position: "top-right",
             });
+        } else {
+            toast.error("Invalid Credentials!!!", {
+                autoClose: 1500,
+                closeOnClick: true,
+                position: "top-right",
+            });
+        }
     };
 
     return (
@@ -119,7 +185,6 @@ const ForgotPassword = ({
             onClose={onClose}
             showCloseIcon
             center
-            // styles={bg}
             classNames={{ modal: `${className} ${classes}` }}
         >
             <div className="items-center pb-3 ">
@@ -141,23 +206,23 @@ const ForgotPassword = ({
                                 placeholder="Email..."
                                 id={"email"}
                                 className={"h-12 mt-1 w-full bg-slate-200"}
+
                             />
                             <HiOutlineMail
                                 size={"1.5rem"}
                                 className="absolute top-[1.4rem] right-2"
                             />
                         </div>
-                        <span
+                        <small
                             style={{
                                 fontWeight: "semi-bold",
                                 color: "red",
                             }}
                         >
                             {emailErrorMsg}
-                        </span>
+                        </small>
                     </div>
                     <ToastContainer theme="light" />
-
 
                     <div className="flex mt-28 justify-end">
                         <PrimaryButton
@@ -180,13 +245,13 @@ const ForgotPassword = ({
                         <div className="relative w-[100%]">
                             <InputFieldWithoutCounter
                                 type={"Eneter OTP"}
-                                onChange={(e) => handleOtpEntered(e)}
+                                onChange={(e) => setOtpEntered(e.target.value)}
                                 // onChange={(e) => setFieldValue("email", e.target.value.toLowerCase())}
                                 placeholder="Email..."
                                 id={"email"}
                                 className={"h-12 mt-1 w-full bg-slate-200"}
                             />
-                            <HiOutlineMail
+                            <MdPassword
                                 size={"1.5rem"}
                                 className="absolute top-4 right-2"
                             />
@@ -212,9 +277,8 @@ const ForgotPassword = ({
                         </div>
                         <div className="relative w-[100%] py-2">
                             <InputFieldWithoutCounter
-                                type={"password"}
-                                onChange={(e) => handleChangePassword(e)}
-                                // onChange={(e) => setFieldValue("email", e.target.value.toLowerCase())}
+                                type={passwordType}
+                                onChange={(e) => handlePassword(e.target.value)}
                                 placeholder="password..."
                                 id={"email"}
                                 className={"h-12 mt-1 w-full bg-slate-200"}
@@ -222,19 +286,28 @@ const ForgotPassword = ({
                             <IoKeyOutline
                                 size={"1.5rem"}
                                 className="absolute top-6 right-1"
+                                onClick={handleShowPassword}
                             />
                         </div>
+                        <small
+                            style={{
+                                fontWeight: "semi-bold",
+                                color: "red",
+                            }}
+                        >
+                            {passwordError}
+                        </small>
                     </div>
-                    {/* 2222 */}
+                    {/* 2222 -----------------------------*/}
                     <div className=" flex flex-col w-full">
                         <div className={Styles.optionText}>
                             Confirm Password<span className="text-red-500">*</span>
                         </div>
                         <div className="relative w-[100%] py-2">
                             <InputFieldWithoutCounter
-                                type={"password"}
-                                onChange={(e) => handleChangeConfirmPassword(e)}
-                                // onChange={(e) => setFieldValue("email", e.target.value.toLowerCase())}
+                                type={confirmPasswordType}
+                                onChange={(e) => handleConfirmPassword(e.target.value)}
+                                // onChange={(e) => setConfirmPasswordChanged(e.target.value)}
                                 placeholder="Confirm password..."
                                 id={"email"}
                                 className={"h-12 mt-1 w-full bg-slate-200"}
@@ -242,8 +315,17 @@ const ForgotPassword = ({
                             <IoKeyOutline
                                 size={"1.5rem"}
                                 className="absolute top-6 right-1"
+                                onClick={handleShowConfirmPassword}
                             />
                         </div>
+                        <small
+                            style={{
+                                fontWeight: "semi-bold",
+                                color: "red",
+                            }}
+                        >
+                            {confirmPasswordError}
+                        </small>
                         <div className="flex  py-2 justify-end">
                             <PrimaryButton
                                 text={"Save"}

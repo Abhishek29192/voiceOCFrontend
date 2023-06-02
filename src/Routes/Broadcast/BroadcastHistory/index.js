@@ -31,6 +31,8 @@ import { Profile } from "../../TeamInbox/Profile";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import "./common.css";
+import SingleBroadcastStatus from "./SingleBroadcastStatus";
+import Styles from "../BroadcastHistory/BroadcastHistory.module.css";
 
 export const BroadcastHistory = () => {
   const [rows, setrows] = useState([]);
@@ -48,6 +50,9 @@ export const BroadcastHistory = () => {
   const [newBroadcastPopup1, setNewBroadcastPopup1] = useState(false);
   const [showSortedOveralldata, setShowSortedOveralldata] = useState(false);
   const [sortedData, setSortedData] = useState(null);
+  const [showSingleBroadcastStatus, setShowSingleBroadcastStatus] =
+    useState(false);
+  const [singleRowData, setSingleRowData] = useState(null);
   const [startDatePicked, setStartDatePicked] = useState(
     moment(new Date()).format("YYYY-MM-DD")
   );
@@ -199,11 +204,10 @@ export const BroadcastHistory = () => {
       .catch((err) => console.log(err, "err"));
   }, []);
 
+  console.log(singleRowData, "71821426115122");
   useEffect(() => {
-    // console.log(showSortedOveralldata, "statsus")
-    // if (showSortedOveralldata === "false") {
     if (boradcastHistoryTabelData) {
-      let data = boradcastHistoryTabelData?.map((e) => ({
+      let data = boradcastHistoryTabelData?.map((e, index) => ({
         id: e._id,
         successful: e.Delivered,
         read: e.Read,
@@ -215,30 +219,27 @@ export const BroadcastHistory = () => {
         Scheduled: e.Scheduled,
         contactCount: e.contactCount,
         dateTime: moment(e.createdAt).format("DD-MM-YYYY"),
+        failed: e.Failed,
       }));
       setrows(data);
+
+      // if (showSingleBroadcastStatus) {
+      //   console.log(data, "data selected")
+      // }
     }
-    // } else {
-    //   console.log("ggggg")
-    //   let data = rowSortedTabelData?.map((e) => ({
-    //     id: e._id,
-    //     successful: e.Delivered,
-    //     read: e.Read,
-    //     sent: e.Sent,
-    //     broadcastName: e.broadCastName,
-    //     Status: e.Status,
-    //     dateTime: moment(e.createdAt).format("YYYY-MM-DD"),
-    //   }))
-    //   setrows(data);
-    //   console.log(data, "filterrrr")
-    // }
-  }, [boradcastHistoryTabelData, showSortedOveralldata]);
+  }, [
+    boradcastHistoryTabelData,
+    showSortedOveralldata,
+    showSingleBroadcastStatus,
+  ]);
+  console.log(boradcastHistoryTabelData, "aaaaaaaaaaaaaaaa");
+  console.log(showSingleBroadcastStatus, "statys");
 
   const columns = [
     {
       field: "dateTime",
       renderHeader: (params) => <p className="text-lg font-bold ml-5">Date</p>,
-      width: 120,
+      width: 100,
       align: "center",
       headerAlign: "center",
     },
@@ -247,7 +248,7 @@ export const BroadcastHistory = () => {
       renderHeader: (params) => (
         <p className="text-lg font-bold ml-5">Broadcast name Scheduled</p>
       ),
-      width: 180,
+      width: 150,
       align: "center",
       headerAlign: "center",
     },
@@ -264,14 +265,15 @@ export const BroadcastHistory = () => {
               styles={buildStyles({ pathColor: "#5536db", textColor: "black" })}
               className="font-[#5536db]"
               value={(params.row.successful / params.row.contactCount) * 100}
-              text={`${Math.floor((params.row.successful / params.row.contactCount) * 100)
-                }%`}
+              text={`${Math.floor(
+                (params.row.successful / params.row.contactCount) * 100
+              )}%`}
               strokeWidth={10}
             />
           </div>
         );
       },
-      width: 180,
+      width: 160,
       align: "center",
       headerAlign: "center",
     },
@@ -280,18 +282,22 @@ export const BroadcastHistory = () => {
       field: "read",
       renderHeader: (params) => <p className="text-lg font-bold ml-5">Read</p>,
       renderCell: (params) => {
-        return <div className="h-[50%] w-[50%]">
-          <CircularProgressbar
-            // background={#5536db}
-            styles={buildStyles({ pathColor: "#5536db", textColor: "black" })}
-            className="font-[#5536db]"
-            value={(params.row.read / params.row.contactCount) * 100}
-            text={`${Math.floor((params.row.read / params.row.contactCount) * 100)}%`}
-            strokeWidth={10}
-          />
-        </div>
+        return (
+          <div className="h-[50%] w-[50%]">
+            <CircularProgressbar
+              // background={#5536db}
+              styles={buildStyles({ pathColor: "#5536db", textColor: "black" })}
+              className="font-[#5536db]"
+              value={(params.row.read / params.row.contactCount) * 100}
+              text={`${Math.floor(
+                (params.row.read / params.row.contactCount) * 100
+              )}%`}
+              strokeWidth={10}
+            />
+          </div>
+        );
       },
-      width: 180,
+      width: 160,
       align: "center",
       headerAlign: "center",
     },
@@ -308,13 +314,15 @@ export const BroadcastHistory = () => {
               styles={buildStyles({ pathColor: "#5536db", textColor: "black" })}
               className="font-[#5536db]"
               value={(params.row.replied / params.row.contactCount) * 100}
-              text={`${Math.floor((params.row.replied / params.row.contactCount) * 100)}%`}
+              text={`${Math.floor(
+                (params.row.replied / params.row.contactCount) * 100
+              )}%`}
               strokeWidth={10}
             />
           </div>
         );
       },
-      width: 180,
+      width: 160,
       align: "center",
       headerAlign: "center",
     },
@@ -328,7 +336,7 @@ export const BroadcastHistory = () => {
           return <div>{`${params.row.sent}/${params.row.contactCount}`}</div>;
         }
       },
-      width: 150,
+      width: 110,
       align: "center",
       headerAlign: "center",
     },
@@ -343,33 +351,39 @@ export const BroadcastHistory = () => {
           return <p className="font-semibold">{params.row.Status}</p>;
         }
       },
-      width: 150,
+      width: 140,
       align: "center",
       headerAlign: "center",
+      sortable: false,
     },
-    // {
-    //   field: "Failed",
-    //   renderHeader: (params) => (
-    //     <p className="text-lg font-bold ml-5">Actions</p>
-    //   ),
-    //   align: "center",
-    //   width: 120,
-    //   editable: true,
-    //   headerAlign: "center",
-    //   renderCell: (params) => {
-    //     return (
-    //       <div className="flex">
-    //         <div className="border-[1px] p-1 rounded mx-3">
-    //           {" "}
-    //           <BsBarChart size={"1.4rem"} />
-    //         </div>
-    //         <div className="border-[1px] p-1 rounded ">
-    //           <AiOutlineEye size={"1.5rem"} />
-    //         </div>
-    //       </div>
-    //     );
-    //   },
-    // },
+    {
+      field: "actions",
+      renderHeader: (params) => (
+        <p className="text-lg font-bold ml-5">Actions</p>
+      ),
+      align: "center",
+      width: 110,
+      editable: true,
+      headerAlign: "center",
+      renderCell: (params) => {
+        return (
+          <div className="flex">
+            <div
+              className="border-[1px] p-1 rounded mx-3"
+              onClick={() => {
+                setShowSingleBroadcastStatus(!showSingleBroadcastStatus);
+                setSingleRowData(params.row);
+              }}
+            >
+              <BsBarChart size={"1.4rem"} />
+            </div>
+            {/* <div className="border-[1px] p-1 rounded ">
+              <AiOutlineEye size={"1.5rem"} />
+            </div> */}
+          </div>
+        );
+      },
+    },
   ];
 
   return (
@@ -381,7 +395,9 @@ export const BroadcastHistory = () => {
         activeTab={localStorage.getItem("activeTab")}
       />
       <div className="flex">
-        <BroadcastOptions activeMenuOption={localStorage.getItem("activeMenuOption")} />
+        <BroadcastOptions
+          activeMenuOption={localStorage.getItem("activeMenuOption")}
+        />
         <div className="flex flex-col w-[80%]">
           <div className={styles.section1}>
             <Base2 className="poppins p-3">Date Range Filter</Base2>
@@ -514,7 +530,7 @@ export const BroadcastHistory = () => {
                 tableContent="broadcastData" // rows={createData(data?.data)}
                 rows={rows}
                 rowSelection={false}
-                columns={[...columns, { field: "status", sortable: false }, { field: "recipients", sortable: false }]}
+                columns={columns}
                 rowHeight={140}
                 disableColumnMenu={true}
                 disableRowSelector={true}
@@ -525,6 +541,17 @@ export const BroadcastHistory = () => {
           </div>
         </div>
       </div>
+      {showSingleBroadcastStatus && (
+        <SingleBroadcastStatus
+          isOpen={showSingleBroadcastStatus}
+          onClose={() => {
+            setShowSingleBroadcastStatus(false);
+          }}
+          className={`${Styles.customModalSingleBroadcastStatus}`}
+          classes={"height:'70vh'"}
+          singleRowData={singleRowData}
+        />
+      )}
       {newBroadcastPopup1 && (
         <NewBroadCast
           isOpen={newBroadcastPopup1}
