@@ -60,32 +60,47 @@ export const NewTemplate = ({ setNewMessageTemplate, selectedMobileNumber }) => 
 
     const handleSendTemplate = (ele) => {
         let data;
-        if (ele.Type == "MEDIA") {
-            if (fileName) {
-                data = new FormData();
-                data.set("mobileNumber", selectedMobileNumber);
-                data.set("templateName", ele?.template_name);
-                data.set("customValues", JSON.stringify(customVariable));
-                data.append("media", file);
+        if (ele.customFields.length == customVariable.length) {
+            if (ele.Type == "MEDIA") {
+                console.log(fileName, "fileName..............")
+                if (fileName.trim().length > 0) {
+                    data = new FormData();
+                    data.set("mobileNumber", selectedMobileNumber);
+                    data.set("templateName", ele?.template_name);
+                    data.set("customValues", JSON.stringify(customVariable));
+                    data.append("media", file);
 
+                    newTemplate(data).catch((err) => console.log(err?.message));
+                    setNewMessageTemplate(false);
+                    setFile({})
+                    setFileName("")
 
+                } else {
+                    toast.error(`Upload file!!!`, {
+                        autoClose: 1500,
+                        closeOnClick: true,
+                        position: "top-right",
+                    });
+                }
             } else {
-                toast.error(`Upload file!!!`, {
-                    autoClose: 1500,
-                    closeOnClick: true,
-                    position: "top-right",
-                });
+                data = {
+                    mobileNumber: selectedMobileNumber,
+                    customValues: JSON.stringify(customVariable),
+                    templateName: ele?.template_name,
+                };
+                newTemplate(data).catch((err) => console.log(err?.message));
+                setNewMessageTemplate(false);
+                setFile({})
+                setFileName("")
             }
-        } else {
-            data = {
-                mobileNumber: selectedMobileNumber,
-                customValues: JSON.stringify(customVariable),
-                templateName: ele?.template_name,
-            };
         }
-        newTemplate(data).catch((err) => console.log(err?.message));
-        setNewMessageTemplate(false);
-        setFile({})
+        else {
+            toast.error(`please fill all customfield before send !!!`, {
+                autoClose: 1500,
+                closeOnClick: true,
+                position: "top-right",
+            });
+        }
     };
 
 
@@ -95,7 +110,7 @@ export const NewTemplate = ({ setNewMessageTemplate, selectedMobileNumber }) => 
             <div className="px-4">
                 <div className=" ">
                     {templateData &&
-                        templateData.map((ele) => {
+                        templateData.map((ele, index) => {
                             return (
                                 <>
                                     <div className="bg-white px-3 my-2 h-[screen] flex flex-col border-b-[1px] py-2 ">
@@ -109,47 +124,61 @@ export const NewTemplate = ({ setNewMessageTemplate, selectedMobileNumber }) => 
 
                                         <div className="w-full flex justify-end items-center">
                                             {ele.Type === "MEDIA" ? (
-                                                (ele.MediaType === "image" ? (
-                                                    <div className=" w-[100%] my-3  items-center flex">
-                                                        {console.log(ele.MediaType, "image")}
-                                                        <FileUploadbutton
-                                                            accept={"image/*"}
-                                                            className={"h-8"}
-                                                            onChange={(e) => {
-                                                                handleFileChange(e);
-                                                            }}
-                                                            fileName={fileName ? fileName : "Select a file"}
-                                                        />
-                                                        <ToastContainer theme="light" />
-                                                    </div>
-                                                ) : (
-                                                    ele.MediaType === "document" ? (
-                                                        <div className=" w-[100%] my-3  items-center flex">
-                                                            {console.log(ele.MediaType, "document")}
-                                                            <FileUploadbutton
-                                                                accept={"image/*"}
-                                                                className={"h-8"}
-                                                                onChange={(e) => {
-                                                                    handleFileChange(e);
-                                                                }}
-                                                                fileName={fileName ? fileName : "Select a file"}
-                                                            />
-                                                            <ToastContainer theme="light" />
-                                                        </div>
-                                                    ) : (
-                                                        <div className=" w-[100%] my-3  items-center flex">
-                                                            <FileUploadbutton
-                                                                accept={"image/*"}
-                                                                className={"h-8"}
-                                                                onChange={(e) => {
-                                                                    handleFileChange(e);
-                                                                }}
-                                                                fileName={fileName ? fileName : "Select a file"}
-                                                            />
-                                                            <ToastContainer theme="light" />
-                                                        </div>
-                                                    )
-                                                ))
+                                                <div className=" w-[100%] my-3  items-center flex">
+                                                    {console.log(ele.MediaType, "image")}
+                                                    <FileUploadbutton
+                                                        id={index}
+                                                        accept={ele.MediaType === "image" ? "image/*" : (ele.MediaType === "document" ? ".pdf,.doc,.docx" : ".mp4")}
+                                                        className={"h-8"}
+                                                        onChange={(e) => {
+                                                            handleFileChange(e);
+                                                        }}
+                                                        fileName={fileName ? fileName : "Select a file"}
+                                                    />
+                                                    <ToastContainer theme="light" />
+                                                </div>
+                                                // (ele.MediaType === "image" ? (
+                                                //     <div className=" w-[100%] my-3  items-center flex">
+                                                //         {console.log(ele.MediaType, "image")}
+                                                //         <FileUploadbutton
+                                                //             accept="image/*"
+                                                //             className={"h-8"}
+                                                //             onChange={(e) => {
+                                                //                 handleFileChange(e);
+                                                //             }}
+                                                //             fileName={fileName ? fileName : "Select a file"}
+                                                //         />
+                                                //         <ToastContainer theme="light" />
+                                                //     </div>
+                                                // ) : (
+                                                //     ele.MediaType === "document" ? (
+
+                                                //         <div className=" w-[100%] my-3  items-center flex">
+                                                //             {console.log(ele.MediaType, "document")}
+                                                //             <FileUploadbutton
+                                                //                 accept=".pdf,.doc,.docx"
+                                                //                 className={"h-8"}
+                                                //                 onChange={(e) => {
+                                                //                     handleFileChange(e);
+                                                //                 }}
+                                                //                 fileName={fileName ? fileName : "Select a file"}
+                                                //             />
+                                                //             <ToastContainer theme="light" />
+                                                //         </div>
+                                                //     ) : (
+                                                //         <div className=" w-[100%] my-3  items-center flex">
+                                                //             <FileUploadbutton
+                                                //                 id={index}
+                                                //                 className={"h-8"}
+                                                //                 onChange={(e) => {
+                                                //                     handleFileChange(e);
+                                                //                 }}
+                                                //                 fileName={fileName ? fileName : "Select a file"}
+                                                //             />
+                                                //             <ToastContainer theme="light" />
+                                                //         </div>
+                                                //     )
+                                                // ))
                                                 // <div className=" w-[100%] my-3  items-center flex">
                                                 //     <FileUploadbutton
                                                 //         accept={"image/*,.doc, .docx,.mp4,.pdf"}

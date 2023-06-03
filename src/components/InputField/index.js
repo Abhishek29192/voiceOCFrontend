@@ -91,20 +91,20 @@ export const InputTextArea = ({
   );
 };
 
-export const FileUploadbutton = ({ onChange, fileName, accept, className }) => {
+export const FileUploadbutton = ({ onChange, fileName, accept, className, id = "actual-btn" }) => {
   return (
     <>
       <input
         type="file"
         hidden
-        id="actual-btn"
+        id={id}
         name="file"
         onChange={onChange}
         accept={accept}
       // accept=".xlsx, .xls,image/*,.doc, .docx,.mp4,.pdf"
       // value={value}
       />
-      <label for="actual-btn" className={`${styles.label} ${className} justify-center mr-4`}>
+      <label for={id} className={`${styles.label} ${className} justify-center mr-4`}>
         Upload file
       </label>
       <span className="pr-9 text-sm">{fileName}</span>

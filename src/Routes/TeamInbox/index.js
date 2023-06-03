@@ -36,6 +36,9 @@ import { useClickOutside } from "../../hooks/useClickOutSide";
 import { sortSearchByNameByNumber } from "../../constants/DropDownContent";
 import { SelectOptionButton } from "../../components/SelectOptions";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export const TeamInbox = () => {
   const [search, setSearch] = useState(false);
   const [newMessage, setNewMessage] = useState(false);
@@ -68,7 +71,7 @@ export const TeamInbox = () => {
   const [mediaFile, setMediaFile] = useState(null)
   // const [agentDetail, setAgentDetail] = useState(null)
   // const [assignAgent, setAssignAgent] = useState(false)
-
+  const [fileName, setFileName] = useState("");
   const ref = useClickOutside(() => setOpenSelectAgents(false));
 
   const {
@@ -222,30 +225,7 @@ export const TeamInbox = () => {
     }
   };
 
-  const handleSend = (e) => {
-    let data
-    if (e.Type === "MEDIA") {
-      data = new FormData();
-      data.set("mobileNumber", whatsappNumber)
-      data.set("status", "true")
-      data.set("customValues", customVariable)
-      data.set("customField", JSON.stringify({
-        templatedSelected: selctedTemplate,
-        name: name,
-      }))
-      data.append("media", mediaFile)
-    } else {
-      data = {
-        mobileNumber: whatsappNumber,
-        userId: null,
-        status: "true",
-        customField: JSON.stringify({
-          templatedSelected: selctedTemplate,
-          name: name,
-        }),
-        customValues: customVariable,
-      };
-    }
+  const sendDataInApi = (data) => {
     mutateAsync(data)
       .then((res) => {
         if (res?.data?.status) {
@@ -266,7 +246,56 @@ export const TeamInbox = () => {
     setNewMessage(false);
     setSearch(false);
     setShowContactList(false);
+    setMediaFile(null)
+    setFileName("")
+  }
+
+  const handleSend = (e) => {
+    let data
+    console.log(e, "llllllllllllllllllllll")
+    // if (e.customFields.length == customVariable.length) {
+    if (e.Type === "MEDIA") {
+      if (fileName.trim().length > 0) {
+        data = new FormData();
+        data.set("mobileNumber", whatsappNumber)
+        data.set("status", "true")
+        data.set("customValues", customVariable)
+        data.set("customField", JSON.stringify({
+          templatedSelected: selctedTemplate,
+          name: name,
+        }))
+        data.append("media", mediaFile)
+        sendDataInApi(data)
+      } else {
+        toast.error(`Upload file!!!`, {
+          autoClose: 1500,
+          closeOnClick: true,
+          position: "top-right",
+        });
+      }
+    } else {
+      data = {
+        mobileNumber: whatsappNumber,
+        userId: null,
+        status: "true",
+        customField: JSON.stringify({
+          templatedSelected: selctedTemplate,
+          name: name,
+        }),
+        customValues: customVariable,
+      };
+      sendDataInApi(data)
+    }
+    // }
+    // else {
+    //   toast.error(`please fill all customfield before send !!!`, {
+    //     autoClose: 1500,
+    //     closeOnClick: true,
+    //     position: "top-right",
+    //   });
+    // }
   };
+
 
   const handleSingleChatData = (ele, index) => {
     setSelectedContactIndex(index);
@@ -411,7 +440,9 @@ export const TeamInbox = () => {
   };
 
   const handleFileChange = (e) => {
+
     setMediaFile(e.target.files[0])
+    setFileName(e.target.files[0].name);
   }
 
 
@@ -588,13 +619,23 @@ export const TeamInbox = () => {
                               (e.Type === "MEDIA") ? (
                                 <div className=" w-[100%] h-full pb-2">
                                   <FileUploadbutton
-                                    accept={"image/*,.doc, .docx,.mp4,.pdf"}
+                                    id={index}
+                                    accept={e.MediaType === "image" ? "image/*" : (e.MediaType === "document" ? ".pdf,.doc,.docx" : ".mp4")}
                                     className={"h-9"}
                                     onChange={(e) => {
                                       handleFileChange(e);
                                     }}
                                   // fileName={fileName ? fileName : "Select a file"}
                                   />
+                                  <ToastContainer theme="light" />
+                                  {/* <FileUploadbutton
+                                    accept={"image/*,.doc, .docx,.mp4,.pdf"}
+                                    className={"h-9"}
+                                    onChange={(e) => {
+                                      handleFileChange(e);
+                                    }}
+                                  // fileName={fileName ? fileName : "Select a file"}
+                                  /> */}
                                 </div>
                               ) : null
                             }

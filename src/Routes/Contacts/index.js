@@ -85,7 +85,7 @@ export const Contacts = () => {
       formData.append("name", selectedFile);
       formData.append("UserId", "one");
       formData.append("contactListName", contactListName);
-      addContact(formData);
+      addContact(formData)
       sethandleContactListModal(false);
       setContactListName("");
       setSelectedFile(null);

@@ -127,6 +127,62 @@ export const ChatBoxSender = ({ message, messageTime, messageType, messageMedia 
         style={{ flexFlow: "column" }}
         className="flex flex-flow-col bg-white w-fit px-11 py-2 poppins rounded-l-2xl rounded-b-2xl m-2 max-w-[50%] break-words "
       >
+        {/* {-----------------------media message with template --------------------------} */}
+        {messageMedia != null && (messageMedia?.type === "image" ? (
+          <div className="flex flex-col w-full items-end justify-end py-2 h-[50%]">
+            <div className="bg-white p-2 rounded-l-md rounded-br-md mx-2">
+              <div
+                className="flex justify-start w-[50%] mb-2"
+              >
+                <HiOutlineDownload size={"1.5rem"} />
+              </div>
+              <a href={messageMedia?.url} download>
+                <img
+                  src={messageMedia?.url}
+                  className="rounded-md"
+                />
+              </a>
+            </div>
+
+          </div>
+        ) : messageType === "video" ? (
+          <div className="flex flex-col w-full items-end justify-end py-2">
+            <div className="flex flex-col bg-white w-fit px-2 py-4 poppins rounded-l-2xl rounded-b-2xl  max-w-[50%] items-center">
+              <div
+                className="flex justify-start w-[100%] mb-2"
+              >
+                <HiOutlineDownload size={"1.5rem"} />
+              </div>
+              <video controls>
+                <source src={messageMedia?.url} />
+              </video>
+            </div>
+          </div>
+        ) : (
+
+          <div className="flex flex-col w-full items-end justify-end py-2">
+            <div className="flex flex-col bg-white w-fit px-11 py-4 poppins rounded-l-2xl rounded-b-2xl m-2 max-w-[50%] items-center">
+              <div
+                className="flex justify-start w-[140%] mb-2"
+
+              >
+                <HiOutlineDownload size={"1.5rem"} />
+              </div>
+              <div>
+                <BsFillFilePdfFill size={"3rem"} color={"red"} />
+              </div>
+              <div
+                style={{ flexFlow: "column", width: "95%" }}
+                className="my-2 break-words max-w[45%]  "
+              >
+                {messageMedia?.name}
+              </div>
+            </div>
+
+          </div>
+
+        ))}
+
         {/* {messageMedia?(
           
         ):(null)} */}
